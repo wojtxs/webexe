@@ -44,6 +44,45 @@ export const heroParams = {
   HERO_GRID: false,
 };
 
+/**
+ * Hero x (decyzja 2026-10-27): wielki znak x w 3D, kursor odsłania warstwę „system”.
+ * Pole tła (SPEED, SCALE, tryb tła…) bierze wartości z heroParams.
+ */
+export const heroXParams = {
+  // Obiekt
+  /** wysokość znaku jako ułamek wysokości elementu [data-gl="hero"] */
+  OBJECT_SIZE: 0.86,
+  /** przesunięcie w poziomie jako ułamek szerokości elementu (0 = środek) */
+  OBJECT_X: 0.2,
+  TILT: 0.35,
+  IDLE: 0.06,
+  CAGE_SCALE: 1.22,
+
+  // Warstwa B
+  GRID_RINGS: 2.2,
+  GRID_SEAMS: 12,
+  GRID_ALPHA: 0.55,
+  FLOW_SPEED: 0.6,
+
+  // Ślad kursora
+  TRAIL_RADIUS: 0.22,
+  TRAIL_DECAY: 0.975,
+  TRAIL_STRENGTH: 1.8,
+  EDGE_NOISE: 0.3,
+  EDGE_SCALE: 5,
+  EDGE_SPEED: 0.25,
+  EDGE_LINE: 1.5,
+
+  // Duch klatki i tło
+  GHOST_ALPHA: 0.18,
+  BG_INK_ALPHA: 0.45,
+
+  // Intro
+  INTRO_DURATION: 1.8,
+};
+
+export type HeroXParams = typeof heroXParams;
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

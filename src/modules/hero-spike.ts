@@ -7,10 +7,9 @@
  */
 
 import type { Module } from '@core/lifecycle';
-import { cssVar, cssColor } from '@core/css';
+import { cssColor } from '@core/css';
 import { on, off } from '@core/events';
 import gsap from 'gsap';
-import { CustomEase } from 'gsap/CustomEase';
 import { Scene, ShaderMaterial, Vector2, WebGLRenderer, type IUniform } from 'three';
 import { createPixelCamera, fitPixelCamera } from '@gl/Camera';
 import { DomPlane } from '@gl/DomPlane';
@@ -18,37 +17,16 @@ import { Mouse } from '@gl/Mouse';
 import { heroColors, heroParams, type BackgroundMode, type HeroVariant } from '@gl/params';
 import { createPlaceholderTextures, type HeroTextures } from '@gl/placeholders';
 import { loadDebug } from '@gl/debug';
+import { easeFromToken } from '@gl/ease';
+import { hasWebGL, maxDpr } from '@gl/support';
 import noise from '@gl/shaders/noise.glsl?raw';
 import bands from '@gl/shaders/bands.glsl?raw';
 import vertex from '@gl/shaders/plane.vert?raw';
 import bandsFrag from '@gl/shaders/bands.frag?raw';
+import bgGlsl from '@gl/shaders/bg.glsl?raw';
 import contourFrag from '@gl/shaders/contour.frag?raw';
 
-gsap.registerPlugin(CustomEase);
-
 let cleanup: (() => void) | null = null;
-
-function hasWebGL(): boolean {
-  try {
-    return !!document.createElement('canvas').getContext('webgl2');
-  } catch {
-    return false;
-  }
-}
-
-/** --ease-default (cubic-bezier) → ease GSAP */
-function easeFromToken(token: string): string {
-  const nums = cssVar(token).match(/-?[\d.]+/g);
-  if (nums?.length !== 4) return 'power3.out';
-  const name = token.replace(/^--/, '');
-  CustomEase.create(name, nums.join(','));
-  return name;
-}
-
-function maxDpr(): number {
-  const mobile = window.matchMedia('(max-width: 767px)').matches;
-  return Math.min(window.devicePixelRatio, mobile ? 1.5 : 1.25);
-}
 
 const HeroSpike: Module = {
   async init(root: HTMLElement) {
@@ -116,7 +94,7 @@ const HeroSpike: Module = {
     const background = new DomPlane(
       new ShaderMaterial({
         vertexShader: vertex,
-        fragmentShader: prefix + contourFrag,
+        fragmentShader: prefix + bgGlsl + contourFrag,
         uniforms: {
           ...field,
           uBgColor: { value: bg },
