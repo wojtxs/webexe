@@ -78,7 +78,8 @@ const HeroBuild: Module = {
       const container = title.parentElement!;
       const cs = getComputedStyle(container);
       const avail =
-        container.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        (container.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)) *
+        (mobile ? 1 : p.TITLE_WIDTH);
       title.style.setProperty('--hb-size', '100px');
       const longest = mobile
         ? (lines[1]?.scrollWidth ?? 1)

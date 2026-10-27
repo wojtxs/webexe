@@ -116,6 +116,8 @@ export class PromptScene {
           uXrayGain: { value: p.XRAY_GAIN },
           uLineColor: { value: colors.edge },
           uLineAlpha: { value: p.LINE_ALPHA },
+          uShare: { value: p.BAND_SHARE },
+          uHalo: { value: p.XRAY_HALO },
         },
         transparent: true,
         premultipliedAlpha: true,

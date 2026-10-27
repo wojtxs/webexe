@@ -342,10 +342,12 @@ export const heroBuildParams = {
 
   // Obiekt `>_` (render A, rentgen B, mapy: alfa A, alfa B, głębia)
   /** szerokość kadru obrazu jako ułamek szerokości ekranu (obiekt zajmuje ~1/3 kadru) */
-  OBJECT_WIDTH: 1.12,
+  OBJECT_WIDTH: 1.05,
   /** przesunięcie środka kadru jako ułamek szerokości / wysokości ekranu */
-  OBJECT_X: 0.2,
-  OBJECT_Y: -0.07,
+  OBJECT_X: 0.27,
+  OBJECT_Y: 0.01,
+  /** desktop: nagłówek zajmuje lewą część kontenera, obiekt prawą (bez nakładania) */
+  TITLE_WIDTH: 0.56,
   /** mobile (< 768 px): obiekt nad nagłówkiem */
   OBJECT_WIDTH_M: 2.3,
   OBJECT_X_M: 0,
@@ -358,6 +360,10 @@ export const heroBuildParams = {
   /** jasność rentgenu i konturu na granicy pasm */
   XRAY_GAIN: 1.15,
   LINE_ALPHA: 0.55,
+  /** udział rentgenu w pasmach: w spoczynku dominuje render */
+  BAND_SHARE: 0.34,
+  /** zasięg linii rentgenu poza bryłą (ułamek kadru), dalej wymiary znikają */
+  XRAY_HALO: 0.025,
 
   // Pasma: jak heroParams, gęściej na obiekcie
   SPEED: 0.06,

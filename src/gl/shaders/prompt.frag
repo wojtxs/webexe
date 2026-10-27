@@ -15,6 +15,8 @@ uniform float uScan;       // 0–1, front przebiegu renderu od góry ekranu; 0 
 uniform float uXrayGain;
 uniform vec3 uLineColor;
 uniform float uLineAlpha;
+uniform float uShare;      // udział rentgenu w paśmie (0.5 = pół na pół jak u Lando)
+uniform float uHalo;       // zasięg linii rentgenu poza bryłą, ułamek kadru
 
 varying vec2 vUv;
 
@@ -43,8 +45,11 @@ void main() {
   // pasma w przestrzeni ekranu: te same linie co poziomice w tle
   vec2 st = screenSt();
   float x = bandField(st);
-  float band = bandMask(x);
-  float line = bandLine(x, uLineWidth);
+  // pasmo rentgenu to węższa część okresu; kontur na obu granicach
+  float f = fract(x);
+  float band = step(1.0 - uShare, f);
+  float dist = min(min(f, 1.0 - f), abs(f - (1.0 - uShare)));
+  float line = 1.0 - smoothstep(0.0, fwidth(x) * uLineWidth, dist);
 
   // nad frontem skanu obiekt jest gotowy (pasma), pod nim jeszcze rentgen
   float fromTop = 1.0 - gl_FragCoord.y / (uDpr * uViewport.y);
@@ -53,7 +58,14 @@ void main() {
 
   // premultiplied: A i B mają własne alfy (B to linie na przezroczystym tle)
   vec4 colA = vec4(a * maps.r, maps.r);
-  vec4 colB = vec4(b * maps.g, maps.g);
+  // linie rentgenu tylko przy bryle: alfa A „rozszerzona” kilkoma próbkami
+  float near = maps.r;
+  for (int i = 0; i < 8; i++) {
+    float ang = float(i) * 0.785398;
+    near = max(near, texture2D(tMaps, uv + vec2(cos(ang), sin(ang) * uTexAspect) * uHalo).r);
+  }
+  float aB = maps.g * smoothstep(0.05, 0.6, near);
+  vec4 colB = vec4(b * aB, aB);
   vec4 col = mix(colA, colB, m);
 
   // kontur granicy pasm tylko na bryle obiektu
