@@ -1,0 +1,14 @@
+/* ==========================================================================
+   Fonty — self-host przez @fontsource.
+   Plus Jakarta Sans Variable: wght 200–800, latin + latin-ext (polskie znaki).
+   Comfortaa 700: tylko latin + latin-ext, używany w wordmarku i akcentach.
+   ========================================================================== */
+
+/* Plus Jakarta Sans Variable — latin + latin-ext */
+@import '@fontsource-variable/plus-jakarta-sans/wght.css';
+
+/* Comfortaa 700 — latin */
+@import '@fontsource/comfortaa/latin-700.css';
+
+/* Comfortaa 700 — latin-ext (polskie znaki: ą ę ó ś ź ż ć ń ł) */
+@import '@fontsource/comfortaa/latin-ext-700.css';
