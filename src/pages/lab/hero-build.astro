@@ -1,0 +1,532 @@
+---
+// /lab/hero-build — spike hero „Build” (tylko dev, noindex).
+// Wejście: terminal `npm run build` + blueprint strony rysowany na żywo, przebieg renderu zamienia go
+// w gotowe hero, potem kursor jest rentgenem: pod nim widać blueprint tej samej strony.
+// Treść z BRIEF.md (01 Hero, 02 Manifest). Blueprint klonuje moduł z warstwy gotowej.
+import Base from '../../layouts/Base.astro';
+
+const isDev = import.meta.env.DEV;
+const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
+---
+
+{isDev ? (
+  <Base title="Lab: hero build — webexe" noindex={true}>
+    <!-- przed startem modułu gotowa warstwa jest ukryta (bez mignięcia); bezpiecznik po 4 s -->
+    <script is:inline>
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('hb-pre');
+        setTimeout(() => document.documentElement.classList.remove('hb-pre'), 4000);
+      }
+    </script>
+    <section class="hb" data-module="hero-build" aria-labelledby="hb-title">
+      <div class="hb-stage" data-build-stage>
+        <div class="hb-layer hb-final" data-build-final>
+          <div class="hb-nav container" data-build-nav>
+            <span class="hb-logo" data-build-el="logo">
+              webexe
+            </span>
+            <a class="hb-pill" href="#kontakt" data-build-el="a.nav">
+              Kontakt
+            </a>
+          </div>
+          <div class="hb-body container">
+            <h1 id="hb-title" class="hb-title" data-build-el="h1" data-build-title>
+              <span class="hb-line" data-build-line>
+                Budujemy
+              </span>
+              <span class="hb-line" data-build-line>
+                oprogramowanie
+              </span>
+              <span class="hb-line" data-build-line>
+                dla firm i zostajemy
+              </span>
+              <span class="hb-line" data-build-line>
+                przy nim <span class="hb-accent">na lata.</span>
+              </span>
+            </h1>
+            <div class="hb-foot">
+              <p class="hb-lead" data-build-el="p.lead">
+                Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy
+                je razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
+              </p>
+              <!-- CTA: propozycja z D9, do potwierdzenia -->
+              <a class="hb-cta" href="#kontakt" data-build-el="a.cta">
+                Porozmawiajmy o projekcie
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hb-layer hb-blueprint" data-build-blueprint aria-hidden="true">
+          <div class="hb-grid container" data-build-grid>
+            {cols.map((n) => (
+              <span class="hb-col" data-build-col>
+                <span class="hb-col-n">{n}</span>
+              </span>
+            ))}
+          </div>
+          <!-- tu moduł wstawia klon warstwy gotowej -->
+        </div>
+
+        <svg class="hb-lens" data-build-lens aria-hidden="true">
+          <path data-build-lens-path />
+        </svg>
+
+        <div class="hb-scan" data-build-scan aria-hidden="true" />
+
+        <div class="hb-term" data-build-term aria-hidden="true">
+          <p class="hb-term-line">
+            <span class="hb-term-prompt">$</span>
+            <span data-build-cmd />
+            <span class="hb-caret" data-build-caret />
+          </p>
+          <p class="hb-term-line hb-term-muted" data-build-status />
+          <div class="hb-bar">
+            <span class="hb-bar-fill" data-build-bar />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hb-manifest" aria-labelledby="hb-manifest-title">
+      <div class="container">
+        <div class="hb-manifest-text">
+          <h2 id="hb-manifest-title" class="hb-problem">
+            Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach
+            nikt nie wie, jak działa, a każda zmiana jest ryzykiem.
+          </h2>
+          <p class="hb-answer">
+            My budujemy tak, żeby dało się to rozwijać latami. I sami to rozwijamy.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="hb-after" id="kontakt" aria-label="Miejsce na kolejne sekcje">
+      <p class="hb-muted">TODO(treść): tu zaczyna się sekcja 03 (greybox w F3).</p>
+    </section>
+  </Base>
+) : (
+  <html lang="pl">
+    <head>
+      <meta charset="UTF-8" />
+      <title>404</title>
+    </head>
+    <body>
+      <p>Strona niedostępna.</p>
+    </body>
+  </html>
+)}
+
+<style>
+  :global(body):has(.hb) {
+    background: var(--c-glebia);
+    color: var(--c-piana);
+  }
+
+  .hb-stage {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 36rem;
+    overflow: hidden;
+  }
+
+  .hb-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-block: var(--s-6) var(--s-8);
+    background: var(--c-glebia);
+  }
+
+  :global(.hb-pre) .hb-final {
+    visibility: hidden;
+  }
+
+  /* --- Warstwa gotowa --- */
+  .hb-nav {
+    align-items: center;
+  }
+
+  .hb-logo {
+    grid-column: 1 / 4;
+    justify-self: start;
+    font-size: var(--t-lead);
+    font-weight: var(--w-h1);
+    letter-spacing: var(--ls-h3);
+  }
+
+  .hb-pill {
+    grid-column: -4 / -1;
+    justify-self: end;
+    padding: var(--s-2) var(--s-6);
+    border: 1px solid var(--c-glebia-raise);
+    border-radius: var(--r-pill);
+    color: var(--c-piana);
+    font-size: var(--t-small);
+    font-weight: var(--w-label);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .hb-body {
+    row-gap: var(--s-8);
+  }
+
+  .hb-title {
+    grid-column: 1 / -1;
+    justify-self: start;
+    /* --hb-size: rozmiar dopasowany do szerokości kontenera, liczy moduł; bez JS token */
+    font-size: var(--hb-size, var(--t-impact));
+    font-weight: var(--w-impact);
+    line-height: var(--lh-impact);
+    letter-spacing: var(--ls-impact);
+    text-transform: uppercase;
+  }
+
+  .hb-line {
+    display: block;
+    width: max-content;
+    white-space: nowrap;
+    will-change: transform;
+  }
+
+  .hb-accent {
+    background: var(--g-laguna);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hb-foot {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-8);
+  }
+
+  .hb-lead {
+    max-width: 40ch;
+    font-size: var(--t-body);
+    font-weight: var(--w-lead);
+    line-height: var(--lh-body);
+    color: var(--c-ink-muted-dark);
+  }
+
+  .hb-cta {
+    flex: none;
+    padding: var(--s-4) var(--s-8);
+    border-radius: var(--r-pill);
+    background: var(--g-laguna);
+    color: var(--c-glebia);
+    font-size: var(--t-body);
+    font-weight: var(--w-label);
+    line-height: var(--lh-label);
+    text-decoration: none;
+  }
+
+  .hb-cta:focus-visible,
+  .hb-pill:focus-visible {
+    outline: 2px solid var(--c-piana);
+    outline-offset: 4px;
+  }
+
+  /* --- Warstwa blueprint: ta sama struktura, tylko obrysy i wymiary --- */
+  .hb-blueprint {
+    pointer-events: none;
+    clip-path: circle(0 at 0 0);
+  }
+
+  :global(.hb-pre) .hb-blueprint {
+    clip-path: none;
+  }
+
+  /* kolumny siatki startują zwinięte, zanim moduł przejmie intro */
+  :global(.hb-pre) .hb-col {
+    transform: scaleY(0);
+  }
+
+  .hb-grid {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .hb-col {
+    position: relative;
+    height: 100%;
+    background: var(--c-glebia-line);
+    transform-origin: top center;
+  }
+
+  .hb-col-n {
+    position: absolute;
+    top: var(--s-16);
+    left: var(--s-2);
+    font-family: var(--f-mono);
+    font-size: var(--t-small);
+    color: var(--c-glebia-raise);
+  }
+
+  .hb-blueprint :global([data-build-el]),
+  .hb-blueprint :global([data-build-line]) {
+    position: relative;
+    outline: 1px solid var(--c-laguna-start);
+    outline-offset: 2px;
+    /* uchwyty w rogach ramki */
+    background:
+      linear-gradient(var(--c-laguna-start) 0 0) left top / 5px 5px no-repeat,
+      linear-gradient(var(--c-laguna-start) 0 0) right top / 5px 5px no-repeat,
+      linear-gradient(var(--c-laguna-start) 0 0) left bottom / 5px 5px no-repeat,
+      linear-gradient(var(--c-laguna-start) 0 0) right bottom / 5px 5px no-repeat;
+  }
+
+  /* etykieta: tag + wymiary, liczone przez moduł (data-tag, data-size) */
+  .hb-blueprint :global([data-tag])::before,
+  .hb-blueprint :global([data-build-line])::before {
+    content: '<' attr(data-tag) '>  ' attr(data-size);
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + var(--s-1));
+    font-family: var(--f-mono);
+    font-size: var(--t-small);
+    font-weight: var(--w-body);
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: nowrap;
+    color: var(--c-laguna-start);
+  }
+
+  /* wiersze nagłówka: wymiar po prawej, żeby nie zasłaniał wiersza wyżej */
+  .hb-blueprint :global([data-build-line])::before {
+    content: attr(data-size);
+    left: calc(100% + var(--s-3));
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--c-laguna-end);
+  }
+
+  /* wiersz pod prawą krawędzią: wymiar wewnątrz ramki, w prawym górnym rogu */
+  .hb-blueprint :global([data-build-line][data-edge])::before {
+    left: auto;
+    right: var(--s-2);
+    top: var(--s-2);
+    transform: none;
+  }
+
+  .hb-blueprint :global(.hb-title) {
+    outline-color: var(--c-glebia-raise);
+    color: transparent;
+    -webkit-text-stroke: 1px var(--c-laguna-start);
+  }
+
+  .hb-blueprint :global(.hb-accent) {
+    background: none;
+    -webkit-text-stroke-color: var(--c-laguna-end);
+  }
+
+  .hb-blueprint :global(.hb-logo) {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--c-laguna-start);
+  }
+
+  .hb-blueprint :global(.hb-pill) {
+    border-style: dashed;
+    border-color: var(--c-laguna-start);
+    color: var(--c-laguna-start);
+  }
+
+  .hb-blueprint :global(.hb-lead) {
+    color: var(--c-laguna-ink);
+  }
+
+  .hb-blueprint :global(.hb-cta) {
+    background: none;
+    border: 1px dashed var(--c-laguna-start);
+    color: var(--c-laguna-start);
+    font-family: var(--f-mono);
+  }
+
+  /* specyfikacja nagłówka (font-size, letter-spacing): wstawia moduł */
+  .hb-blueprint :global(.hb-spec) {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + var(--s-1));
+    font-family: var(--f-mono);
+    font-size: var(--t-small);
+    font-weight: var(--w-body);
+    line-height: var(--lh-small);
+    letter-spacing: 0;
+    text-transform: none;
+    text-align: right;
+    white-space: pre;
+    color: var(--c-laguna-end);
+    -webkit-text-stroke: 0;
+  }
+
+  /* --- Soczewka kursora: obrys plamy --- */
+  .hb-lens {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .hb-lens path {
+    fill: none;
+    stroke: var(--c-laguna-end);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 6px var(--c-laguna-end));
+  }
+
+  /* --- Przebieg renderu --- */
+  .hb-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: var(--c-laguna-end);
+    box-shadow: 0 0 12px var(--c-laguna-end);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* --- Terminal --- */
+  .hb-term {
+    position: absolute;
+    /* pusta strefa między nawigacją a nagłówkiem: nie zasłania ramek blueprintu */
+    left: 50%;
+    top: var(--s-24);
+    translate: -50% 0;
+    width: min(28rem, calc(100% - 2 * var(--grid-padding)));
+    padding: var(--s-4) var(--s-6);
+    border: 1px solid var(--c-glebia-raise);
+    border-radius: var(--r-chip);
+    background: var(--c-glebia);
+    font-family: var(--f-mono);
+    font-size: var(--t-small);
+    line-height: var(--lh-small);
+    color: var(--c-piana);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  :global(.hb-pre) .hb-term {
+    opacity: 1;
+  }
+
+  .hb-term-line {
+    display: flex;
+    gap: var(--s-2);
+    min-height: 1.45em;
+  }
+
+  .hb-term-prompt {
+    color: var(--c-laguna-end);
+  }
+
+  .hb-term-muted {
+    color: var(--c-ink-muted-dark);
+  }
+
+  .hb-caret {
+    width: 0.6em;
+    background: var(--c-laguna-end);
+    animation: hb-blink 0.9s steps(1) infinite;
+  }
+
+  @keyframes hb-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .hb-bar {
+    height: 2px;
+    margin-top: var(--s-3);
+    background: var(--c-glebia-raise);
+  }
+
+  .hb-bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--g-laguna);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  /* --- Manifest i reszta --- */
+  .hb-manifest {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-block: var(--s-32);
+  }
+
+  .hb-manifest-text {
+    grid-column: 2 / 12;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-12);
+  }
+
+  .hb-problem,
+  .hb-answer {
+    font-size: var(--t-h2);
+    font-weight: var(--w-h2);
+    line-height: var(--lh-h2);
+    letter-spacing: var(--ls-h2);
+  }
+
+  .hb-problem {
+    color: var(--c-ink-muted-dark);
+  }
+
+  .hb-after {
+    min-height: 100vh;
+    padding: var(--s-16) var(--grid-padding);
+  }
+
+  .hb-muted {
+    font-size: var(--t-small);
+    color: var(--c-ink-muted-dark);
+  }
+
+  @media (max-width: 767px) {
+    .hb-logo {
+      grid-column: 1 / 3;
+    }
+
+    .hb-pill {
+      grid-column: 3 / -1;
+    }
+
+    .hb-line {
+      width: auto;
+      white-space: normal;
+    }
+
+    .hb-foot {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .hb-blueprint :global([data-build-line])::before,
+    .hb-blueprint :global(.hb-spec) {
+      display: none;
+    }
+
+    .hb-manifest-text {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -330,6 +330,30 @@ export const heroRibbonParams = {
   INTRO_DURATION: 2.4,
 };
 
+/**
+ * Hero „Build” (2026-10-27): strona buduje się jak blueprint, przebieg renderu zamienia ją
+ * w gotowe hero, kursor to soczewka z blueprintem. Bez WebGL, czasy w sekundach, promienie w CSS px.
+ */
+export const heroBuildParams = {
+  // Intro
+  TYPE_DURATION: 0.55,
+  BUILD_DURATION: 1.3,
+  RENDER_DURATION: 0.8,
+
+  // Soczewka
+  LENS_IDLE: 120,
+  LENS_GROW: 140,
+  LENS_LERP: 0.16,
+  LENS_RADIUS_LERP: 0.08,
+  LENS_WOBBLE: 0.06,
+  LENS_STRETCH: 0.35,
+  PACE_PX: 40,
+  PACE_LERP: 0.08,
+
+  // Scroll: przesunięcie wierszy nagłówka jako ułamek szerokości ekranu
+  SCROLL_SHIFT: 0.18,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

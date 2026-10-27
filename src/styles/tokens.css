@@ -23,6 +23,9 @@
   --c-ink-muted-dark: #9db5b0;
   --c-laguna-ink: #0e7490;
 
+  /* --- Krój techniczny: etykiety blueprintu i terminal (systemowy, bez zależności) --- */
+  --f-mono: ui-monospace, 'Cascadia Code', Consolas, Menlo, monospace;
+
   /* --- Typografia — skala rem (1 rem = 16 px @1440) --- */
   --t-impact: 8rem;
   /* wordmark w hero „Przez x”: ~83% szerokości makiety 1440 */
