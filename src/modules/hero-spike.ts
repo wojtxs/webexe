@@ -15,7 +15,7 @@ import { Scene, ShaderMaterial, Vector2, WebGLRenderer, type IUniform } from 'th
 import { createPixelCamera, fitPixelCamera } from '@gl/Camera';
 import { DomPlane } from '@gl/DomPlane';
 import { Mouse } from '@gl/Mouse';
-import { heroColors, heroParams, type HeroVariant } from '@gl/params';
+import { heroColors, heroParams, type BackgroundMode, type HeroVariant } from '@gl/params';
 import { createPlaceholderTextures, type HeroTextures } from '@gl/placeholders';
 import { loadDebug } from '@gl/debug';
 import noise from '@gl/shaders/noise.glsl?raw';
@@ -64,7 +64,13 @@ const HeroSpike: Module = {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const params = heroParams;
     // ?variant=2 pozwala porównać warianty z samego linku
-    if (new URLSearchParams(window.location.search).get('variant') === '2') params.VARIANT = 2;
+    const query = new URLSearchParams(window.location.search);
+    if (query.get('variant') === '2') params.VARIANT = 2;
+    // ?bg=0–3 wybiera tryb tła z linku
+    const bgQuery = Number(query.get('bg'));
+    if (query.has('bg') && [0, 1, 2, 3].includes(bgQuery)) {
+      params.BACKGROUND_MODE = bgQuery as BackgroundMode;
+    }
 
     const renderer = new WebGLRenderer({ alpha: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(maxDpr());
@@ -102,6 +108,7 @@ const HeroSpike: Module = {
       uReveal: { value: reduced ? 1 : 0 },
       uRevealSize: { value: 0 },
       uLineWidth: { value: 1 },
+      uCell: { value: 16 },
     };
 
     const prefix = `${noise}\n${bands}\n`;
@@ -110,7 +117,14 @@ const HeroSpike: Module = {
       new ShaderMaterial({
         vertexShader: vertex,
         fragmentShader: prefix + contourFrag,
-        uniforms: { ...field, uBgColor: { value: bg }, uLineColor: { value: lineBg } },
+        uniforms: {
+          ...field,
+          uBgColor: { value: bg },
+          uLineColor: { value: lineBg },
+          uMode: { value: 0 },
+          uDotMin: { value: 0 },
+          uDotMax: { value: 0 },
+        },
         depthTest: false,
         depthWrite: false,
       })
@@ -133,6 +147,7 @@ const HeroSpike: Module = {
         uLineColor: { value: lineObject },
         uLineAlpha: { value: params.LINE_ALPHA_OBJECT },
         uDebugMask: { value: 0 },
+        uHeroGrid: { value: 0 },
       },
       transparent: true,
       depthTest: false,
@@ -177,6 +192,12 @@ const HeroSpike: Module = {
       field.uRevealSize.value = params.REVEAL_SIZE;
       field.uLineWidth.value = params.LINE_WIDTH;
       heroMaterial.uniforms.uLineAlpha.value = params.LINE_ALPHA_OBJECT;
+      field.uCell.value = params.GRID_CELL;
+      const bgUniforms = background.mesh.material.uniforms;
+      bgUniforms.uMode.value = params.BACKGROUND_MODE;
+      bgUniforms.uDotMin.value = params.DOT_MIN;
+      bgUniforms.uDotMax.value = params.DOT_MAX;
+      heroMaterial.uniforms.uHeroGrid.value = params.HERO_GRID ? 1 : 0;
 
       field.uMouse.value.set(mouse.eased.x / h, (h - mouse.eased.y) / h);
       field.uPace.value = mouse.pace;
@@ -245,7 +266,21 @@ const HeroSpike: Module = {
         .onChange((v: boolean) => {
           heroMaterial.uniforms.uDebugMask.value = v ? 1 : 0;
         });
-      gui.add(params, 'BACKGROUND_CONTOURS').name('poziomice w tle');
+      gui.add(params, 'BACKGROUND_CONTOURS').name('tło GL');
+
+      const bgFolder = gui.addFolder('Tło');
+      bgFolder
+        .add(params, 'BACKGROUND_MODE', {
+          'poziomice (organiczne)': 0,
+          kropki: 1,
+          'schodki na siatce': 2,
+          kreskowanie: 3,
+        })
+        .name('tryb');
+      bgFolder.add(params, 'GRID_CELL', 4, 64, 1).name('komórka (px)');
+      bgFolder.add(params, 'DOT_MIN', 0, 0.5, 0.01);
+      bgFolder.add(params, 'DOT_MAX', 0, 0.5, 0.01);
+      bgFolder.add(params, 'HERO_GRID').name('pasma obiektu w siatce');
 
       const f = gui.addFolder('Pasma');
       f.add(params, 'SPEED', 0, 0.5, 0.005);

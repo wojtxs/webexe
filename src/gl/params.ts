@@ -33,7 +33,19 @@ export const heroParams = {
   LINE_WIDTH: 1,
   LINE_ALPHA_OBJECT: 0.6,
   BACKGROUND_CONTOURS: true,
+
+  // Tło: tryb rysunku z pola pasm (poziomice okazały się za organiczne)
+  BACKGROUND_MODE: 2 as BackgroundMode,
+  /** bok komórki siatki w CSS px (kropki, schodki, odstęp kreskowania) */
+  GRID_CELL: 16,
+  DOT_MIN: 0.08,
+  DOT_MAX: 0.3,
+  /** pasma na obiekcie skwantowane do tej samej siatki co tło */
+  HERO_GRID: false,
 };
+
+/** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
+export type BackgroundMode = 0 | 1 | 2 | 3;
 
 export type HeroParams = typeof heroParams;
 

@@ -8,15 +8,26 @@ uniform vec2 uPlaneSize;  // CSS px
 uniform float uTexAspect; // szerokość / wysokość tekstur
 uniform vec3 uLineColor;
 uniform float uLineAlpha;
-uniform float uLineWidth;
 uniform float uDebugMask;
+uniform float uHeroGrid;  // 1 = pasma skwantowane do siatki tła (tryb schodków)
 
 varying vec2 vUv;
 
 void main() {
   vec2 st = screenSt();
-  float x = bandField(st);
-  float revealed = bandReveal(st, x);
+  float x, mask, line, revealed;
+  if (uHeroGrid > 0.5) {
+    vec3 g = gridBands(screenPx());
+    x = g.z;
+    revealed = bandReveal(cellCenterSt(screenPx()), x);
+    mask = g.x;
+    line = g.y;
+  } else {
+    x = bandField(st);
+    revealed = bandReveal(st, x);
+    mask = bandMask(x);
+    line = bandLine(x, uLineWidth);
+  }
 
   // object-fit: contain
   vec2 uv = vUv;
@@ -32,9 +43,9 @@ void main() {
   vec3 b = texture2D(tB, uv).rgb;
   float alpha = texture2D(tAlpha, uv).r * inBounds.x * inBounds.y;
 
-  float mask = bandMask(x) * revealed;
+  mask *= revealed;
   vec3 col = mix(a, b, mask);
-  col = mix(col, uLineColor, bandLine(x, uLineWidth) * revealed * uLineAlpha);
+  col = mix(col, uLineColor, line * revealed * uLineAlpha);
   col = mix(col, vec3(mask), uDebugMask);
 
   gl_FragColor = vec4(col, alpha);

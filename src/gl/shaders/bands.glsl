@@ -16,9 +16,19 @@ uniform float uCursorIntensity;
 uniform float uCursorBounce;
 uniform float uReveal;    // 0–1, intro od dołu
 uniform float uRevealSize;
+uniform float uLineWidth; // px urządzenia
+uniform float uCell;      // CSS px, bok komórki siatki
+
+vec2 screenPx() {
+  return gl_FragCoord.xy / uDpr;
+}
 
 vec2 screenSt() {
   return gl_FragCoord.xy / (uDpr * uViewport.y);
+}
+
+vec2 cellCenterSt(vec2 px) {
+  return (floor(px / uCell) + 0.5) * uCell / uViewport.y;
 }
 
 // Zwraca pole x: całkowite i połówkowe wartości x to granice pasm.
@@ -56,4 +66,22 @@ float bandReveal(vec2 st, float x) {
   float jag = uRevealSize * 0.01;
   float front = mix(-jag, 1.0 + jag, uReveal);
   return step(st.y + (fract(x) - 0.5) * jag, front);
+}
+
+// Pasma skwantowane do siatki: maska z środka komórki, kontur po krawędziach komórek,
+// na których maska się zmienia (schodki). Zwraca vec3(maska, linia, x).
+vec3 gridBands(vec2 px) {
+  float h = uViewport.y;
+  vec2 c = floor(px / uCell);
+  vec2 local = px - c * uCell;
+  float x = bandField((c + 0.5) * uCell / h);
+  float m = bandMask(x);
+  float mr = bandMask(bandField((c + vec2(1.5, 0.5)) * uCell / h));
+  float mu = bandMask(bandField((c + vec2(0.5, 1.5)) * uCell / h));
+  float w = uLineWidth / uDpr;
+  float line = max(
+    step(uCell - w, local.x) * abs(m - mr),
+    step(uCell - w, local.y) * abs(m - mu)
+  );
+  return vec3(m, line, x);
 }
