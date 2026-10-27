@@ -142,7 +142,7 @@ export const heroCoreParams = {
   OBJECT_SIZE: 0.5,
   /** przesunięcie środka w poziomie jako ułamek szerokości elementu (0 = środek) */
   OBJECT_X: 0.22,
-  OBJECT_Y: 0.02,
+  OBJECT_Y: -0.07,
   YAW: 0.25,
   PITCH: 0.42,
   /** obrót za kursorem (rad) */
@@ -192,7 +192,7 @@ export const heroPlatesParams = {
   /** limit wysokości stosu jako ułamek wysokości elementu */
   OBJECT_HEIGHT: 0.62,
   OBJECT_X: 0.24,
-  OBJECT_Y: 0.02,
+  OBJECT_Y: -0.07,
   YAW: -0.5,
   PITCH: 0.52,
   TURN: 0.5,
@@ -271,7 +271,7 @@ export const heroRibbonParams = {
   /** wysokość pętli jako ułamek wysokości viewportu */
   OBJECT_SIZE: 0.56,
   OBJECT_X: 0.25,
-  OBJECT_Y: 0.02,
+  OBJECT_Y: -0.07,
   YAW: -0.35,
   PITCH: 0.18,
   ROLL: -0.12,
@@ -340,18 +340,45 @@ export const heroBuildParams = {
   BUILD_DURATION: 1.3,
   RENDER_DURATION: 0.8,
 
-  // Soczewka
-  LENS_IDLE: 120,
-  LENS_GROW: 140,
-  LENS_LERP: 0.16,
-  LENS_RADIUS_LERP: 0.08,
-  LENS_WOBBLE: 0.06,
-  LENS_STRETCH: 0.35,
+  // Obiekt `>_` (render A, rentgen B, mapy: alfa A, alfa B, głębia)
+  /** szerokość kadru obrazu jako ułamek szerokości ekranu (obiekt zajmuje ~1/3 kadru) */
+  OBJECT_WIDTH: 1.12,
+  /** przesunięcie środka kadru jako ułamek szerokości / wysokości ekranu */
+  OBJECT_X: 0.2,
+  OBJECT_Y: -0.07,
+  /** mobile (< 768 px): obiekt nad nagłówkiem */
+  OBJECT_WIDTH_M: 2.3,
+  OBJECT_X_M: 0,
+  OBJECT_Y_M: -0.2,
+  /** paralaksa z mapy głębi (ułamek kadru przy kursorze na krawędzi ekranu) */
+  DEPTH: 0.014,
+  /** unoszenie w spoczynku: amplituda (ułamek kadru) i prędkość */
+  FLOAT_AMP: 0.004,
+  FLOAT_SPEED: 0.6,
+  /** jasność rentgenu i konturu na granicy pasm */
+  XRAY_GAIN: 1.15,
+  LINE_ALPHA: 0.55,
+
+  // Pasma: jak heroParams, gęściej na obiekcie
+  SPEED: 0.06,
+  SCALE: 1.2,
+  NOISE_DETAIL: 4.5,
+  DISTORT_SCALE: 1,
+  DISTORT_INTENSITY: 0.5,
+  CURSOR_SCALE: 3,
+  CURSOR_INTENSITY: 0.15,
+  CURSOR_BOUNCE: -0.75,
+  MOUSE_LERP: 0.1,
   PACE_PX: 40,
   PACE_LERP: 0.08,
+  LINE_WIDTH: 1,
 
-  // Scroll: przesunięcie wierszy nagłówka jako ułamek szerokości ekranu
+  // Scroll (sticky 2 × vh)
+  /** przesunięcie wierszy nagłówka jako ułamek szerokości ekranu */
   SCROLL_SHIFT: 0.18,
+  /** obiekt odjeżdża w górę o ułamek wysokości ekranu i maleje */
+  SCROLL_LIFT: 0.55,
+  SCROLL_SCALE: 0.8,
 };
 
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */

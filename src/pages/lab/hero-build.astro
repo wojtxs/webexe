@@ -1,7 +1,7 @@
 ---
 // /lab/hero-build — spike hero „Build” (tylko dev, noindex).
 // Wejście: terminal `npm run build` + blueprint strony rysowany na żywo, przebieg renderu zamienia go
-// w gotowe hero, potem kursor jest rentgenem: pod nim widać blueprint tej samej strony.
+// w gotowe hero. Bohater to obiekt `>_` w GL: pasma szumu odsłaniają jego rentgen, kursor je ugina.
 // Treść z BRIEF.md (01 Hero, 02 Manifest). Blueprint klonuje moduł z warstwy gotowej.
 import Base from '../../layouts/Base.astro';
 
@@ -18,8 +18,14 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
         setTimeout(() => document.documentElement.classList.remove('hb-pre'), 4000);
       }
     </script>
+    <!-- jeden canvas GL pod całą stroną (poziomice w tle + obiekt hero) -->
+    <div class="hb-gl" data-gl-wrap aria-hidden="true"></div>
     <section class="hb" data-module="hero-build" aria-labelledby="hb-title">
       <div class="hb-stage" data-build-stage>
+        <!-- prostokąt obiektu `>_`: płaszczyzna GL idzie za nim; bez WebGL widać obraz -->
+        <div class="hb-object" data-gl="hero" aria-hidden="true">
+          <img src="/gl/textures/hero-prompt/prompt-a.webp" alt="" width="1376" height="768" />
+        </div>
         <div class="hb-layer hb-final" data-build-final>
           <div class="hb-nav container" data-build-nav>
             <span class="hb-logo" data-build-el="logo">
@@ -68,10 +74,6 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
           <!-- tu moduł wstawia klon warstwy gotowej -->
         </div>
 
-        <svg class="hb-lens" data-build-lens aria-hidden="true">
-          <path data-build-lens-path />
-        </svg>
-
         <div class="hb-scan" data-build-scan aria-hidden="true" />
 
         <div class="hb-term" data-build-term aria-hidden="true">
@@ -90,13 +92,16 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
 
     <section class="hb-manifest" aria-labelledby="hb-manifest-title">
       <div class="container">
-        <div class="hb-manifest-text">
-          <h2 id="hb-manifest-title" class="hb-problem">
+        <div class="hb-manifest-text" data-build-manifest>
+          <h2 id="hb-manifest-title" class="hb-problem" data-build-reveal>
             Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach
             nikt nie wie, jak działa, a każda zmiana jest ryzykiem.
           </h2>
-          <p class="hb-answer">
+          <p class="hb-answer" data-build-reveal>
             My budujemy tak, żeby dało się to rozwijać latami. I sami to rozwijamy.
+            <span class="hb-block" aria-hidden="true">
+              ▌
+            </span>
           </p>
         </div>
       </div>
@@ -123,8 +128,30 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
     color: var(--c-piana);
   }
 
-  .hb-stage {
+  /* canvas GL pod całą stroną; sekcje mają przezroczyste tło */
+  .hb-gl {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hb,
+  .hb-manifest,
+  .hb-after {
     position: relative;
+    z-index: 1;
+  }
+
+  /* sticky track: hero trzyma się ekranu przez jeden dodatkowy ekran scrolla */
+  .hb {
+    height: 200vh;
+    height: 200svh;
+  }
+
+  .hb-stage {
+    position: sticky;
+    top: 0;
     height: 100vh;
     height: 100svh;
     min-height: 36rem;
@@ -138,7 +165,37 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
     flex-direction: column;
     justify-content: space-between;
     padding-block: var(--s-6) var(--s-8);
-    background: var(--c-glebia);
+  }
+
+  /* --- Obiekt `>_` --- */
+  .hb-object {
+    --obj-lift: 0;
+    --obj-scale: 1;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(var(--obj-w, 1.25) * 100vw);
+    aspect-ratio: 1376 / 768;
+    transform: translate(-50%, -50%)
+      translate(
+        calc(var(--obj-x, 0.16) * 100vw),
+        calc((var(--obj-y, 0) - var(--obj-lift)) * 100svh)
+      )
+      scale(var(--obj-scale));
+    pointer-events: none;
+  }
+
+  .hb-object img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+  }
+
+  /* bez WebGL: sam render, z wtopionymi krawędziami */
+  .hb[data-gl-fallback] .hb-object img {
+    opacity: 1;
+    mask-image: radial-gradient(closest-side, black 60%, transparent);
   }
 
   :global(.hb-pre) .hb-final {
@@ -259,7 +316,8 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
   .hb-col {
     position: relative;
     height: 100%;
-    background: var(--c-glebia-line);
+    /* półprzezroczyste: spod siatki widać rentgen obiektu */
+    background: color-mix(in srgb, var(--c-glebia-line) 55%, transparent);
     transform-origin: top center;
   }
 
@@ -370,23 +428,6 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
     -webkit-text-stroke: 0;
   }
 
-  /* --- Soczewka kursora: obrys plamy --- */
-  .hb-lens {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: visible;
-  }
-
-  .hb-lens path {
-    fill: none;
-    stroke: var(--c-laguna-end);
-    stroke-width: 1.5;
-    filter: drop-shadow(0 0 6px var(--c-laguna-end));
-  }
-
   /* --- Przebieg renderu --- */
   .hb-scan {
     position: absolute;
@@ -491,6 +532,19 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
     color: var(--c-ink-muted-dark);
   }
 
+  /* maski linii SplitText: zapas na ogonki liter (ę, y, j) */
+  .hb-manifest :global([data-build-reveal] > div) {
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  /* blok kursora na końcu Manifestu, jak w terminalu */
+  .hb-block {
+    margin-left: 0.08em;
+    color: var(--c-laguna-end);
+    animation: hb-blink 1s steps(1) infinite;
+  }
+
   .hb-after {
     min-height: 100vh;
     padding: var(--s-16) var(--grid-padding);
@@ -527,6 +581,13 @@ const cols = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')
 
     .hb-manifest-text {
       grid-column: 1 / -1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hb-caret,
+    .hb-block {
+      animation: none;
     }
   }
 </style>

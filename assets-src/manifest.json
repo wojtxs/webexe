@@ -7,5 +7,23 @@
       "width": 2560,
       "quality": 85
     }
+  },
+  {
+    "src": "hero-prompt/prompt-a.png",
+    "dest": "gl/textures/hero-prompt/prompt-a.webp",
+    "width": 1376,
+    "quality": 90
+  },
+  {
+    "src": "hero-prompt/prompt-b.png",
+    "dest": "gl/textures/hero-prompt/prompt-b.webp",
+    "width": 1376,
+    "quality": 90
+  },
+  {
+    "src": "hero-prompt/prompt-maps.png",
+    "dest": "gl/textures/hero-prompt/prompt-maps.webp",
+    "width": 1376,
+    "lossless": true
   }
 ]

@@ -7,7 +7,8 @@
  *     "src":     "hero/hero-a-source.png",   // ścieżka od assets-src/
  *     "dest":    "gl/textures/hero/hero-a.webp", // ścieżka od public/
  *     "width":   2560,                        // docelowa szerokość px
- *     "quality": 85                           // jakość WebP (1–100)
+ *     "quality": 85,                          // jakość WebP (1–100)
+ *     "lossless": false                       // opcjonalnie: mapy danych (alfa, głębia) bez strat
  *   }
  *
  * Użycie: npm run assets
@@ -52,7 +53,7 @@ async function run() {
       await mkdir(destDir, { recursive: true });
       await sharp(srcPath)
         .resize({ width: entry.width, withoutEnlargement: true })
-        .webp({ quality: entry.quality ?? 85 })
+        .webp(entry.lossless ? { lossless: true } : { quality: entry.quality ?? 85 })
         .toFile(destPath);
       console.log(`  OK    ${entry.src} → public/${entry.dest}`);
       ok++;
