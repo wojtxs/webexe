@@ -371,6 +371,26 @@ export const heroBuildParams = {
   XRAY_HALO: 0.01,
   CLEAR_HALO: 0.025,
 
+  // Życie w spoczynku
+  /** fala sygnału: przejście przez tło i pas rentgenu przez bryłę (czas w s, szerokości w st) */
+  SWEEP_DURATION: 2.8,
+  SWEEP_GAP: 3.2,
+  SWEEP_FIRST_DELAY: 1.2,
+  SWEEP_WIDTH: 0.16,
+  SWEEP_NOISE: 0.035,
+  PULSE_WIDTH: 0.07,
+  PULSE_GAIN: 1.6,
+  /** błysk po chromie: okres, czas przejścia, szerokość (ułamek kadru), siła */
+  GLINT_PERIOD: 4.6,
+  GLINT_DURATION: 1.3,
+  GLINT_WIDTH: 0.045,
+  GLINT_GAIN: 0.32,
+  /** wędrujący cień na bryle */
+  SHADOW: 0.4,
+  SHADOW_SPEED: 0.07,
+  /** dryf paralaksy bez kursora (−1..1) */
+  IDLE_DRIFT: 0.45,
+
   // Poziomice w tle (pole pasm jak heroParams)
   SPEED: 0.06,
   SCALE: 1.2,

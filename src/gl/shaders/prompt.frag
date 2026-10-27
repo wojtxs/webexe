@@ -1,6 +1,7 @@
 // Hero „Build”: obiekt `>_` jako zdjęcie z mapami (technika twarzy z landonorris.com).
-// Obiekt zawsze cały jako render A; rentgen B tylko w plamie pod kursorem. Paralaksa z mapy głębi,
-// przebieg skanu z intro. Poziomice zostają w tle (contour.frag) i kończą się przed bryłą.
+// Obiekt zawsze cały jako render A; rentgen B w plamie pod kursorem i w pasie fali sygnału, która co
+// kilka sekund przechodzi przez tło i bryłę (prompt-bg.frag). W spoczynku: wędrujący cień, błysk na
+// chromie, paralaksa z mapy głębi. Przebieg skanu z intro. Poziomice kończą się przed bryłą.
 // Poprzedzony przez noise.glsl i bands.glsl.
 
 uniform sampler2D tA;
@@ -21,6 +22,17 @@ uniform float uXrayRadius; // promień plamy w jednostkach st (wysokość ekranu
 uniform float uXrayNoise;
 uniform float uHalo;       // zasięg linii rentgenu poza bryłą, ułamek kadru
 uniform float uClearHalo;  // strefa bez poziomic wokół bryły, ułamek kadru
+uniform float uTime;
+uniform float uSweep;      // front fali sygnału w st (wspólny z tłem)
+uniform float uSweepWidth;
+uniform float uSweepNoise;
+uniform float uGlint;      // pozycja błysku wzdłuż przekątnej kadru (0–1), poza = brak
+uniform float uGlintWidth;
+uniform float uGlintGain;
+uniform float uShadow;     // siła wędrującego cienia
+uniform float uShadowSpeed;
+
+const vec2 SWEEP_DIR = vec2(0.912, -0.41);
 uniform vec3 uBgColor;     // kolor tła (sRGB): wypełnienie rentgenu i strefa bez poziomic wokół bryły
 
 varying vec2 vUv;
@@ -44,6 +56,7 @@ void main() {
   float bounds = inBounds.x * inBounds.y;
 
   vec3 maps = texture2D(tMaps, uv).rgb;
+  float solid = smoothstep(0.0, 0.5, maps.r);
   vec3 a = texture2D(tA, uv).rgb;
   vec3 b = texture2D(tB, uv).rgb * uXrayGain;
 
@@ -55,6 +68,18 @@ void main() {
   float aa = fwidth(d) * 1.5;
   float spot = (1.0 - smoothstep(r - aa, r + aa, d)) * step(0.002, r);
   float ring = (1.0 - smoothstep(0.0, aa * uLineWidth, abs(d - r))) * step(0.002, r);
+
+  // pas fali sygnału: rentgen między frontem a ogonem, krawędzie postrzępione szumem
+  float s = dot(st, SWEEP_DIR) + snoise(vec3(st * 4.0, uPhase * 2.0)) * uSweepNoise;
+  float sa = fwidth(s) * 1.5;
+  float sweep = smoothstep(uSweep - uSweepWidth - sa, uSweep - uSweepWidth + sa, s) *
+    (1.0 - smoothstep(uSweep - sa, uSweep + sa, s));
+  float sweepRing = max(
+    1.0 - smoothstep(0.0, sa * uLineWidth, abs(s - uSweep)),
+    1.0 - smoothstep(0.0, sa * uLineWidth, abs(s - uSweep + uSweepWidth))
+  );
+  spot = max(spot, sweep);
+  ring = max(ring, sweepRing);
 
   // nad frontem skanu obiekt jest gotowy, pod nim jeszcze rentgen (intro)
   float fromTop = 1.0 - gl_FragCoord.y / (uDpr * uViewport.y);
@@ -72,7 +97,13 @@ void main() {
   }
 
   // bryła jest pełna w obu stanach, jak twarz i kask u Lando: tło nigdy nie prześwituje przez obiekt
-  float solid = smoothstep(0.0, 0.5, maps.r);
+  // wędrujący cień (jak chmura nad kaskiem) i błysk światła po chromie
+  float sh = snoise(vec3(st * 1.3 + vec2(uTime * uShadowSpeed, 0.0), uTime * 0.07)) * 0.5 + 0.5;
+  a *= 1.0 - smoothstep(0.45, 0.85, sh) * uShadow;
+  float g = dot(uv - 0.5, vec2(0.86, -0.51)) + 0.5 - uGlint;
+  float glint = exp(-g * g / (uGlintWidth * uGlintWidth)) * solid * (0.6 + maps.b);
+  a += glint * uGlintGain;
+
   vec4 colA = vec4(a * maps.r, maps.r);
   float aB = maps.g * smoothstep(0.05, 0.6, near);
   float alphaB = max(aB, solid);

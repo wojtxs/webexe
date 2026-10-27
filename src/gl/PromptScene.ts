@@ -30,7 +30,7 @@ import noise from '@gl/shaders/noise.glsl?raw';
 import bands from '@gl/shaders/bands.glsl?raw';
 import vertex from '@gl/shaders/plane.vert?raw';
 import bgGlsl from '@gl/shaders/bg.glsl?raw';
-import contourFrag from '@gl/shaders/contour.frag?raw';
+import bgFrag from '@gl/shaders/prompt-bg.frag?raw';
 import promptFrag from '@gl/shaders/prompt.frag?raw';
 
 const TEX = '/gl/textures/hero-prompt';
@@ -51,13 +51,15 @@ export class PromptScene {
   /** kursor w oknie: plama rentgenu pojawia się i znika */
   private pointerIn = false;
   private xray = 0;
+  /** zegar życia w spoczynku: rusza po intro (scan = 1) */
+  private cycle = 0;
   private onMove = () => (this.pointerIn = true);
   private onLeave = () => (this.pointerIn = false);
 
   private constructor(
     wrap: HTMLElement,
     el: HTMLElement,
-    colors: { bg: Color; line: Color; edge: Color }
+    colors: { bg: Color; line: Color; edge: Color; pulse: Color }
   ) {
     this.renderer = new WebGLRenderer({ alpha: true, powerPreference: 'high-performance' });
     this.renderer.setPixelRatio(maxDpr());
@@ -84,17 +86,22 @@ export class PromptScene {
       uRevealSize: { value: 25 },
       uLineWidth: { value: p.LINE_WIDTH },
       uCell: { value: 16 },
+      // front fali sygnału: wspólny dla tła i obiektu; daleko poza ekranem = brak fali
+      uSweep: { value: -10 },
     };
     const prefix = `${noise}\n${bands}\n`;
 
     this.background = new DomPlane(
       new ShaderMaterial({
         vertexShader: vertex,
-        fragmentShader: prefix + bgGlsl + contourFrag,
+        fragmentShader: prefix + bgGlsl + bgFrag,
         uniforms: {
           ...this.field,
           uBgColor: { value: colors.bg },
           uLineColor: { value: colors.line },
+          uPulseColor: { value: colors.pulse },
+          uPulseWidth: { value: p.PULSE_WIDTH },
+          uPulseGain: { value: p.PULSE_GAIN },
           uMode: { value: 0 },
           uDotMin: { value: 0 },
           uDotMax: { value: 0 },
@@ -128,6 +135,14 @@ export class PromptScene {
           uXrayNoise: { value: p.XRAY_EDGE_NOISE },
           uHalo: { value: p.XRAY_HALO },
           uClearHalo: { value: p.CLEAR_HALO },
+          uTime: { value: 0 },
+          uSweepWidth: { value: p.SWEEP_WIDTH },
+          uSweepNoise: { value: p.SWEEP_NOISE },
+          uGlint: { value: -10 },
+          uGlintWidth: { value: p.GLINT_WIDTH },
+          uGlintGain: { value: p.GLINT_GAIN },
+          uShadow: { value: p.SHADOW },
+          uShadowSpeed: { value: p.SHADOW_SPEED },
           uBgColor: { value: colors.bg.clone().convertLinearToSRGB() },
         },
         transparent: true,
@@ -145,14 +160,15 @@ export class PromptScene {
   }
 
   static async create(wrap: HTMLElement, el: HTMLElement): Promise<PromptScene> {
-    const [bg, line, edge] = await Promise.all([
+    const [bg, line, edge, pulse] = await Promise.all([
       cssColor('--c-glebia'),
       cssColor('--c-glebia-raise'),
       cssColor('--c-laguna-end'),
+      cssColor('--c-laguna-start'),
     ]);
     // kontur obiektu idzie bez konwersji kolorów (prompt.frag pracuje w sRGB)
     edge.convertLinearToSRGB();
-    const scene = new PromptScene(wrap, el, { bg, line, edge });
+    const scene = new PromptScene(wrap, el, { bg, line, edge, pulse });
     await scene.load();
     return scene;
   }
@@ -202,10 +218,38 @@ export class PromptScene {
     const u = this.object.mesh.material.uniforms;
     u.uOpacity!.value = this.state.opacity;
     u.uScan!.value = this.state.scan;
+    // bez kursora obiekt sam lekko dryfuje; z kursorem paralaksa idzie za myszą
+    const drift = (1 - this.xray) * p.IDLE_DRIFT;
     u.uParallax!.value.set(
-      reduced ? 0 : (this.mouse.eased.x / w) * 2 - 1,
-      reduced ? 0 : -((this.mouse.eased.y / h) * 2 - 1)
+      reduced
+        ? 0
+        : ((this.mouse.eased.x / w) * 2 - 1) * this.xray + Math.sin(this.time * 0.31) * drift,
+      reduced
+        ? 0
+        : -((this.mouse.eased.y / h) * 2 - 1) * this.xray + Math.cos(this.time * 0.23) * drift
     );
+    u.uTime!.value = reduced ? 0 : this.time;
+
+    // fala sygnału i błysk: cykle liczone od końca intro
+    if (!reduced && this.state.scan >= 1) this.cycle += dt;
+    const period = p.SWEEP_DURATION + p.SWEEP_GAP;
+    const ts = this.cycle - p.SWEEP_FIRST_DELAY;
+    const phase = ts >= 0 ? ts % period : -1;
+    let sweep = -10;
+    if (phase >= 0 && phase < p.SWEEP_DURATION) {
+      const k = phase / p.SWEEP_DURATION;
+      const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      // przekątna ekranu w st wzdłuż kierunku fali, z zapasem na szerokość pasa
+      const from = -0.41 - p.SWEEP_WIDTH - 0.1;
+      const to = (w / h) * 0.912 + 0.1;
+      sweep = from + (to - from) * e;
+    }
+    f.uSweep!.value = sweep;
+    const tg = (this.cycle + p.GLINT_PERIOD * 0.5) % p.GLINT_PERIOD;
+    u.uGlint!.value =
+      !reduced && this.cycle > 0 && tg < p.GLINT_DURATION
+        ? -0.3 + 1.6 * (tg / p.GLINT_DURATION)
+        : -10;
     u.uFloat!.value = reduced ? 0 : Math.sin(this.time * p.FLOAT_SPEED) * p.FLOAT_AMP;
     const target = this.pointerIn ? 1 : 0;
     this.xray += (target - this.xray) * (1 - Math.pow(1 - p.XRAY_LERP, dt * 60));
