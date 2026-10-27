@@ -1,0 +1,87 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Preload via Vite ?url — hashed paths gwarantują długi cache
+import pjsNormalUrl from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
+import pjsLatinExtUrl from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-ext-wght-normal.woff2?url';
+
+// Styles
+import '../styles/fonts.css';
+import '../styles/fluid.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/utils.css';
+
+interface Props extends HTMLAttributes<'html'> {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = 'webexe — oprogramowanie dla firm',
+  description = 'Budujemy oprogramowanie dla firm i zostajemy przy nim na lata. Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI.',
+  ogImage,
+  noindex = false,
+  ...rest
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="pl" {...rest}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Preload krytycznych fontów (body text) -->
+    <link rel="preload" href={pjsNormalUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={pjsLatinExtUrl} as="font" type="font/woff2" crossorigin />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <!-- Skip to content (a11y) -->
+    <a
+      href="#main-content"
+      class="sr-only"
+      style="position:absolute;top:var(--s-4);left:var(--s-4);z-index:9999;background:var(--c-biel);color:var(--c-glebia);padding:var(--s-2) var(--s-4);border-radius:var(--r-chip);"
+    >
+      Przejdź do treści
+    </a>
+
+    <!-- Nawigacja — placeholder, wypełniony w F6 -->
+    <nav aria-label="Nawigacja główna" data-nav>
+      <!-- TODO: nav -->
+    </nav>
+
+    <!-- WebGL canvas: fixed w tle, poniżej treści -->
+    <div class="gl-wrap" aria-hidden="true" data-gl-wrap></div>
+
+    <!-- Treść strony -->
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- Moduły JS: ładowane po treści -->
+    <script>
+      import '@core/app';
+    </script>
+  </body>
+</html>

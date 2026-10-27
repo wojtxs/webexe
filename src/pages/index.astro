@@ -1,14 +1,96 @@
 ---
-// Placeholder — zastąpiony w C4 przez Base layout + sekcje
+import Base from '../layouts/Base.astro';
 ---
 
-<html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>webexe</title>
-  </head>
-  <body>
-    <p>webexe — fundament F1</p>
-  </body>
-</html>
+<Base>
+  <!-- 01 Hero -->
+  <section
+    id="hero"
+    data-nav-theme="light"
+    data-module="hero"
+    aria-label="Hero"
+    style="min-height:100vh;"
+  >
+    <h1>
+      Budujemy
+      <br />
+      oprogramowanie
+      <br />
+      dla firm i zostajemy
+      <br />
+      przy nim na lata.
+    </h1>
+    <p>
+      Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI.
+      <br />
+      Projektujemy je razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
+    </p>
+    <!-- CTA: TODO(treść) — D9 -->
+  </section>
+
+  <!-- 02 Manifest -->
+  <section
+    id="manifest"
+    data-nav-theme="light"
+    data-module="manifest"
+    aria-label="Manifest"
+    style="min-height:100vh;"
+  >
+    <!-- TODO(treść) — greybox F3 -->
+  </section>
+
+  <!-- 03 Jak pracujemy -->
+  <section
+    id="jak-pracujemy"
+    data-nav-theme="light"
+    data-module="how-we-work"
+    aria-label="Jak pracujemy"
+    style="min-height:100vh;"
+  >
+    <!-- TODO(treść) — greybox F3 -->
+  </section>
+
+  <!-- 04 Przykłady -->
+  <section
+    id="przyklady"
+    data-nav-theme="light"
+    data-module="examples"
+    aria-label="Przykłady rozwiązań"
+    style="min-height:100vh;"
+  >
+    <!-- TODO(treść) — blokuje D10 -->
+  </section>
+
+  <!-- 05 Realizacje -->
+  <section
+    id="realizacje"
+    data-nav-theme="light"
+    data-module="work"
+    aria-label="Realizacje"
+    style="min-height:100vh;"
+  >
+    <!-- TODO(treść) — blokuje D3 -->
+  </section>
+
+  <!-- 06 Poznaj nas -->
+  <section
+    id="poznaj-nas"
+    data-nav-theme="dark"
+    data-module="about"
+    aria-label="Poznaj nas"
+    style="min-height:100vh;"
+  >
+    <!-- TODO(treść) — blokuje D4, D10 -->
+  </section>
+
+  <!-- 07 Kontakt / stopka -->
+  <section
+    id="kontakt"
+    data-nav-theme="dark"
+    data-module="footer"
+    aria-label="Kontakt"
+    style="min-height:100vh;"
+  >
+    <!-- TODO(treść) — blokuje D7, D9 -->
+  </section>
+</Base>
