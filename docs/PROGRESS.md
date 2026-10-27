@@ -18,12 +18,12 @@ Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza 
 
 ## F1: Fundament
 
-- [ ] Astro (static) + TS strict, ESLint, Prettier, skrypty `dev/build/preview/check/lint`
-- [ ] `tokens.css` (z DESIGN.md), `fluid.css`, `base.css`, `utils.css`
-- [ ] Fonty self-host + preload, subset latin-ext
-- [ ] `core/`: lifecycle, scroll (Lenis + ticker + ScrollTrigger), motion (matchMedia full/reduced), events, css
-- [ ] Strona `/lab` (tylko dev, noindex) jako sandbox na eksperymenty
-- [ ] Skrypt `scripts/assets.mjs` (sharp: resize + WebP)
+- [x] Astro (static) + TS strict, ESLint, Prettier, skrypty `dev/build/preview/check/lint`
+- [x] `tokens.css` (z DESIGN.md), `fluid.css`, `base.css`, `utils.css`
+- [x] Fonty self-host + preload, subset latin-ext
+- [x] `core/`: lifecycle, scroll (Lenis + ticker + ScrollTrigger), motion (matchMedia full/reduced), events, css
+- [x] Strona `/lab` (tylko dev, noindex) jako sandbox na eksperymenty
+- [x] Skrypt `scripts/assets.mjs` (sharp: resize + WebP)
 
 **Warunek wyjścia:** pusta makieta z siatką skaluje się proporcjonalnie od 992 do 1920 px, scroll jest płynny na desktopie i na telefonie, przy reduced motion działa natywny scroll, `npm run build` przechodzi czysto.
 
@@ -94,3 +94,10 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Decyzje:
 - Lekcje (co dopisać do speca/DESIGN/CLAUDE.md):
 -->
+
+### 2026-10-27 — F1: Fundament
+
+- Zrobione: wszystkie 7 commitów F1. Astro 7.3.8 (static) + TS strict, ESLint 10 flat config, Prettier. CSS: tokens, fluid, base, utils. Fonty: @fontsource PJS Variable + Comfortaa 700, preload w Base.astro. Core: app, lifecycle, scroll (Lenis+ST), motion (matchMedia), events (WeakMap), css (lazy three). /lab z grid overlay. scripts/assets.mjs (sharp WebP pipeline). `npm run build/check/lint` przechodzą czysto. 0 vulnerabilities.
+- Zostało: F0 (D2–D11 otwarte, assety hero). Następna faza to F2: spike maski hero w /lab.
+- Decyzje: Astro 5→7 (5 było za stare przy starcie projektu w 2026-10). ESLint 9→10. sharp 0.33→0.35 (CVE fix). .prettierignore na docs/ i .claude/. events.ts używa WeakMap cb→wrapper żeby off() działało poprawnie.
+- Lekcje: Warto sprawdzać `npm show astro dist-tags.latest` przed pisaniem package.json — wersja w planie była przeterminowana. Prettier domyślnie sięga do docs/ i plików projektu — dodaj .prettierignore od razu w C1.
