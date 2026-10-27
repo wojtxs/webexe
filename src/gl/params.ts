@@ -261,6 +261,75 @@ export const heroPortalParams = {
   INTRO_STAGGER: 0.06,
 };
 
+/**
+ * Hero „wstęga z kodu” (2026-10-27): jedna wstęga z prawdziwym kodem strony zawiązana w pętlę,
+ * kursor ją prasuje (fałdy znikają, kod ostrzeje), scroll rozwija ją w pionową płachtę pod Manifestem.
+ * Jednostki krzywej lokalne: wysokość pętli ≈ 2 × LOOP_RADIUS.
+ */
+export const heroRibbonParams = {
+  // Obiekt
+  /** wysokość pętli jako ułamek wysokości viewportu */
+  OBJECT_SIZE: 0.56,
+  OBJECT_X: 0.25,
+  OBJECT_Y: 0.02,
+  YAW: -0.35,
+  PITCH: 0.18,
+  ROLL: -0.12,
+  TURN: 0.2,
+  TILT: 0.1,
+
+  // Krzywa
+  LOOP_LENGTH: 2.6,
+  LOOP_RADIUS: 1,
+  LOOP_DEPTH: 0.7,
+  /** wielokrotności π */
+  THETA_START: -0.12,
+  THETA_END: 2.3,
+  WIDTH: 0.62,
+  TWIST: 1.1,
+  TWIST_FREQ: 1.3,
+  TWIST_SPEED: 0.25,
+  BREATH: 0.06,
+  BREATH_SPEED: 0.5,
+  RIPPLE: 0.03,
+  RIPPLE_FREQ: 9,
+  SPEED: 1,
+
+  // Arkusze echa
+  ECHO_COUNT: 5,
+  ECHO_GAP: 0.022,
+  ECHO_FAN: 1.1,
+
+  // Kursor: prasowanie
+  /** promień śladu w CSS px */
+  IRON_RADIUS: 220,
+  IRON_RISE: 0.2,
+  IRON_FALL: 0.012,
+  IRON_LIFT: 0.12,
+
+  // Materiał
+  TINT: 0.45,
+  SPEC: 0.55,
+  GLOSS: 40,
+  RIM: 0.8,
+  EDGE: 0.5,
+  TEXT_DIM: 0.32,
+  TEXT_GAIN: 1,
+  /** znaków w wierszu kodu na szerokość wstęgi */
+  CHARS_PER_ROW: 56,
+
+  // Scroll: płachta
+  /** szerokość płachty jako ułamek szerokości viewportu */
+  SHEET_WIDTH: 0.46,
+  SHEET_DIM: 0.12,
+
+  // Tło
+  BG_INK_ALPHA: 0.5,
+
+  // Intro
+  INTRO_DURATION: 2.4,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

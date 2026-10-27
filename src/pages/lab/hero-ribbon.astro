@@ -1,0 +1,226 @@
+---
+// /lab/hero-ribbon — spike hero „wstęga z kodu” + wejście w Manifest (tylko dev, noindex).
+// Strojenie: ?debug, rozwinięcie: ?p=0–1. Treść z BRIEF.md (01 Hero, 02 Manifest).
+import Base from '../../layouts/Base.astro';
+
+const isDev = import.meta.env.DEV;
+---
+
+{isDev ? (
+  <Base title="Lab: hero wstęga — webexe" noindex={true}>
+    <section class="rb" data-module="hero-ribbon">
+      <div class="sticky-track rb-track" data-ribbon-track>
+        <div class="sticky-item rb-stage">
+          <div class="rb-copy container" data-ribbon-copy>
+            <div class="rb-text">
+              <h1 class="rb-title">
+                Budujemy
+                <br />
+                oprogramowanie
+                <br />
+                dla firm i zostajemy
+                <br />
+                przy nim na lata.
+              </h1>
+              <p class="rb-lead">
+                Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy
+                je razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
+              </p>
+              <!-- CTA: propozycja z D9, do potwierdzenia -->
+              <a class="rb-cta" href="#kontakt">
+                Porozmawiajmy o projekcie
+              </a>
+              <p class="rb-hint">
+                Przeciągnij kursorem po wstędze, przewiń w dół. Panel strojenia:
+                <a href="?debug">?debug</a>
+              </p>
+              <p class="rb-fallback">Brak WebGL: spike wymaga WebGL2.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="rb-manifest" aria-labelledby="rb-manifest-title" data-ribbon-manifest>
+      <div class="container">
+        <div class="rb-manifest-text">
+          <h2 id="rb-manifest-title" class="rb-problem">
+            Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach
+            nikt nie wie, jak działa, a każda zmiana jest ryzykiem.
+          </h2>
+          <p class="rb-answer">
+            My budujemy tak, żeby dało się to rozwijać latami. I sami to rozwijamy.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="rb-after" id="kontakt" aria-label="Miejsce na kolejne sekcje">
+      <p class="rb-hint">TODO(treść): tu zaczyna się sekcja 03 (greybox w F3).</p>
+    </section>
+  </Base>
+) : (
+  <html lang="pl">
+    <head>
+      <meta charset="UTF-8" />
+      <title>404</title>
+    </head>
+    <body>
+      <p>Strona niedostępna.</p>
+    </body>
+  </html>
+)}
+
+<style>
+  :global(body):has(.rb) {
+    background: var(--c-glebia);
+  }
+
+  .rb,
+  .rb-manifest,
+  .rb-after {
+    background: transparent;
+    color: var(--c-piana);
+  }
+
+  .rb-track {
+    height: 260vh;
+  }
+
+  .rb-stage {
+    display: flex;
+    align-items: center;
+  }
+
+  .rb-copy {
+    position: relative;
+    width: 100%;
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+
+  .rb-text {
+    grid-column: 1 / 7;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-6);
+  }
+
+  .rb-text a {
+    pointer-events: auto;
+  }
+
+  .rb-title {
+    font-size: var(--t-h1);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: var(--ls-h1);
+  }
+
+  .rb-lead {
+    font-size: var(--t-lead);
+    font-weight: var(--w-lead);
+    line-height: var(--lh-lead);
+    letter-spacing: var(--ls-lead);
+    color: var(--c-ink-muted-dark);
+    max-width: 38ch;
+  }
+
+  .rb-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--s-4) var(--s-8);
+    border-radius: var(--r-pill);
+    background: var(--c-piana);
+    color: var(--c-glebia);
+    font-size: var(--t-body);
+    font-weight: var(--w-label);
+    line-height: var(--lh-label);
+    text-decoration: none;
+    transition: background var(--d-fast) var(--ease-out);
+  }
+
+  .rb-cta:hover {
+    background: var(--c-biel);
+  }
+
+  .rb-cta:focus-visible {
+    outline: 2px solid var(--c-laguna-end);
+    outline-offset: 4px;
+  }
+
+  .rb-hint {
+    font-size: var(--t-small);
+    color: var(--c-ink-muted-dark);
+  }
+
+  .rb-fallback {
+    display: none;
+    font-size: var(--t-small);
+  }
+
+  [data-gl-fallback] .rb-fallback {
+    display: block;
+  }
+
+  /* --- Manifest: tekst na tle przygaszonej płachty kodu --- */
+  .rb-manifest {
+    min-height: 120vh;
+    display: flex;
+    align-items: center;
+    padding-block: var(--s-32);
+  }
+
+  .rb-manifest-text {
+    grid-column: 2 / 12;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-12);
+  }
+
+  .rb-problem {
+    font-size: var(--t-h2);
+    font-weight: var(--w-h2);
+    line-height: var(--lh-h2);
+    letter-spacing: var(--ls-h2);
+    color: var(--c-ink-muted-dark);
+  }
+
+  .rb-answer {
+    font-size: var(--t-h2);
+    font-weight: var(--w-h2);
+    line-height: var(--lh-h2);
+    letter-spacing: var(--ls-h2);
+    color: var(--c-piana);
+  }
+
+  .rb-after {
+    min-height: 100vh;
+    padding: var(--s-16) var(--grid-padding);
+  }
+
+  @media (max-width: 767px) {
+    .rb-track {
+      height: 200vh;
+    }
+
+    .rb-stage {
+      align-items: flex-end;
+      padding-bottom: var(--s-12);
+    }
+
+    .rb-text,
+    .rb-manifest-text {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rb-track {
+      height: auto;
+    }
+
+    .rb-track .sticky-item {
+      position: relative;
+    }
+  }
+</style>
