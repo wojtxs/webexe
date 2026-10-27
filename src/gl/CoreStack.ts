@@ -167,6 +167,7 @@ export function createCoreStack(colors: CoreColors, options: CoreOptions) {
       uSpacing: { value: options.pulseSpacing },
       uLength: { value: options.pulseLength },
       uBase: { value: options.pulseBase },
+      uGain: { value: 1 },
       uPower: { value: 0 },
     },
   });

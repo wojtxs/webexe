@@ -180,6 +180,58 @@ export const heroCoreParams = {
   INTRO_DROP: 6,
 };
 
+/**
+ * Hero „warstwy systemu” (2026-10-27, styl z referencji użytkownika): stos kwadratowych płyt
+ * na ciemnym tle. Szkło (Aplikacje, Integracje), szklana skrzynka z płytką (Automatyzacje),
+ * metalowa podstawa (Utrzymanie). Choreografia jak w rdzeniu, do tego bloom.
+ */
+export const heroPlatesParams = {
+  // Obiekt
+  /** szerokość stosu (przekątna) jako ułamek szerokości elementu [data-gl="hero"] */
+  OBJECT_WIDTH: 0.4,
+  /** limit wysokości stosu jako ułamek wysokości elementu */
+  OBJECT_HEIGHT: 0.62,
+  OBJECT_X: 0.24,
+  OBJECT_Y: 0.02,
+  YAW: -0.5,
+  PITCH: 0.52,
+  TURN: 0.5,
+  TILT: 0.1,
+  HOVER_LIFT: 0.12,
+  /** rozsunięcie warstw w hero (przed scrollem) */
+  SPREAD: 0.5,
+
+  // Światło i szkło
+  GLOW: 1,
+  BEAM: 0.9,
+  ENV_INTENSITY: 1.1,
+  LIGHT_INTENSITY: 1.4,
+  BLOOM_STRENGTH: 0.9,
+  BLOOM_RADIUS: 0.55,
+  BLOOM_THRESHOLD: 0.82,
+
+  // Impulsy
+  PULSE_SPEED: 0.9,
+  PULSE_SPACING: 0.6,
+  PULSE_LENGTH: 0.3,
+  PULSE_BASE: 0.7,
+  PULSE_GAIN: 3,
+
+  // Scroll: rozkład na warstwy
+  EXPLODE_GAP: 0.55,
+  EXPLODE_X: -0.1,
+  EXPLODE_WIDTH: 0.34,
+  EXPLODE_YAW: -0.2,
+
+  // Tło
+  BG_INK_ALPHA: 0.5,
+
+  // Intro
+  INTRO_DURATION: 1.1,
+  INTRO_STAGGER: 0.16,
+  INTRO_DROP: 5,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

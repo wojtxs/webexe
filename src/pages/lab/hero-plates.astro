@@ -1,0 +1,221 @@
+---
+// /lab/hero-plates — spike hero „warstwy systemu” (styl z referencji użytkownika) (tylko dev, noindex). Strojenie: ?debug, rozkład: ?p=0–1
+import Base from '../../layouts/Base.astro';
+
+const isDev = import.meta.env.DEV;
+// od góry, jak warstwy rdzenia (BRIEF.md, 01 Hero)
+const layers = ['Aplikacje', 'Integracje', 'Automatyzacje', 'Utrzymanie'];
+---
+
+{isDev ? (
+  <Base title="Lab: hero warstwy — webexe" noindex={true}>
+    <section class="hc" data-module="hero-plates">
+      <div class="sticky-track hc-track" data-core-track>
+        <div class="sticky-item hc-stage">
+          <div class="hc-visual" data-gl="hero" aria-hidden="true" />
+          <div class="hc-copy container" data-core-copy>
+            <div class="hc-text">
+              <h1 class="hc-title">
+                Budujemy
+                <br />
+                oprogramowanie
+                <br />
+                dla firm i zostajemy
+                <br />
+                przy nim na lata.
+              </h1>
+              <p class="hc-lead">
+                Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy
+                je razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
+              </p>
+              <p class="hc-hint">
+                Najedź na warstwę, przewiń w dół. Panel strojenia: <a href="?debug">?debug</a>
+              </p>
+              <p class="hc-fallback">Brak WebGL: spike wymaga WebGL2.</p>
+            </div>
+          </div>
+          <ul class="hc-labels" aria-hidden="true">
+            {layers.map((label, i) => (
+              <li class="hc-label" data-core-label={i}>
+                {label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hc-after" aria-label="Miejsce na sekcję usług">
+      <p class="hc-hint">TODO(treść): tu zaczyna się sekcja 03 (greybox w F3).</p>
+    </section>
+  </Base>
+) : (
+  <html lang="pl">
+    <head>
+      <meta charset="UTF-8" />
+      <title>404</title>
+    </head>
+    <body>
+      <p>Strona niedostępna.</p>
+    </body>
+  </html>
+)}
+
+<style>
+  .hc,
+  .hc-after {
+    background: transparent;
+    color: var(--c-piana);
+  }
+
+  :global(body):has(.hc) {
+    background: var(--c-glebia);
+  }
+
+  .hc-after {
+    background: var(--c-glebia);
+  }
+
+  .hc-track {
+    height: 300vh;
+  }
+
+  .hc-stage {
+    display: flex;
+    align-items: center;
+  }
+
+  .hc-visual {
+    position: absolute;
+    inset: 0;
+    touch-action: pan-y;
+  }
+
+  .hc-copy {
+    position: relative;
+    width: 100%;
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+
+  .hc-text {
+    grid-column: 1 / 7;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-6);
+  }
+
+  .hc-text a {
+    pointer-events: auto;
+  }
+
+  .hc-title {
+    font-size: var(--t-h1);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: var(--ls-h1);
+  }
+
+  .hc-lead {
+    font-size: var(--t-lead);
+    font-weight: var(--w-lead);
+    line-height: var(--lh-lead);
+    color: var(--c-ink-muted-dark);
+    max-width: 38ch;
+  }
+
+  .hc-hint {
+    font-size: var(--t-small);
+    color: var(--c-ink-muted-dark);
+  }
+
+  .hc-fallback {
+    display: none;
+    font-size: var(--t-small);
+  }
+
+  [data-gl-fallback] .hc-fallback {
+    display: block;
+  }
+
+  /* etykiety: pozycję liczy moduł (translate3d), tu tylko wygląd i pojawianie się */
+  .hc-labels {
+    position: absolute;
+    inset: 0;
+    list-style: none;
+    pointer-events: none;
+  }
+
+  .hc-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-size: var(--t-label);
+    font-weight: var(--w-label);
+    line-height: var(--lh-label);
+    color: var(--c-piana);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--d-fast) var(--ease-out);
+  }
+
+  /* kreska prowadząca od krawędzi warstwy do etykiety */
+  .hc-label::before {
+    content: '';
+    width: var(--s-8);
+    height: 1px;
+    background: var(--c-piana);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform var(--d-fast) var(--ease-out);
+  }
+
+  .hc-label.is-left {
+    flex-direction: row-reverse;
+  }
+
+  .hc-label.is-left::before {
+    transform-origin: right center;
+  }
+
+  .hc-label.is-on {
+    opacity: 1;
+  }
+
+  .hc-label.is-on::before {
+    transform: scaleX(1);
+  }
+
+  .is-exploded .hc-label {
+    font-size: var(--t-h3);
+    font-weight: var(--w-h3);
+    line-height: var(--lh-h3);
+    letter-spacing: var(--ls-h3);
+  }
+
+  .hc-after {
+    min-height: 100vh;
+    padding: var(--s-16) var(--grid-padding);
+  }
+
+  @media (max-width: 767px) {
+    .hc-track {
+      height: 220vh;
+    }
+
+    .hc-stage {
+      align-items: flex-end;
+      padding-bottom: var(--s-12);
+    }
+
+    .hc-text {
+      grid-column: 1 / -1;
+    }
+
+    .is-exploded .hc-label {
+      font-size: var(--t-lead);
+    }
+  }
+</style>

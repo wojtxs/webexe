@@ -9,6 +9,7 @@ uniform float uSpacing; // odstęp impulsów w jednostkach obiektu
 uniform float uLength;  // długość ogona jako ułamek odstępu
 uniform float uBase;    // jasność rury bez impulsu
 uniform float uPower;   // 0 = wyłączone (sam kolor rury), 1 = działa
+uniform float uGain;    // wzmocnienie HDR impulsów (> 1 łapie bloom)
 
 varying vec3 vLocal;
 varying vec2 vUv;
@@ -20,5 +21,6 @@ void main() {
 
   vec3 col = mix(uCore, lag, uBase + (1.0 - uBase) * head);
   col = mix(col, uHot, pow(head, 6.0) * 0.45);
+  col *= mix(1.0, uGain, head);
   gl_FragColor = vec4(col, 1.0);
 }
