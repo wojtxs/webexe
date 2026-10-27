@@ -1,0 +1,79 @@
+---
+// /lab — sandbox dla eksperymentów (tylko dev, noindex)
+// Dostęp: npm run dev → http://localhost:4321/lab
+import Base from '../../layouts/Base.astro';
+
+const isDev = import.meta.env.DEV;
+---
+
+{isDev ? (
+  <Base title="Lab — webexe" noindex={true}>
+    <div
+      data-module="grid-overlay"
+      style="position:fixed;bottom:var(--s-6);left:var(--s-6);z-index:9999;"
+    >
+      <button
+        data-grid-toggle
+        style={`
+            font-family: inherit;
+            font-size: var(--t-label);
+            font-weight: var(--w-label);
+            background: var(--c-glebia);
+            color: var(--c-piana);
+            border: none;
+            border-radius: var(--r-pill);
+            padding: var(--s-2) var(--s-4);
+            cursor: pointer;
+          `}
+      >
+        Pokaż siatkę (G)
+      </button>
+    </div>
+
+    <section style="min-height:100vh;display:flex;flex-direction:column;gap:var(--s-8);padding:var(--s-16) var(--grid-padding);">
+      <h1 style="font-size:var(--t-h2);font-weight:var(--w-h2);line-height:var(--lh-h2);letter-spacing:var(--ls-h2);">
+        Lab
+      </h1>
+      <p style="font-size:var(--t-lead);color:var(--c-ink-muted);max-width:var(--prose-max-width);">
+        Sandbox na eksperymenty. Widoczny tylko w <code>npm run dev</code>. Nie jest indeksowany.
+      </p>
+      <ul style="font-size:var(--t-body);color:var(--c-ink-muted);display:flex;flex-direction:column;gap:var(--s-2);">
+        <li>
+          Klawisz <kbd>G</kbd> lub przycisk — toggle siatki
+        </li>
+        <li>Fluid scaling: zmień szerokość okna 390→1920px</li>
+      </ul>
+
+      <!-- Fluid scaling demo -->
+      <div style="margin-top:var(--s-8);padding:var(--s-6);background:var(--c-biel);border-radius:var(--r-card);">
+        <p style="font-size:var(--t-small);color:var(--c-ink-muted);margin-bottom:var(--s-4);">
+          Skala typografii (skaluje się z oknem):
+        </p>
+        {[
+          ['--t-impact', 'Impact'],
+          ['--t-h1', 'H1'],
+          ['--t-h2', 'H2'],
+          ['--t-h3', 'H3'],
+          ['--t-lead', 'Lead'],
+          ['--t-body', 'Body'],
+        ].map(([token, label]) => (
+          <p
+            style={`font-size:var(${token});font-weight:700;line-height:1.2;color:var(--c-glebia);opacity:0.9;`}
+          >
+            {label}
+          </p>
+        ))}
+      </div>
+    </section>
+  </Base>
+) : (
+  <html lang="pl">
+    <head>
+      <meta charset="UTF-8" />
+      <title>404</title>
+    </head>
+    <body>
+      <p>Strona niedostępna.</p>
+    </body>
+  </html>
+)}
