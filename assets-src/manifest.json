@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "comment": "Format wpisu — dodaj tu assety kiedy będą gotowe (F0/F2):",
+    "example": {
+      "src": "hero/hero-a-source.png",
+      "dest": "gl/textures/hero/hero-a.webp",
+      "width": 2560,
+      "quality": 85
+    }
+  }
+]

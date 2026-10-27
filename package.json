@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check && tsc --noEmit",
-    "lint": "eslint . && prettier --check ."
+    "lint": "eslint . && prettier --check .",
+    "assets": "node scripts/assets.mjs"
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.1.1",

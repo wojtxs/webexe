@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.astro/
+docs/
+README.md
+CLAUDE.md
+assets-src/
+.claude/
