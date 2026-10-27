@@ -2,7 +2,7 @@
 
 Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza jest zamknięta dopiero wtedy, gdy spełnia swój warunek wyjścia.
 
-**Aktualna faza:** F2 (spike zbudowany, bramka D2 czeka na assety i ocenę na żywo). F0 nadal otwarte: decyzje i assety.
+**Aktualna faza:** F2 (spike „rentgen aplikacji” zbudowany, bramka D2 czeka na ocenę na żywo). F0 nadal otwarte: decyzje i assety.
 **Decyzje otwarte:** D2–D11 w `BRIEF.md`
 
 ## F0: Treść i kierunek (bez Claude Code albo tylko pomocniczo)
@@ -85,6 +85,7 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 | 2026-10-27 | D1: oferta to budowa i wieloletnie utrzymanie oprogramowania dla firm, forma „wy” | nowe copy; utrzymanie na własnej infrastrukturze to wyróżnik |
 | 2026-10-27 | Hero: rekomendowany wariant „aplikacja → infrastruktura”, porównanie z „ręczna robota → system” w F2 | nowy H1 mówi o zostawaniu na lata, a nie o samej automatyzacji |
 | 2026-10-27 | Hero: wielki znak x w 3D, kursor odsłania warstwę „system” (zamiast wariantów 1 i 2 z D2), do potwierdzenia na żywo | użytkownik chce hero na poziomie landonorris.com; x to nasz najmocniejszy znak, robiony w całości w three.js, bez generowanych obrazów |
+| 2026-10-27 | Hero: „rentgen aplikacji” zamiast znaku x (okno aplikacji, kursor prześwietla je do infrastruktury), do potwierdzenia na żywo | x się nie podobał: pod x był ten sam x, odsłanianie nic nie mówiło. Rentgen to wariant D2 wprost i mówi to, co H1. Odrzucone: przekrój terenu, porządek z chaosu, founderzy (blokuje D4) |
 
 ## Log sesji
 
@@ -122,3 +123,11 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zostało: ocena na żywo przez użytkownika (60 fps na iGPU, wygląd materiału A, czytelność H1 obok znaku). Mobile niezweryfikowany na prawdziwym urządzeniu (headless przy 390 px liczy layout szerzej niż zrzut). Dotyk: tap-impuls nie zrobiony, autopilot może posłużyć jako dryf. Po akceptacji: aktualizacja `BRIEF.md` (D2), `DESIGN.md` (motywy sygnaturowe), `ASSETS.md` (assety HERO-A/B przestają być potrzebne) i specu `01-hero.md`.
 - Decyzje: koncept hero = znak x 3D (użytkownik). Tryb tła domyślnie „schodki na siatce”. Nagranie referencyjne (78 MB) nie jest commitowane.
 - Lekcje: ShaderMaterial z `vertexColors: true` dostaje atrybut `color`, więc gradient Laguna liczony raz na CPU działa w obu warstwach. Render targety warstw w HalfFloat + MSAA 4×, kompozycja zakłada alfę premultiplikowaną (czyszczenie do 0).
+
+### 2026-10-27 — F2: hero „rentgen aplikacji” (`/lab/hero-rentgen`)
+
+- Zrobione: użytkownik odrzucił znak x. Z czterech kierunków (przekrój terenu, porządek z chaosu, rentgen aplikacji, founderzy) wybrał rentgen. Spike na pipeline z hero x (render targety, ślad ping-pong, `composite.frag`, tło), nowy obiekt w `src/gl/AppStack.ts`. Warstwa A to okno aplikacji z matowych paneli rozsuniętych w głębi (menu, wykres z linią Laguna, tabela, pierścień statusu, przycisk), bez tekstu. Warstwa B to skrzynka z maszynownią w tym samym obrysie: szafa z diodami pod menu, monitoring z linią sygnału pod wykresem, baza danych pod tabelą, kopie pod statusem, rury z impulsami danych, siatka na dnie. Duch to krawędzie maszynowni i osie rur. Shadery `infra`, `pulse`, `led` + wspólny `laguna.glsl`. `?xray` (cała warstwa B), w `?debug` podgląd pace i siły śladu. Zrzuty 1440 i 390.
+- Zmiana wspólna: `trail.frag` przyjmuje siłę > 1 (wartość śladu i tak ≤ 1). Rentgen liczy siłę jako sqrt(pace) × 2.4, więc spokojny ruch też odsłania dużą plamę. W hero x z liniowym pace × 1.8 normalny ruch ledwo przekraczał próg 0.5, co mogło osłabiać efekt. Hero x ma siłę obciętą do 1, więc działa po staremu.
+- Zostało: ocena na żywo (60 fps na iGPU przy 3 warstwach z MSAA, czytelność). Przy wartościach ze strojenia użytkownika (OBJECT_WIDTH 0.57, OBJECT_X 0.13) okno wchodzi pod H1 na 1440, a skrzynka B jest przez głębię większa niż okno A. Do decyzji: obiekt mniejszy, H1 krótsza kolumna albo świadome nakładanie. Warstwa A ryzykuje wygląd „każdego landingu SaaS”: do rozważenia mocniejszy charakter (inne proporcje okna, mniej kart, jeden wyraźny element). Dotyk i reduced motion jak w hero x. Po akceptacji aktualizacja `BRIEF.md` (D2), `DESIGN.md`, `ASSETS.md` i `01-hero.md`.
+- Decyzje: koncept hero = rentgen aplikacji (do potwierdzenia na żywo). Spike hero x zostaje w labie do porównania.
+- Lekcje: tryb `--screenshot` + `--virtual-time-budget` w headless Edge przestał zwracać klatki GL (nawet dla starego spike). Działa CDP w prawdziwym czasie: Edge z `--remote-debugging-port`, WebSocket z Node 22 (bez zależności), `Page.captureScreenshot`, ruch przez `Input.dispatchMouseEvent`. SwiftShader daje ~11 fps, więc ślad testowy wymaga szybkiego ruchu i zrzutu zaraz po nim. Przycisk „kopiuj parametry” musi dawać blok TS, a nie JSON z kluczem-wrapperem: wklejka JSON-a zepsuła `params.ts`.
