@@ -147,3 +147,8 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zostało: ocena na żywo, zwłaszcza **60 fps na iGPU** (transmisja renderuje scenę drugi raz, do tego bloom; w razie problemów: niższa rozdzielczość bloomu, mniej segmentów, szkło bez transmisji na mobile). Szkło w SwiftShader wychodzi szarawe, na prawdziwym GPU może wyglądać inaczej. Po akceptacji: `DESIGN.md` (ciemne hero, poświata, nowa sygnatura), spec `01-hero.md`, `ASSETS.md`. Reduced motion i klawiatura jak w rdzeniu (spike).
 - Decyzje: koncept hero = warstwy systemu w stylu referencji (do potwierdzenia na żywo). Spike'i x, rentgen i rdzeń zostają w labie.
 - Lekcje: kolorów HDR (> 1) na `MeshBasicMaterial` używaj z `toneMapped: false` i bloomem z progiem ~0.8; tło musi zostać poniżej progu. Quad tła w tej samej scenie (`frustumCulled = false`, `renderOrder = -1`, bez depth) pozwala na jeden RenderPass zamiast dwóch renderów.
+
+### 2026-10-27 — F2: hero „Przez x” (`/lab/hero-portal`)
+
+- Zrobione: użytkownik odrzucił wszystkie obiekty 3D (render warstw psuł się u niego: NaN z transmisji + bloom). Nowy kierunek wybrany przez użytkownika: gigantyczny wordmark (token `--t-wordmark-hero`), scroll rozsuwa litery, x rośnie wokół wierzchołka górnego klina, klin to portal w GL (`portal.frag`: ciemna paleta w klinie, jasna poza nim), klin zakrywa ekran i przechodzi w Manifest (słowa odsłaniane scrollem, akcent „latami”, x rysuje się na końcu). Zrzuty sekwencji scrolla 1440.
+- Zostało: ocena na żywo, mobile 390 niesprawdzony, reduced motion tylko szkic, wpisy w DESIGN.md i spec 01-hero po akceptacji.

@@ -1,0 +1,365 @@
+---
+// /lab/hero-portal — spike hero „Przez x” + wejście w Manifest (tylko dev, noindex).
+// Hero: gigantyczny wordmark, scroll rozsuwa litery, x rośnie, a przez jego górny klin
+// (portal) wlatujemy do Manifestu. Treść z BRIEF.md (01 Hero, 02 Manifest).
+import Base from '../../layouts/Base.astro';
+
+const isDev = import.meta.env.DEV;
+const left = ['w', 'e', 'b', 'e'];
+
+// Manifest: słowa do odsłaniania scrollem; akcent „latami” w Comfortaa (DESIGN.md)
+const problem =
+  'Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach nikt nie wie, jak działa, a każda zmiana jest ryzykiem.'.split(
+    ' '
+  );
+const answer = 'My budujemy tak, żeby dało się to rozwijać latami. I sami to rozwijamy.'.split(' ');
+---
+
+{isDev ? (
+  <Base title="Lab: hero przez x — webexe" noindex={true}>
+    <section class="px" data-module="hero-portal">
+      <div class="sticky-track px-track" data-portal-track>
+        <div class="sticky-item px-stage">
+          <p class="px-wordmark" aria-hidden="true" data-portal-wordmark>
+            {left.map((l) => (
+              <span class="px-l" data-portal-letter="left">
+                <span class="px-li">{l}</span>
+              </span>
+            ))}
+            <span class="px-x" data-portal-x>
+              <svg class="px-x-svg" viewBox="0 0 100 100" aria-hidden="true">
+                <defs>
+                  <linearGradient
+                    id="px-laguna"
+                    gradientUnits="userSpaceOnUse"
+                    x1="22"
+                    y1="10"
+                    x2="78"
+                    y2="90"
+                  >
+                    <stop class="px-stop-start" offset="0" />
+                    <stop class="px-stop-end" offset="1" />
+                  </linearGradient>
+                </defs>
+                <line
+                  class="px-stroke"
+                  data-portal-stroke="0"
+                  x1="28.8"
+                  y1="16.1"
+                  x2="71.2"
+                  y2="83.9"
+                />
+                <line
+                  class="px-stroke"
+                  data-portal-stroke="1"
+                  x1="71.2"
+                  y1="16.1"
+                  x2="28.8"
+                  y2="83.9"
+                />
+              </svg>
+            </span>
+            <span class="px-l" data-portal-letter="right">
+              <span class="px-li">e</span>
+            </span>
+          </p>
+
+          <div class="px-copy container" data-portal-copy>
+            <h1 class="px-title" data-portal-reveal>
+              Budujemy oprogramowanie dla firm i zostajemy przy nim na lata.
+            </h1>
+            <div class="px-side" data-portal-reveal>
+              <p class="px-lead">
+                Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy
+                je razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
+              </p>
+              <a class="px-cta" href="#kontakt">
+                Porozmawiajmy o projekcie
+              </a>
+            </div>
+          </div>
+          <p class="px-hint" data-portal-hint>
+            Przewiń. Panel strojenia: <a href="?debug">?debug</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pm" aria-labelledby="pm-title" data-portal-manifest>
+      <div class="sticky-track pm-track" data-manifest-track>
+        <div class="sticky-item pm-stage">
+          <div class="pm-text container">
+            <h2 id="pm-title" class="pm-lines">
+              <span class="pm-p">
+                {problem.map((w) => (
+                  <span class="pm-w" data-manifest-word>
+                    {w}{' '}
+                  </span>
+                ))}
+              </span>
+              <span class="pm-a">
+                {answer.map((w) =>
+                  w.startsWith('latami') ? (
+                    <span class="pm-w" data-manifest-word>
+                      <span class="pm-accent">latami</span>
+                      {w.slice(6)}{' '}
+                    </span>
+                  ) : (
+                    <span class="pm-w" data-manifest-word>
+                      {w}{' '}
+                    </span>
+                  )
+                )}
+                <svg class="pm-x" viewBox="0 0 100 100" aria-hidden="true" data-manifest-x>
+                  <line class="pm-x-stroke" x1="28.8" y1="16.1" x2="71.2" y2="83.9" />
+                  <line class="pm-x-stroke" x1="71.2" y1="16.1" x2="28.8" y2="83.9" />
+                </svg>
+              </span>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="px-end" aria-label="Dalej">
+      <p class="px-hint">TODO(treść): tu zaczyna się sekcja 03 (greybox w F3).</p>
+    </section>
+  </Base>
+) : (
+  <html lang="pl">
+    <head>
+      <meta charset="UTF-8" />
+      <title>404</title>
+    </head>
+    <body>
+      <p>Strona niedostępna.</p>
+    </body>
+  </html>
+)}
+
+<style>
+  /* --- Hero --- */
+  .px-track {
+    height: 360vh;
+  }
+
+  .px-stage {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding-block: var(--s-24) var(--s-12);
+  }
+
+  .px-wordmark {
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 700;
+    font-size: var(--t-wordmark-hero);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--c-glebia);
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .px-l,
+  .px-li,
+  .px-x {
+    display: inline-block;
+  }
+
+  /* bez will-change na .px-x: przy skali ×40 warstwa musi się przerysowywać ostro */
+  .px-l,
+  .px-li {
+    will-change: transform;
+  }
+
+  /* x w miejscu litery: wysokość jak x-height Comfortaa, kreski jak grubość liter */
+  .px-x {
+    width: 0.62em;
+    height: 0.62em;
+    margin-inline: -0.01em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .px-x-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .px-stroke {
+    fill: none;
+    stroke: url(#px-laguna);
+    stroke-width: 16;
+    stroke-linecap: round;
+  }
+
+  .px-stop-start {
+    stop-color: var(--c-laguna-start);
+  }
+
+  .px-stop-end {
+    stop-color: var(--c-laguna-end);
+  }
+
+  .px-copy {
+    align-items: end;
+  }
+
+  .px-title {
+    grid-column: 1 / 7;
+    font-size: var(--t-h3);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h3);
+    letter-spacing: var(--ls-h3);
+    color: var(--c-glebia);
+    max-width: 22ch;
+  }
+
+  .px-side {
+    grid-column: 8 / 13;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-6);
+  }
+
+  .px-lead {
+    font-size: var(--t-body);
+    line-height: var(--lh-body);
+    color: var(--c-ink-muted);
+    max-width: 44ch;
+  }
+
+  .px-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--s-4) var(--s-8);
+    border-radius: var(--r-pill);
+    background: var(--g-laguna);
+    color: var(--c-glebia);
+    font-size: var(--t-label);
+    font-weight: var(--w-h3);
+    text-decoration: none;
+    transition: transform var(--d-fast) var(--ease-out);
+  }
+
+  .px-cta:hover {
+    transform: translateY(-2px);
+  }
+
+  .px-cta:focus-visible {
+    outline: 2px solid var(--c-laguna-start);
+    outline-offset: 3px;
+  }
+
+  .px-hint {
+    position: absolute;
+    top: var(--s-8);
+    right: var(--grid-padding);
+    font-size: var(--t-small);
+    color: var(--c-ink-muted);
+  }
+
+  /* --- Manifest --- */
+  .pm-track {
+    height: 260vh;
+  }
+
+  .pm-stage {
+    display: flex;
+    align-items: center;
+  }
+
+  .pm-lines {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-8);
+    font-size: var(--t-h2);
+    font-weight: var(--w-h2);
+    line-height: var(--lh-h2);
+    letter-spacing: var(--ls-h2);
+    color: var(--c-piana);
+    max-width: 24ch;
+  }
+
+  .pm-w {
+    opacity: 0.14;
+  }
+
+  .pm-accent {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    background: var(--g-laguna);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .pm-x {
+    display: inline-block;
+    width: 0.62em;
+    height: 0.62em;
+    vertical-align: -0.04em;
+    overflow: visible;
+  }
+
+  .pm-x-stroke {
+    fill: none;
+    stroke: var(--c-laguna-end);
+    stroke-width: 16;
+    stroke-linecap: round;
+  }
+
+  .px-end {
+    min-height: 100vh;
+    padding: var(--s-16) var(--grid-padding);
+    background: var(--c-glebia);
+  }
+
+  .px-end .px-hint {
+    position: static;
+    color: var(--c-ink-muted-dark);
+  }
+
+  /* bez WebGL nie ma ciemnego tła z GL, więc Manifest dostaje Głębię z CSS */
+  :global([data-gl-fallback]) .pm {
+    background: var(--c-glebia);
+  }
+
+  @media (max-width: 991px) {
+    .px-title,
+    .px-side {
+      grid-column: 1 / -1;
+    }
+
+    .px-copy {
+      row-gap: var(--s-6);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .px-track {
+      height: 300vh;
+    }
+
+    .px-stage {
+      padding-block: var(--s-16) var(--s-8);
+    }
+
+    .px-lead {
+      font-size: var(--t-small);
+    }
+
+    .px-hint {
+      display: none;
+    }
+  }
+</style>

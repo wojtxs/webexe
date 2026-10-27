@@ -232,6 +232,35 @@ export const heroPlatesParams = {
   INTRO_DROP: 5,
 };
 
+/**
+ * Hero „Przez x” (2026-10-27): gigantyczny wordmark, scroll rozsuwa litery, x rośnie,
+ * a przez jego górny klin (portal) wlatujemy do Manifestu. Zakresy to progres sticky tracku 0–1.
+ */
+export const heroPortalParams = {
+  // Choreografia scrolla
+  COPY_OUT: [0.02, 0.14] as [number, number],
+  LETTERS_OUT: [0.04, 0.36] as [number, number],
+  ZOOM: [0.12, 0.86] as [number, number],
+  PORTAL_IN: [0.2, 0.3] as [number, number],
+  DARK: [0.84, 0.9] as [number, number],
+  /** zapas skali ponad minimum, przy którym klin zakrywa cały ekran */
+  ZOOM_OVERSHOOT: 1.25,
+
+  // Kursor
+  /** rozwarcie kresek x za kursorem (stopnie) */
+  SCISSOR: 4,
+  CURSOR_SCALE: 3,
+  CURSOR_INTENSITY: 0.15,
+  CURSOR_BOUNCE: -0.75,
+
+  // Tło
+  INK_ALPHA_LIGHT: 0.55,
+  INK_ALPHA_DARK: 0.7,
+
+  // Intro
+  INTRO_STAGGER: 0.06,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

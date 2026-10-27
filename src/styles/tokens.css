@@ -25,6 +25,8 @@
 
   /* --- Typografia — skala rem (1 rem = 16 px @1440) --- */
   --t-impact: 8rem;
+  /* wordmark w hero „Przez x”: ~83% szerokości makiety 1440 */
+  --t-wordmark-hero: 21rem;
   --t-h1: 4.5rem;
   --t-h2: 3.5rem;
   --t-h3: 2rem;
@@ -103,6 +105,7 @@
 @media (max-width: 767px) {
   :root {
     --t-impact: 3.5rem;
+    --t-wordmark-hero: 5.6rem;
     --t-h1: 2.5rem;
     --t-h2: 2rem;
     --t-h3: 1.5rem;
