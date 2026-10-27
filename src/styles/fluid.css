@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Fluid scaling — technika z landonorris.com (docs/DESIGN.md § Fluid scaling).
+   html { font-size } oblicza się z szerokości viewportu, co sprawia,
+   że wszystkie wartości w rem skalują się proporcjonalnie.
+
+   Makiety referencyjne: 1440 (desktop), 834 (tablet), 390 (mobile).
+   Wymiar z makiety w px ÷ 16 = rem.
+   ========================================================================== */
+
+:root {
+  --min-w: 992px;
+  --max-w: 1920px;
+  --design-w: 1440;
+  --unit: 16;
+}
+
+@media (max-width: 991px) {
+  :root {
+    --min-w: 768px;
+    --max-w: 991px;
+    --design-w: 834;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --min-w: 320px;
+    --max-w: 767px;
+    --design-w: 390;
+  }
+}
+
+html {
+  font-size: calc(clamp(var(--min-w), 100vw, var(--max-w)) / var(--design-w) * var(--unit));
+}

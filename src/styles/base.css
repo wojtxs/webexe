@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Base — reset, html/body, typografia bazowa, focus, dostępność.
+   ========================================================================== */
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- html / body --- */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: auto; /* Lenis zarządza scrollem; nie używamy CSS scroll-behavior */
+}
+
+body {
+  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', sans-serif;
+  font-size: var(--t-body);
+  font-weight: var(--w-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  color: var(--c-glebia);
+  background-color: var(--c-piana);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* --- Elementy inline --- */
+a {
+  color: var(--c-laguna-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* --- Tekst ciągły --- */
+.prose {
+  max-width: var(--prose-max-width);
+}
+
+/* --- Focus ring (a11y) --- */
+:focus-visible {
+  outline: 2px solid var(--c-laguna-start);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- Selekcja --- */
+::selection {
+  background-color: var(--c-laguna-start);
+  color: var(--c-biel);
+}
+
+/* --- Reduced motion: wyłącz wszystkie CSS transitions i animations --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

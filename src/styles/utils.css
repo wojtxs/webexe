@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Utilities — klasy pomocnicze, siatka, sticky pattern, breakpoint hide.
+   ========================================================================== */
+
+/* --- Container: siatka 12/8/4 kol. --- */
+.container {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  column-gap: var(--grid-gap);
+  padding-inline: var(--grid-padding);
+  width: 100%;
+}
+
+/* --- Accessible hide (screen-reader only) --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Sticky pattern (bez pin: true w ScrollTrigger) --- */
+.sticky-track {
+  position: relative;
+}
+
+.sticky-item {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* --- Breakpoint hide: data-hide="d|t|m" --- */
+@media (min-width: 992px) {
+  [data-hide='d'] {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  [data-hide='t'] {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  [data-hide='m'] {
+    display: none !important;
+  }
+}
+
+/* --- GL wrap: fixed canvas w tle --- */
+.gl-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
