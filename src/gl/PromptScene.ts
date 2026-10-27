@@ -118,6 +118,7 @@ export class PromptScene {
           uLineAlpha: { value: p.LINE_ALPHA },
           uShare: { value: p.BAND_SHARE },
           uHalo: { value: p.XRAY_HALO },
+          uBgColor: { value: colors.bg.clone().convertLinearToSRGB() },
         },
         transparent: true,
         premultipliedAlpha: true,

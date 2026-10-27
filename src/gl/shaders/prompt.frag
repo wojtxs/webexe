@@ -17,6 +17,7 @@ uniform vec3 uLineColor;
 uniform float uLineAlpha;
 uniform float uShare;      // udział rentgenu w paśmie (0.5 = pół na pół jak u Lando)
 uniform float uHalo;       // zasięg linii rentgenu poza bryłą, ułamek kadru
+uniform vec3 uBgColor;     // kolor tła (sRGB): wypełnienie rentgenu i strefa bez poziomic wokół bryły
 
 varying vec2 vUv;
 
@@ -56,22 +57,32 @@ void main() {
   float rendered = step(fromTop, uScan);
   float m = mix(1.0, band, rendered);
 
-  // premultiplied: A i B mają własne alfy (B to linie na przezroczystym tle)
-  vec4 colA = vec4(a * maps.r, maps.r);
-  // linie rentgenu tylko przy bryle: alfa A „rozszerzona” kilkoma próbkami
+  // alfa A „rozszerzona” próbkami na dwóch promieniach: bliżej linie rentgenu, dalej strefa bez poziomic
   float near = maps.r;
+  float far = maps.r;
   for (int i = 0; i < 8; i++) {
     float ang = float(i) * 0.785398;
-    near = max(near, texture2D(tMaps, uv + vec2(cos(ang), sin(ang) * uTexAspect) * uHalo).r);
+    vec2 dir = vec2(cos(ang), sin(ang) * uTexAspect);
+    near = max(near, texture2D(tMaps, uv + dir * uHalo).r);
+    far = max(far, texture2D(tMaps, uv + dir * uHalo * 2.2).r);
   }
+
+  // bryła jest pełna w obu stanach, jak twarz i kask u Lando: tło nigdy nie prześwituje przez obiekt
+  float solid = smoothstep(0.0, 0.5, maps.r);
+  vec4 colA = vec4(a * maps.r, maps.r);
   float aB = maps.g * smoothstep(0.05, 0.6, near);
-  vec4 colB = vec4(b * aB, aB);
+  float alphaB = max(aB, solid);
+  vec4 colB = vec4(mix(uBgColor, b, aB) * alphaB, alphaB);
   vec4 col = mix(colA, colB, m);
 
   // kontur granicy pasm tylko na bryle obiektu
   float edge = line * rendered * maps.r * uLineAlpha;
   col.rgb = mix(col.rgb, uLineColor, edge);
   col.a = max(col.a, edge);
+
+  // pod obiektem: miękka strefa w kolorze tła, poziomice kończą się przed krawędzią bryły
+  float clearZone = smoothstep(0.0, 0.9, max(near, far * 0.7));
+  col += (1.0 - col.a) * vec4(uBgColor * clearZone, clearZone);
 
   col *= bounds * uOpacity;
   // tekstury i uLineColor są w sRGB (bez konwersji), więc wynik idzie wprost na ekran
