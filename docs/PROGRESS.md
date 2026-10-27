@@ -84,6 +84,7 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 | 2026-10-26 | Paleta i fonty z brand boardu, mechanika z landonorris.com | własna tożsamość, palety Lando nie kopiujemy |
 | 2026-10-27 | D1: oferta to budowa i wieloletnie utrzymanie oprogramowania dla firm, forma „wy” | nowe copy; utrzymanie na własnej infrastrukturze to wyróżnik |
 | 2026-10-27 | Hero: rekomendowany wariant „aplikacja → infrastruktura”, porównanie z „ręczna robota → system” w F2 | nowy H1 mówi o zostawaniu na lata, a nie o samej automatyzacji |
+| 2026-10-27 | Hero: wielki znak x w 3D, kursor odsłania warstwę „system” (zamiast wariantów 1 i 2 z D2), do potwierdzenia na żywo | użytkownik chce hero na poziomie landonorris.com; x to nasz najmocniejszy znak, robiony w całości w three.js, bez generowanych obrazów |
 
 ## Log sesji
 
@@ -114,3 +115,10 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zrobione: feedback użytkownika „poziomice w tle za organiczne”. Dodane tryby tła z tego samego pola pasm: kropki (halftone), schodki na siatce, kreskowanie. Przełącznik w `lil-gui` (Tło → tryb) i `?bg=0–3`. Opcja „pasma obiektu w siatce” kwantyzuje też maskę hero. Domyślny tryb w `params.ts` to schodki (2).
 - Zostało: wybór trybu tła przez użytkownika na żywo. Jeśli tło zmieni się na stałe, trzeba zaktualizować `DESIGN.md` (motyw sygnaturowy 1 mówi o poziomicach) i spec `01-hero.md` (interakcja 6, kolory konturu).
 - Lekcje: headless Edge + SwiftShader potrafi zwrócić pusty zrzut GL przy ponownym użyciu tego samego `--user-data-dir`. Każdy zrzut rób na świeżym profilu, zanim uznasz, że coś jest zepsute.
+
+### 2026-10-27 — F2: hero ze znakiem x 3D (`/lab/hero-x`)
+
+- Zrobione: analiza nagrania landonorris.com (`docs/refs/NN-/`, klatki wyciągnięte przez headless Edge, bez ffmpeg). Wniosek: u Lando obiekt jest ogromny i centralny, warstwa B pojawia się tylko w śladzie kursora (organiczne plamy, które zanikają), duch warstwy B (siatkowy kask) jest widoczny zawsze, tło prawie puste. Zbudowany spike: x z dwóch kapsuł (proporcje z brand boardu, rozsunięte w głębi), warstwa A szklista z gradientem Laguna, warstwa B ciemny rdzeń z siatką + klatka, duch klatki, ślad kursora ping-pong w 1/4 rozdzielczości z poszarpaną krawędzią i konturem, plama śladu na tle, intro B → A, przechył za kursorem. `?debug`, `?autopilot` (wirtualny kursor Lissajous), `?bg=0–3`. Wspólne pliki: `bg.glsl`, `ease.ts`, `support.ts`.
+- Zostało: ocena na żywo przez użytkownika (60 fps na iGPU, wygląd materiału A, czytelność H1 obok znaku). Mobile niezweryfikowany na prawdziwym urządzeniu (headless przy 390 px liczy layout szerzej niż zrzut). Dotyk: tap-impuls nie zrobiony, autopilot może posłużyć jako dryf. Po akceptacji: aktualizacja `BRIEF.md` (D2), `DESIGN.md` (motywy sygnaturowe), `ASSETS.md` (assety HERO-A/B przestają być potrzebne) i specu `01-hero.md`.
+- Decyzje: koncept hero = znak x 3D (użytkownik). Tryb tła domyślnie „schodki na siatce”. Nagranie referencyjne (78 MB) nie jest commitowane.
+- Lekcje: ShaderMaterial z `vertexColors: true` dostaje atrybut `color`, więc gradient Laguna liczony raz na CPU działa w obu warstwach. Render targety warstw w HalfFloat + MSAA 4×, kompozycja zakłada alfę premultiplikowaną (czyszczenie do 0).
