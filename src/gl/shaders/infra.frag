@@ -25,4 +25,5 @@ void main() {
   vec3 col = mix(vColor, lag, grid * uGridAlpha);
   col = mix(col, lag, fresnel * uRim);
   gl_FragColor = vec4(col, 1.0);
+  #include <colorspace_fragment>
 }

@@ -1,5 +1,6 @@
 // Rury i linia monitoringu: przygaszona Laguna, po niej płyną impulsy danych.
 // vUv.x = długość łuku, więc odstęp impulsów jest równy na każdej rurze. Poprzedzony przez laguna.glsl.
+// colorspace_fragment: w render targecie no-op, na ekranie konwersja do sRGB.
 
 uniform vec3 uCore;
 uniform vec3 uHot;      // rozjaśnienie czoła impulsu
@@ -7,6 +8,7 @@ uniform float uPhase;
 uniform float uSpacing; // odstęp impulsów w jednostkach obiektu
 uniform float uLength;  // długość ogona jako ułamek odstępu
 uniform float uBase;    // jasność rury bez impulsu
+uniform float uPower;   // 0 = wyłączone (sam kolor rury), 1 = działa
 
 varying vec3 vLocal;
 varying vec2 vUv;

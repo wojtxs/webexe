@@ -32,6 +32,7 @@ Konkretny, spokojny, bez żargonu. Mówimy wprost, także o tym, czego nie warto
 - **H1:** Budujemy / oprogramowanie / dla firm i zostajemy / przy nim na lata.
 - **Lead:** Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy je razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
 - **CTA:** *(D9, propozycja: „Porozmawiajmy o projekcie”)*
+- **Etykiety warstw rdzenia** (hover i rozkład przy scrollu, od góry): Aplikacje, Integracje, Automatyzacje, Utrzymanie. *(2026-10-27, od użytkownika; Utrzymanie jako podstawa, bo to rdzeń oferty)*
 
 ### 02 Manifest
 - **Problem:** Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach nikt nie wie, jak działa, a każda zmiana jest ryzykiem.

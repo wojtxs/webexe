@@ -131,6 +131,55 @@ export const heroRentgenParams = {
   INTRO_DURATION: 1.8,
 };
 
+/**
+ * Hero „rdzeń z warstw” (2026-10-27, zamiast rentgenu): wieża z czterech modułów-usług.
+ * Intro: warstwy składają się od podstawy. Mysz obraca rdzeń, wycięty klin pokazuje wnętrze.
+ * Hover: warstwa się unosi, obok etykieta. Scroll: rozkład na warstwy (rysunek złożeniowy).
+ */
+export const heroCoreParams = {
+  // Obiekt
+  /** wysokość wieży jako ułamek wysokości elementu [data-gl="hero"] */
+  OBJECT_SIZE: 0.5,
+  /** przesunięcie środka w poziomie jako ułamek szerokości elementu (0 = środek) */
+  OBJECT_X: 0.22,
+  OBJECT_Y: 0.02,
+  YAW: 0.25,
+  PITCH: 0.42,
+  /** obrót za kursorem (rad) */
+  TURN: 0.6,
+  TILT: 0.12,
+  HOVER_LIFT: 0.1,
+
+  // Wnętrze
+  RIM: 0.3,
+  PULSE_SPEED: 0.8,
+  PULSE_SPACING: 0.7,
+  PULSE_LENGTH: 0.35,
+  PULSE_BASE: 0.55,
+  /** prędkość pierścieni automatyzacji (mnożnik) */
+  SPIN: 1,
+
+  // Scroll: rozkład na warstwy
+  /** dodatkowy odstęp między warstwami przy pełnym rozkładzie */
+  EXPLODE_GAP: 0.55,
+  /** położenie środka przy pełnym rozkładzie (ułamek szerokości, 0 = środek) */
+  EXPLODE_X: -0.12,
+  EXPLODE_SIZE: 0.62,
+  EXPLODE_YAW: 0.55,
+
+  // Tło
+  BG_INK_ALPHA: 0.45,
+
+  // Światło
+  ENV_INTENSITY: 1,
+  LIGHT_INTENSITY: 1.2,
+
+  // Intro
+  INTRO_DURATION: 1.1,
+  INTRO_STAGGER: 0.14,
+  INTRO_DROP: 6,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 
