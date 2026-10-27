@@ -357,15 +357,21 @@ export const heroBuildParams = {
   /** unoszenie w spoczynku: amplituda (ułamek kadru) i prędkość */
   FLOAT_AMP: 0.004,
   FLOAT_SPEED: 0.6,
-  /** jasność rentgenu i konturu na granicy pasm */
+  /** jasność rentgenu i konturu plamy */
   XRAY_GAIN: 1.15,
   LINE_ALPHA: 0.55,
-  /** udział rentgenu w pasmach: w spoczynku dominuje render */
-  BAND_SHARE: 0.34,
-  /** zasięg linii rentgenu poza bryłą (ułamek kadru), dalej wymiary znikają */
-  XRAY_HALO: 0.025,
+  /** rentgen tylko pod kursorem: promień plamy (jednostka = wysokość ekranu), wzrost z prędkością */
+  XRAY_RADIUS: 0.13,
+  XRAY_GROW: 0.07,
+  /** postrzępienie krawędzi plamy szumem */
+  XRAY_EDGE_NOISE: 0.025,
+  /** pojawianie się i znikanie plamy (lerp na klatkę) */
+  XRAY_LERP: 0.08,
+  /** zasięg linii rentgenu poza bryłą (ułamek kadru) i strefy bez poziomic wokół obiektu */
+  XRAY_HALO: 0.01,
+  CLEAR_HALO: 0.025,
 
-  // Pasma: jak heroParams, gęściej na obiekcie
+  // Poziomice w tle (pole pasm jak heroParams)
   SPEED: 0.06,
   SCALE: 1.2,
   NOISE_DETAIL: 4.5,

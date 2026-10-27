@@ -48,6 +48,11 @@ export class PromptScene {
   private object: DomPlane<ShaderMaterial>;
   private textures: Texture[] = [];
   private time = 0;
+  /** kursor w oknie: plama rentgenu pojawia się i znika */
+  private pointerIn = false;
+  private xray = 0;
+  private onMove = () => (this.pointerIn = true);
+  private onLeave = () => (this.pointerIn = false);
 
   private constructor(
     wrap: HTMLElement,
@@ -58,6 +63,8 @@ export class PromptScene {
     this.renderer.setPixelRatio(maxDpr());
     wrap.appendChild(this.renderer.domElement);
     this.mouse = new Mouse({ lerp: p.MOUSE_LERP, pacePx: p.PACE_PX, paceLerp: p.PACE_LERP });
+    window.addEventListener('pointermove', this.onMove, { passive: true });
+    document.documentElement.addEventListener('pointerleave', this.onLeave);
 
     // wspólne uniformy pola pasm: te same obiekty w obu materiałach
     this.field = {
@@ -116,8 +123,11 @@ export class PromptScene {
           uXrayGain: { value: p.XRAY_GAIN },
           uLineColor: { value: colors.edge },
           uLineAlpha: { value: p.LINE_ALPHA },
-          uShare: { value: p.BAND_SHARE },
+          uXray: { value: 0 },
+          uXrayRadius: { value: p.XRAY_RADIUS },
+          uXrayNoise: { value: p.XRAY_EDGE_NOISE },
           uHalo: { value: p.XRAY_HALO },
+          uClearHalo: { value: p.CLEAR_HALO },
           uBgColor: { value: colors.bg.clone().convertLinearToSRGB() },
         },
         transparent: true,
@@ -197,6 +207,10 @@ export class PromptScene {
       reduced ? 0 : -((this.mouse.eased.y / h) * 2 - 1)
     );
     u.uFloat!.value = reduced ? 0 : Math.sin(this.time * p.FLOAT_SPEED) * p.FLOAT_AMP;
+    const target = this.pointerIn ? 1 : 0;
+    this.xray += (target - this.xray) * (1 - Math.pow(1 - p.XRAY_LERP, dt * 60));
+    u.uXray!.value = this.xray;
+    u.uXrayRadius!.value = p.XRAY_RADIUS + p.XRAY_GROW * (reduced ? 0 : this.mouse.pace);
 
     this.background.sync(w, h);
     this.object.sync(w, h);
@@ -205,6 +219,8 @@ export class PromptScene {
   }
 
   destroy(): void {
+    window.removeEventListener('pointermove', this.onMove);
+    document.documentElement.removeEventListener('pointerleave', this.onLeave);
     this.mouse.destroy();
     this.background.destroy();
     this.object.destroy();

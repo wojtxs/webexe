@@ -1,5 +1,6 @@
 // Hero „Build”: obiekt `>_` jako zdjęcie z mapami (technika twarzy z landonorris.com).
-// Render A i rentgen B przełączane pasmami szumu, paralaksa z mapy głębi, przebieg skanu z intro.
+// Obiekt zawsze cały jako render A; rentgen B tylko w plamie pod kursorem. Paralaksa z mapy głębi,
+// przebieg skanu z intro. Poziomice zostają w tle (contour.frag) i kończą się przed bryłą.
 // Poprzedzony przez noise.glsl i bands.glsl.
 
 uniform sampler2D tA;
@@ -15,8 +16,11 @@ uniform float uScan;       // 0–1, front przebiegu renderu od góry ekranu; 0 
 uniform float uXrayGain;
 uniform vec3 uLineColor;
 uniform float uLineAlpha;
-uniform float uShare;      // udział rentgenu w paśmie (0.5 = pół na pół jak u Lando)
+uniform float uXray;       // 0–1, plama rentgenu widoczna (kursor w oknie)
+uniform float uXrayRadius; // promień plamy w jednostkach st (wysokość ekranu)
+uniform float uXrayNoise;
 uniform float uHalo;       // zasięg linii rentgenu poza bryłą, ułamek kadru
+uniform float uClearHalo;  // strefa bez poziomic wokół bryły, ułamek kadru
 uniform vec3 uBgColor;     // kolor tła (sRGB): wypełnienie rentgenu i strefa bez poziomic wokół bryły
 
 varying vec2 vUv;
@@ -43,19 +47,19 @@ void main() {
   vec3 a = texture2D(tA, uv).rgb;
   vec3 b = texture2D(tB, uv).rgb * uXrayGain;
 
-  // pasma w przestrzeni ekranu: te same linie co poziomice w tle
+  // plama rentgenu pod kursorem: postrzępiona szumem krawędź, promień rośnie z prędkością ruchu
   vec2 st = screenSt();
-  float x = bandField(st);
-  // pasmo rentgenu to węższa część okresu; kontur na obu granicach
-  float f = fract(x);
-  float band = step(1.0 - uShare, f);
-  float dist = min(min(f, 1.0 - f), abs(f - (1.0 - uShare)));
-  float line = 1.0 - smoothstep(0.0, fwidth(x) * uLineWidth, dist);
+  float n = snoise(vec3(st * 5.0, uPhase * 3.0));
+  float r = uXrayRadius * uXray;
+  float d = length(st - uMouse) + n * uXrayNoise;
+  float aa = fwidth(d) * 1.5;
+  float spot = (1.0 - smoothstep(r - aa, r + aa, d)) * step(0.002, r);
+  float ring = (1.0 - smoothstep(0.0, aa * uLineWidth, abs(d - r))) * step(0.002, r);
 
-  // nad frontem skanu obiekt jest gotowy (pasma), pod nim jeszcze rentgen
+  // nad frontem skanu obiekt jest gotowy, pod nim jeszcze rentgen (intro)
   float fromTop = 1.0 - gl_FragCoord.y / (uDpr * uViewport.y);
   float rendered = step(fromTop, uScan);
-  float m = mix(1.0, band, rendered);
+  float m = mix(1.0, spot, rendered);
 
   // alfa A „rozszerzona” próbkami na dwóch promieniach: bliżej linie rentgenu, dalej strefa bez poziomic
   float near = maps.r;
@@ -64,7 +68,7 @@ void main() {
     float ang = float(i) * 0.785398;
     vec2 dir = vec2(cos(ang), sin(ang) * uTexAspect);
     near = max(near, texture2D(tMaps, uv + dir * uHalo).r);
-    far = max(far, texture2D(tMaps, uv + dir * uHalo * 2.2).r);
+    far = max(far, texture2D(tMaps, uv + dir * uClearHalo).r);
   }
 
   // bryła jest pełna w obu stanach, jak twarz i kask u Lando: tło nigdy nie prześwituje przez obiekt
@@ -75,8 +79,8 @@ void main() {
   vec4 colB = vec4(mix(uBgColor, b, aB) * alphaB, alphaB);
   vec4 col = mix(colA, colB, m);
 
-  // kontur granicy pasm tylko na bryle obiektu
-  float edge = line * rendered * maps.r * uLineAlpha;
+  // kontur plamy tylko na bryle obiektu
+  float edge = ring * rendered * maps.r * uLineAlpha;
   col.rgb = mix(col.rgb, uLineColor, edge);
   col.a = max(col.a, edge);
 
