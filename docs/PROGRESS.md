@@ -2,7 +2,7 @@
 
 Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza jest zamknięta dopiero wtedy, gdy spełnia swój warunek wyjścia.
 
-**Aktualna faza:** F2 (spike „rdzeń z warstw” zbudowany, bramka D2 czeka na ocenę na żywo). F0 nadal otwarte: decyzje i assety.
+**Aktualna faza:** F2 (spike „warstwy systemu” zbudowany, bramka D2 czeka na ocenę na żywo). F0 nadal otwarte: decyzje i assety.
 **Decyzje otwarte:** D2–D11 w `BRIEF.md`
 
 ## F0: Treść i kierunek (bez Claude Code albo tylko pomocniczo)
@@ -87,6 +87,7 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 | 2026-10-27 | Hero: wielki znak x w 3D, kursor odsłania warstwę „system” (zamiast wariantów 1 i 2 z D2), do potwierdzenia na żywo | użytkownik chce hero na poziomie landonorris.com; x to nasz najmocniejszy znak, robiony w całości w three.js, bez generowanych obrazów |
 | 2026-10-27 | Hero: „rentgen aplikacji” zamiast znaku x (okno aplikacji, kursor prześwietla je do infrastruktury), do potwierdzenia na żywo | x się nie podobał: pod x był ten sam x, odsłanianie nic nie mówiło. Rentgen to wariant D2 wprost i mówi to, co H1. Odrzucone: przekrój terenu, porządek z chaosu, founderzy (blokuje D4) |
 | 2026-10-27 | Hero: „rdzeń z warstw” zamiast rentgenu: wieża z 4 modułów-usług (Aplikacje, Integracje, Automatyzacje, Utrzymanie), składa się w intro, obraca za myszą, rozkłada się scrollem; do potwierdzenia na żywo | rentgen też się nie podobał; użytkownik opisał choreografię (składanie, pulsujące linie, obrót odsłaniający wnętrze, etykiety na hover, rozkład na warstwy przechodzący w usługi). Kształt: rdzeń z warstw (wybór z 3), 4 etykiety z Utrzymaniem jako podstawą |
+| 2026-10-27 | Hero: „warstwy systemu” w stylu referencji użytkownika (kwadratowe płyty: szkło, płytka drukowana w szklanej skrzynce, metalowa podstawa z zielonymi paskami, smuga światła), ciemne tło Głębia, bloom; do potwierdzenia na żywo | biały rdzeń „lipny”; użytkownik pokazał obraz referencyjny (`C:\Users\wojci\OneDrive\Pulpit\fsaf.jpg`, nie w repo). Łamie DESIGN.md: hero na Głębi zamiast Piany i poświata (bloom) mimo zakazu „Laguna nie robi poświaty”; do zatwierdzenia przy akceptacji |
 
 ## Log sesji
 
@@ -139,3 +140,10 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zostało: ocena na żywo. Ryzyko wyglądu: biała wieża z dysków przypomina ikonę bazy danych; dźwignie to detale obudowy (szczeliny, porty, szew Laguny), inne proporcje albo ciemniejsza obudowa. Kolejność warstw do potwierdzenia. Prawdziwe przejście w sekcję 03 dopiero po F3 (teraz greybox `TODO(treść)`). Reduced motion: statyczna klatka, etykiety widoczne stale; bez `gsap.matchMedia` (spike). Etykiety nie są dostępne z klawiatury. Po akceptacji: `DESIGN.md` (sygnatura to już nie „pasma odsłaniają system”, zasadę „sam z siebie rusza się tylko szum” trzeba poszerzyć o impulsy i pierścienie), spec `01-hero.md`, `ASSETS.md`.
 - Decyzje: koncept hero = rdzeń z warstw (do potwierdzenia na żywo). Kolejność od góry: Aplikacje, Integracje, Automatyzacje, Utrzymanie. Spike x i spike rentgen zostają w labie.
 - Lekcje: `ShaderMaterial` renderowany prosto na ekran potrzebuje `#include <colorspace_fragment>` (w render targecie to no-op, więc wspólne shadery mogą go mieć zawsze). Po commicie z `autocrlf` pliki mają CRLF: skrypty podmieniające tekst muszą normalizować końce linii, a `prettier --check` pada na plikach przepisanych przez checkout. Dłuższe edycje rób skryptem w pliku, nie przez `node -e '…'` w bashu: apostrofy i `\x27` psują cytowanie.
+
+### 2026-10-27 — F2: hero „warstwy systemu” (`/lab/hero-plates`)
+
+- Zrobione: biały rdzeń odrzucony, użytkownik pokazał obraz referencyjny (stos płyt: szklane panele, płytka w szklanej skrzynce, metalowa podstawa z zielonymi paskami, ciemne tło, smuga światła). `src/gl/PlateStack.ts`: Aplikacje (dwie szklane płyty z wytrawionym interfejsem: obrysy, paski, wykres), Integracje (szklana płyta z siecią 7 węzłów, impulsy na krawędziach), Automatyzacje (szklana skrzynka, płytka z układem centralnym, 8 mniejszymi, pinami i 36 świecącymi ścieżkami z impulsami, deterministyczny generator), Utrzymanie (ośmiokątna metalowa podstawa w dwóch stopniach, zielone paski na bokach, kątowniki na wierzchu, smuga światła `beam.frag` addytywnie). Szkło to `MeshPhysicalMaterial` z transmisją, świecenie to kolory HDR + `UnrealBloomPass` (EffectComposer z MSAA 4×, `NoToneMapping`, żeby tło zostało tokenem). Tło: Głębia + wzór pasm w `--c-glebia-line`, quad w scenie. Choreografia jak w rdzeniu (intro od podstawy, zapalanie, obrót, hover z etykietą, rozkład scrollem). Zrzuty 1440 (złożony, hover, rozkład) i 390.
+- Zostało: ocena na żywo, zwłaszcza **60 fps na iGPU** (transmisja renderuje scenę drugi raz, do tego bloom; w razie problemów: niższa rozdzielczość bloomu, mniej segmentów, szkło bez transmisji na mobile). Szkło w SwiftShader wychodzi szarawe, na prawdziwym GPU może wyglądać inaczej. Po akceptacji: `DESIGN.md` (ciemne hero, poświata, nowa sygnatura), spec `01-hero.md`, `ASSETS.md`. Reduced motion i klawiatura jak w rdzeniu (spike).
+- Decyzje: koncept hero = warstwy systemu w stylu referencji (do potwierdzenia na żywo). Spike'i x, rentgen i rdzeń zostają w labie.
+- Lekcje: kolorów HDR (> 1) na `MeshBasicMaterial` używaj z `toneMapped: false` i bloomem z progiem ~0.8; tło musi zostać poniżej progu. Quad tła w tej samej scenie (`frustumCulled = false`, `renderOrder = -1`, bez depth) pozwala na jeden RenderPass zamiast dwóch renderów.
