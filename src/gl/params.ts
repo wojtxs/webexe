@@ -83,6 +83,54 @@ export const heroXParams = {
 
 export type HeroXParams = typeof heroXParams;
 
+/**
+ * Hero „rentgen aplikacji” (2026-10-27, zamiast znaku x): okno aplikacji, kursor prześwietla
+ * je do infrastruktury pod spodem. Ślad, krawędź, duch i tło jak w hero x.
+ */
+export const heroRentgenParams = {
+  // Obiekt
+  /** szerokość okna jako ułamek szerokości elementu [data-gl="hero"] */
+  OBJECT_WIDTH: 0.57,
+  /** przesunięcie środka w poziomie jako ułamek szerokości elementu (0 = środek) */
+  OBJECT_X: 0.13,
+  YAW: -0.42,
+  PITCH: 0.14,
+  TILT: 0.22,
+  IDLE: 0.04,
+  /** rozsunięcie kart i treści UI w głębi */
+  EXPLODE: 0.1,
+
+  // Warstwa B
+  GRID_DENSITY: 5,
+  GRID_ALPHA: 0.35,
+  RIM: 0.9,
+  PULSE_SPEED: 0.9,
+  PULSE_SPACING: 0.9,
+  PULSE_LENGTH: 0.35,
+  PULSE_BASE: 0.3,
+
+  // Ślad kursora
+  TRAIL_RADIUS: 0.2,
+  TRAIL_DECAY: 0.975,
+  /** siła = sqrt(pace) × TRAIL_STRENGTH, więc odsłania już spokojny ruch */
+  TRAIL_STRENGTH: 2.4,
+  EDGE_NOISE: 0.3,
+  EDGE_SCALE: 5,
+  EDGE_SPEED: 0.25,
+  EDGE_LINE: 1.5,
+
+  // Duch maszynowni i tło
+  GHOST_ALPHA: 0.12,
+  BG_INK_ALPHA: 0.45,
+
+  // Światło warstwy A
+  ENV_INTENSITY: 1,
+  LIGHT_INTENSITY: 1.2,
+
+  // Intro
+  INTRO_DURATION: 1.8,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

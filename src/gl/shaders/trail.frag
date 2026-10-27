@@ -5,7 +5,7 @@ uniform sampler2D tPrev;
 uniform vec2 uMouse;      // uv 0–1
 uniform vec2 uPrevMouse;  // uv 0–1
 uniform float uAspect;    // szerokość / wysokość
-uniform float uStrength;  // pace × siła, 0–1
+uniform float uStrength;  // pace × siła (może być > 1)
 uniform float uRadius;    // w jednostkach wysokości ekranu
 uniform float uDecay;     // mnożnik na tę klatkę
 uniform float uIntro;     // 1 → 0: na starcie cała warstwa B rozpuszcza się do A
@@ -24,7 +24,8 @@ void main() {
   vec2 a = vec2(uPrevMouse.x * uAspect, uPrevMouse.y);
   vec2 b = vec2(uMouse.x * uAspect, uMouse.y);
 
-  float splat = (1.0 - smoothstep(0.0, uRadius, segmentDistance(p, a, b))) * uStrength;
+  // siła > 1 poszerza plamę ponad próg 0.5, wartość i tak nie przekracza 1
+  float splat = min(1.0, (1.0 - smoothstep(0.0, uRadius, segmentDistance(p, a, b))) * uStrength);
   float value = texture2D(tPrev, vUv).r * uDecay;
   value = max(value, splat);
   // intro: góra trzyma B dłużej, więc x „schodzi” z warstwy systemu od dołu
