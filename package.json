@@ -28,6 +28,7 @@
     "eslint": "^10.13.0",
     "eslint-plugin-astro": "^3.2.1",
     "globals": "^16.0.0",
+    "lil-gui": "^0.21.0",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^1.1.2",
     "sharp": "^0.35.5",
