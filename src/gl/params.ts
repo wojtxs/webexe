@@ -523,6 +523,55 @@ export const heroArcsParams = {
   SCROLL_ROT: 0.25,
 };
 
+/**
+ * Hero „sieć systemów” (2026-10-28, paleta v2: Węgiel, Bursztyn, Kawa, Kość). Moduły aplikacji
+ * (matowe bryły z ekranami) połączone przewodami z rdzeniem, czyli ikoną x z logo. Po przewodach
+ * płyną impulsy danych: moduł pyta, rdzeń odpowiada. Jednostki świata, czasy w s.
+ */
+export const heroNetParams = {
+  // Kamera i położenie grupy
+  FOV: 30,
+  CAM_Z: 14,
+  X: 0,
+  Y: -0.45,
+  ROT_X: 0.08,
+  ROT_Y: -0.32,
+  /** mobile (< 768 px) */
+  X_M: -1.0,
+  Y_M: 1.1,
+  SCALE_M: 0.52,
+
+  // Przewody
+  TUBE_RADIUS: 0.065,
+  // Impulsy
+  PULSE_SPEED: 0.55,
+  PULSE_W: 0.035,
+  PULSE_TAIL: 0.09,
+  /** przerwa między zapytaniami w spoczynku */
+  PULSE_GAP_MIN: 0.35,
+  PULSE_GAP_MAX: 1.1,
+  /** szansa, że rdzeń odpowie na zapytanie */
+  REPLY: 0.7,
+  HOLD_GAP: 0.06,
+  HOLD_SPEED: 1.9,
+
+  // Materiał i atmosfera
+  FOG_NEAR: 13,
+  FOG_FAR: 26,
+  GRAIN: 0.03,
+  FLOAT: 0.08,
+
+  // Kursor i scroll
+  PARALLAX_X: 0.12,
+  PARALLAX_Y: 0.06,
+  MOUSE_LERP: 0.06,
+  PACE_PX: 40,
+  PACE_LERP: 0.08,
+  SCROLL_ROT: 0.35,
+  SCROLL_DOLLY: 3,
+  SCROLL_RISE: 1.2,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

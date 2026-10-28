@@ -14,6 +14,21 @@
   /* --- Gradient Laguna --- */
   --g-laguna: linear-gradient(135deg, var(--c-laguna-start), var(--c-laguna-end));
 
+  /* --- Paleta marki v2 (plansza od użytkownika, 2026-10-28): Węgiel, Bursztyn, Kawa, Kość ---
+     Hex Bursztynu odczytany z planszy (gradient x), do potwierdzenia z plikiem źródłowym. */
+  --c-wegiel: #15110e;
+  --c-kawa: #2a221c;
+  --c-kosc: #f7f4f0;
+  --c-bursztyn-start: #f59e0b;
+  --c-bursztyn-end: #ea580c;
+  --g-bursztyn: linear-gradient(135deg, var(--c-bursztyn-start), var(--c-bursztyn-end));
+  /* pochodne v2: propozycje do DESIGN.md */
+  --c-kawa-line: #201a15;
+  --c-kawa-raise: #3a2f27;
+  --c-kosc-muted: #a99d91;
+  --c-kosc-line: #e9e2d9;
+  --c-ink-warm: #6e6157;
+
   /* --- Kolory pochodne --- */
   --c-piana-line: #d5eae5;
   --c-piana-deep: #bcd9d2;
@@ -22,6 +37,9 @@
   --c-ink-muted: #566b6f;
   --c-ink-muted-dark: #9db5b0;
   --c-laguna-ink: #0e7490;
+
+  /* --- Kroje: wordmark i akcenty (Comfortaa 700), tekst (Plus Jakarta Sans) --- */
+  --f-accent: 'Comfortaa', 'Plus Jakarta Sans Variable', sans-serif;
 
   /* --- Krój techniczny: etykiety blueprintu i terminal (systemowy, bez zależności) --- */
   --f-mono: ui-monospace, 'Cascadia Code', Consolas, Menlo, monospace;

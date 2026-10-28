@@ -1,5 +1,5 @@
 /**
- * hero-arcs.ts — spike hero „łuki” (tylko /lab/hero-arcs), wzór: cerebrium.ai.
+ * hero-arcs.ts — spike hero (tylko /lab/hero-arcs), wzór: cerebrium.ai. Obiekt: „sieć systemów” (NetScene).
  *
  * 1. Intro: łuki wyrastają z dołu (GL), wiersze nagłówka wyjeżdżają spod maski, potem lead,
  *    przyciski, linia i marquee usług.
@@ -21,9 +21,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
-import { ArcScene } from '@gl/ArcScene';
+import { NetScene } from '@gl/NetScene';
 import { Mouse } from '@gl/Mouse';
-import { heroArcsParams as p } from '@gl/params';
+import { heroNetParams as p } from '@gl/params';
 import { easeFromToken } from '@gl/ease';
 import { loadDebug } from '@gl/debug';
 import { hasWebGL } from '@gl/support';
@@ -68,7 +68,7 @@ const HeroArcs: Module = {
 
     // --- GL; bez WebGL zostaje poświata z CSS ---
     const mouse = new Mouse({ lerp: 0.12, pacePx: p.PACE_PX, paceLerp: p.PACE_LERP });
-    let scene: ArcScene | null = null;
+    let scene: NetScene | null = null;
     let disposed = false;
     const view = { intro: reduced ? 1 : 0, scroll: 0, outro: 0 };
     /** panel zasłania cały ekran: GL nie renderuje */
@@ -76,7 +76,7 @@ const HeroArcs: Module = {
     let dirty = true;
 
     if (wrap && hasWebGL()) {
-      ArcScene.create(wrap, mouse)
+      NetScene.create(wrap, mouse)
         .then((s) => {
           if (disposed) return s.destroy();
           scene = s;
@@ -393,7 +393,7 @@ const HeroArcs: Module = {
         onUpdate: (self) => {
           const now = performance.now();
           if (Math.abs(self.getVelocity()) > 1400 && now > cool && !covered) {
-            scene?.fire(undefined, 1.6);
+            scene?.fire(1.6);
             cool = now + 220;
           }
         },
@@ -468,7 +468,7 @@ const HeroArcs: Module = {
 
     // strojenie pod ?debug
     let gui: Awaited<ReturnType<typeof loadDebug>> = null;
-    void loadDebug('hero łuki').then((g) => {
+    void loadDebug('hero sieć systemów').then((g) => {
       if (!g || disposed) return g?.destroy();
       gui = g;
       const keys = [
@@ -476,11 +476,10 @@ const HeroArcs: Module = {
         ['Y', -8, 2],
         ['ROT_X', -1, 1],
         ['ROT_Y', -2, 2],
-        ['ROT_Z', -1, 1],
         ['CAM_Z', 4, 20],
-        ['STREAK_SPEED', 0.1, 2],
-        ['STREAK_GAP_MIN', 0.2, 6],
-        ['STREAK_GAP_MAX', 0.5, 8],
+        ['PULSE_SPEED', 0.1, 2],
+        ['PULSE_GAP_MIN', 0.05, 4],
+        ['PULSE_GAP_MAX', 0.1, 6],
         ['PARALLAX_X', 0, 0.5],
         ['PARALLAX_Y', 0, 0.5],
       ] as const;

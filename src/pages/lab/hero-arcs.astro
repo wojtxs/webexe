@@ -40,8 +40,9 @@ const marquee = [...services, ...services, ...services];
 {isDev ? (
   <Base title="Lab: hero łuki — webexe" noindex={true}>
     <script is:inline>
-      if (new URLSearchParams(location.search).get('panel') === 'light')
-        document.documentElement.dataset.panel = 'light';
+      const q = new URLSearchParams(location.search);
+      if (q.get('panel') === 'light') document.documentElement.dataset.panel = 'light';
+      if (q.get('accent') === 'comfortaa') document.documentElement.dataset.accent = 'comfortaa';
     </script>
     <div class="ha-gl" data-gl-wrap aria-hidden="true"></div>
     <div class="ha-dots" data-ha-dots aria-hidden="true"></div>
@@ -332,8 +333,8 @@ const marquee = [...services, ...services, ...services];
 
 <style>
   :global(body):has(.ha) {
-    background: var(--c-glebia);
-    color: var(--c-piana);
+    background: var(--c-wegiel);
+    color: var(--c-kosc);
   }
 
   /* --- Warstwy tła: GL, kropki nad łukami, kursor --- */
@@ -346,7 +347,7 @@ const marquee = [...services, ...services, ...services];
 
   .ha-gl[data-fallback] {
     background:
-      radial-gradient(60% 70% at 80% 100%, var(--c-laguna-ink), transparent 70%), var(--c-glebia);
+      radial-gradient(60% 70% at 80% 100%, var(--c-bursztyn-end), transparent 70%), var(--c-wegiel);
   }
 
   .ha-dots {
@@ -356,7 +357,7 @@ const marquee = [...services, ...services, ...services];
     pointer-events: none;
     background-image: radial-gradient(
       circle,
-      color-mix(in srgb, var(--c-piana) 45%, transparent) 1px,
+      color-mix(in srgb, var(--c-kosc) 45%, transparent) 1px,
       transparent 1.5px
     );
     background-size: var(--s-24) var(--s-24);
@@ -373,7 +374,7 @@ const marquee = [...services, ...services, ...services];
     width: var(--s-12);
     height: var(--s-12);
     margin: calc(var(--s-12) / -2) 0 0 calc(var(--s-12) / -2);
-    border: 1px solid color-mix(in srgb, var(--c-piana) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--c-kosc) 60%, transparent);
     border-radius: 50%;
     pointer-events: none;
     opacity: 0;
@@ -393,7 +394,7 @@ const marquee = [...services, ...services, ...services];
     width: var(--s-24);
     height: var(--s-24);
     margin: calc(var(--s-24) / -2) 0 0 calc(var(--s-24) / -2);
-    background: color-mix(in srgb, var(--c-laguna-end) 18%, transparent);
+    background: color-mix(in srgb, var(--c-bursztyn-end) 18%, transparent);
   }
 
   .ha {
@@ -418,13 +419,13 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha-btn-primary {
-    background: var(--g-laguna);
-    color: var(--c-glebia);
+    background: var(--g-bursztyn);
+    color: var(--c-wegiel);
   }
 
   .ha-btn-ghost {
-    background: var(--c-glebia-raise);
-    color: var(--c-piana);
+    background: var(--c-kawa);
+    color: var(--c-kosc);
   }
 
   .ha-btn:hover {
@@ -432,7 +433,7 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha a:focus-visible {
-    outline: 2px solid var(--c-laguna-end);
+    outline: 2px solid var(--c-bursztyn-end);
     outline-offset: 4px;
   }
 
@@ -446,12 +447,14 @@ const marquee = [...services, ...services, ...services];
     padding-block: var(--s-6);
   }
 
+  /* wordmark: Comfortaa 700 małymi literami, x w Bursztynie (jak na planszy marki) */
   .ha-logo {
     grid-column: 1 / 4;
     justify-self: start;
     color: inherit;
-    font-size: var(--t-lead);
-    font-weight: var(--w-h1);
+    font-family: var(--f-accent);
+    font-size: var(--t-h3);
+    font-weight: var(--w-h3);
     letter-spacing: var(--ls-h3);
     text-decoration: none;
   }
@@ -459,10 +462,18 @@ const marquee = [...services, ...services, ...services];
   .ha-logo-x,
   .ha-accent,
   .ha-x {
-    background: var(--g-laguna);
+    background: var(--g-bursztyn);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+
+  /* znak x: Comfortaa 700; słowa-akcenty w kroju nagłówka (Comfortaa do porównania: ?accent=comfortaa) */
+  .ha-x,
+  :global(html[data-accent='comfortaa']) .ha-accent {
+    font-family: var(--f-accent);
+    font-weight: var(--w-h3);
+    letter-spacing: var(--ls-h3);
   }
 
   .ha-links {
@@ -471,16 +482,16 @@ const marquee = [...services, ...services, ...services];
     display: flex;
     gap: var(--s-1);
     padding: var(--s-1);
-    border: 1px solid var(--c-glebia-raise);
+    border: 1px solid var(--c-kawa);
     border-radius: var(--r-pill);
-    background: color-mix(in srgb, var(--c-glebia) 70%, transparent);
+    background: color-mix(in srgb, var(--c-wegiel) 70%, transparent);
     backdrop-filter: blur(8px);
   }
 
   .ha-links a {
     padding: var(--s-2) var(--s-4);
     border-radius: var(--r-pill);
-    color: var(--c-ink-muted-dark);
+    color: var(--c-kosc-muted);
     font-size: var(--t-small);
     font-weight: var(--w-small);
     text-decoration: none;
@@ -488,7 +499,7 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha-links a:hover {
-    color: var(--c-piana);
+    color: var(--c-kosc);
   }
 
   .ha-nav-cta {
@@ -516,7 +527,7 @@ const marquee = [...services, ...services, ...services];
   .ha-title {
     grid-column: 1 / 9;
     font-size: var(--t-h1);
-    font-weight: var(--w-display-light);
+    font-weight: var(--w-h1);
     line-height: var(--lh-h1);
     letter-spacing: var(--ls-h1);
   }
@@ -540,7 +551,7 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha-lead {
-    color: var(--c-ink-muted-dark);
+    color: var(--c-kosc-muted);
     font-size: var(--t-body);
     line-height: var(--lh-body);
   }
@@ -555,7 +566,7 @@ const marquee = [...services, ...services, ...services];
     grid-column: 1 / -1;
     display: block;
     height: 1px;
-    background: var(--c-glebia-raise);
+    background: var(--c-kawa);
     transform-origin: left;
   }
 
@@ -580,9 +591,9 @@ const marquee = [...services, ...services, ...services];
     align-items: center;
     gap: var(--s-8);
     padding-right: var(--s-8);
-    color: var(--c-ink-muted-dark);
+    color: var(--c-kosc-muted);
     font-size: var(--t-h3);
-    font-weight: var(--w-display-light);
+    font-weight: var(--w-h3);
     letter-spacing: var(--ls-h3);
     white-space: nowrap;
   }
@@ -598,13 +609,13 @@ const marquee = [...services, ...services, ...services];
 
   /* --- Panel: domyślnie ciemny raise, ?panel=light jasna Piana --- */
   .ha-panel {
-    --pn-bg: var(--c-glebia-raise);
-    --pn-ink: var(--c-piana);
-    --pn-muted: var(--c-ink-muted-dark);
-    --pn-dim: color-mix(in srgb, var(--c-piana) 22%, transparent);
-    --pn-card: var(--c-glebia);
-    --pn-line: var(--c-glebia-line);
-    --pn-sk: color-mix(in srgb, var(--c-piana) 14%, transparent);
+    --pn-bg: var(--c-kawa);
+    --pn-ink: var(--c-kosc);
+    --pn-muted: var(--c-kosc-muted);
+    --pn-dim: color-mix(in srgb, var(--c-kosc) 22%, transparent);
+    --pn-card: var(--c-wegiel);
+    --pn-line: var(--c-kawa-line);
+    --pn-sk: color-mix(in srgb, var(--c-kosc) 14%, transparent);
     position: relative;
     padding-block: var(--s-32);
     border-radius: var(--r-panel);
@@ -614,13 +625,13 @@ const marquee = [...services, ...services, ...services];
   }
 
   :global(html[data-panel='light']) .ha-panel {
-    --pn-bg: var(--c-piana);
-    --pn-ink: var(--c-glebia);
-    --pn-muted: var(--c-ink-muted);
-    --pn-dim: color-mix(in srgb, var(--c-glebia) 22%, transparent);
+    --pn-bg: var(--c-kosc);
+    --pn-ink: var(--c-wegiel);
+    --pn-muted: var(--c-ink-warm);
+    --pn-dim: color-mix(in srgb, var(--c-wegiel) 22%, transparent);
     --pn-card: var(--c-biel);
-    --pn-line: var(--c-piana-line);
-    --pn-sk: var(--c-piana-line);
+    --pn-line: var(--c-kosc-line);
+    --pn-sk: var(--c-kosc-line);
   }
 
   /* --- Manifest --- */
@@ -633,7 +644,7 @@ const marquee = [...services, ...services, ...services];
   .ha-answer {
     grid-column: 1 / 11;
     font-size: var(--t-h2);
-    font-weight: var(--w-display-light);
+    font-weight: var(--w-h3);
     line-height: var(--lh-h3);
     letter-spacing: var(--ls-h2);
   }
@@ -653,11 +664,11 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha-stop-1 {
-    stop-color: var(--c-laguna-start);
+    stop-color: var(--c-bursztyn-start);
   }
 
   .ha-stop-2 {
-    stop-color: var(--c-laguna-end);
+    stop-color: var(--c-bursztyn-end);
   }
 
   /* --- Jak pracujemy --- */
@@ -704,13 +715,13 @@ const marquee = [...services, ...services, ...services];
 
   .ha-steps-verb {
     font-size: var(--t-h2);
-    font-weight: var(--w-display-light);
+    font-weight: var(--w-h2);
     line-height: var(--lh-h2);
     letter-spacing: var(--ls-h2);
   }
 
   .ha-steps-nav li.is-active .ha-steps-n {
-    background: var(--g-laguna);
+    background: var(--g-bursztyn);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -739,7 +750,7 @@ const marquee = [...services, ...services, ...services];
   .ha-step-verb {
     margin-top: var(--s-4);
     font-size: var(--t-h3);
-    font-weight: var(--w-display-light);
+    font-weight: var(--w-h3);
     line-height: var(--lh-h3);
     letter-spacing: var(--ls-h3);
   }
@@ -782,7 +793,7 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha-sk-line.is-accent {
-    background: var(--g-laguna);
+    background: var(--g-bursztyn);
     opacity: 0.8;
   }
 
@@ -796,7 +807,7 @@ const marquee = [...services, ...services, ...services];
 
   .ha-flow path[data-ha-edge] {
     fill: none;
-    stroke: var(--c-laguna-start);
+    stroke: var(--c-bursztyn-start);
     stroke-width: 1.5;
   }
 
@@ -812,7 +823,7 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha-flow .ha-flow-core {
-    stroke: var(--c-laguna-end);
+    stroke: var(--c-bursztyn-end);
   }
 
   .ha-flow .ha-flow-skip {
@@ -828,7 +839,7 @@ const marquee = [...services, ...services, ...services];
 
   .ha-flow-dot {
     visibility: hidden;
-    fill: var(--c-laguna-end);
+    fill: var(--c-bursztyn-end);
   }
 
   .ha-flow g {
@@ -904,7 +915,7 @@ const marquee = [...services, ...services, ...services];
     width: var(--s-12);
     height: var(--s-4);
     border-radius: var(--r-chip);
-    background: var(--g-laguna);
+    background: var(--g-bursztyn);
   }
 
   .ha-app-grid {
@@ -945,12 +956,12 @@ const marquee = [...services, ...services, ...services];
     flex: 1;
     height: calc(var(--h) * 100%);
     border-radius: 2px 2px 0 0;
-    background: var(--c-laguna-start);
+    background: var(--c-bursztyn-start);
     transform-origin: bottom;
   }
 
   .ha-app-bars i:nth-child(even) {
-    background: var(--c-laguna-end);
+    background: var(--c-bursztyn-end);
   }
 
   .ha-app-ring {
@@ -960,7 +971,7 @@ const marquee = [...services, ...services, ...services];
     border-radius: 50%;
     background:
       radial-gradient(closest-side, var(--pn-bg) 70%, transparent 71%),
-      conic-gradient(var(--c-laguna-end) 0 68%, var(--pn-sk) 68% 100%);
+      conic-gradient(var(--c-bursztyn-end) 0 68%, var(--pn-sk) 68% 100%);
   }
 
   .ha-app-row {
@@ -1026,7 +1037,7 @@ const marquee = [...services, ...services, ...services];
   .ha-mon-bar i {
     display: block;
     height: 100%;
-    background: var(--g-laguna);
+    background: var(--g-bursztyn);
     transform-origin: left;
   }
 
@@ -1063,11 +1074,11 @@ const marquee = [...services, ...services, ...services];
 
   .ha-pipe-approve:global(.is-ok) {
     border-color: transparent;
-    background: var(--g-laguna);
+    background: var(--g-bursztyn);
   }
 
   .ha-pipe-approve:global(.is-ok) svg {
-    stroke: var(--c-glebia);
+    stroke: var(--c-wegiel);
   }
 
   .ha-doc {
@@ -1101,7 +1112,7 @@ const marquee = [...services, ...services, ...services];
   }
 
   .ha-pipe-done span:first-child {
-    background: color-mix(in srgb, var(--c-laguna-end) 55%, transparent);
+    background: color-mix(in srgb, var(--c-bursztyn-end) 55%, transparent);
   }
 
   /* 04 monitoring bez liczb */
@@ -1123,13 +1134,13 @@ const marquee = [...services, ...services, ...services];
 
   .ha-mon-line {
     fill: none;
-    stroke: var(--c-laguna-end);
+    stroke: var(--c-bursztyn-end);
     stroke-width: 2;
     vector-effect: non-scaling-stroke;
   }
 
   .ha-mon-area {
-    fill: color-mix(in srgb, var(--c-laguna-start) 18%, transparent);
+    fill: color-mix(in srgb, var(--c-bursztyn-start) 18%, transparent);
   }
 
   .ha-mon-rows {
@@ -1156,9 +1167,9 @@ const marquee = [...services, ...services, ...services];
     width: var(--s-2);
     height: var(--s-2);
     border-radius: 50%;
-    background: var(--c-laguna-end);
+    background: var(--c-bursztyn-end);
     box-shadow: 0 0 0 calc(var(--pulse, 0) * var(--s-2))
-      color-mix(in srgb, var(--c-laguna-end) calc((1 - var(--pulse, 0)) * 50%), transparent);
+      color-mix(in srgb, var(--c-bursztyn-end) calc((1 - var(--pulse, 0)) * 50%), transparent);
   }
 
   .ha-mon-meter,
@@ -1175,7 +1186,7 @@ const marquee = [...services, ...services, ...services];
     width: calc(var(--w) * 100%);
     height: 100%;
     border-radius: var(--r-pill);
-    background: var(--c-laguna-start);
+    background: var(--c-bursztyn-start);
     transform-origin: left;
   }
 
@@ -1197,9 +1208,9 @@ const marquee = [...services, ...services, ...services];
 
   .ha-cta-link {
     grid-column: 1 / -1;
-    color: var(--c-piana);
+    color: var(--c-kosc);
     font-size: var(--t-impact);
-    font-weight: var(--w-display-light);
+    font-weight: var(--w-h1);
     line-height: var(--lh-impact);
     letter-spacing: var(--ls-impact);
     text-decoration: none;
@@ -1279,8 +1290,8 @@ const marquee = [...services, ...services, ...services];
       z-index: -1;
       background: linear-gradient(
         to top,
-        var(--c-glebia) 45%,
-        color-mix(in srgb, var(--c-glebia) 70%, transparent) 75%,
+        var(--c-wegiel) 45%,
+        color-mix(in srgb, var(--c-wegiel) 70%, transparent) 75%,
         transparent
       );
       pointer-events: none;
