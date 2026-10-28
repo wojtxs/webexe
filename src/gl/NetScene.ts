@@ -55,7 +55,7 @@ interface NodeDef {
 const NODES: NodeDef[] = [
   { kind: 'hub', pos: [2.7, 0.9, 0.6], size: [1.5, 1.5] },
   { kind: 'chart', pos: [5.4, 2.6, -1.4], size: [2.3, 1.5] },
-  { kind: 'list', pos: [6.5, 0.1, -0.6], size: [2.0, 1.4] },
+  { kind: 'list', pos: [7.4, 1.0, -2.2], size: [2.0, 1.4] },
   { kind: 'kanban', pos: [0.1, 2.5, -2.4], size: [2.1, 1.35] },
   { kind: 'form', pos: [-0.6, 0.5, -4.2], size: [1.6, 1.15] },
   { kind: 'metric', pos: [8.6, 2.4, -3.6], size: [1.6, 1.05] },

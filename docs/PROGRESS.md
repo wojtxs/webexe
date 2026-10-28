@@ -257,3 +257,8 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - Reduced motion: bez `[data-live]` wszystko w zwykłym przepływie (sprawdzone zrzutem z emulacją). Zrzuty 1440 (14 klatek) i 390 (5 klatek). Lint, check i build czyste.
 - Zostało: ocena płynności na żywo (clip-path path na całym ekranie, przelot), strojenie tempa (`.ha-intro` 460svh, pozycje na osi), dotyk na mobile; akcent po SplitText dostaje gradient osobno (`.ha-word`).
 - Lekcje: `node -e` z dłuższym kodem w Bash na Windowsie łamie się na cudzysłowach; większe podmiany robić plikiem `.mjs` w scratchpadzie. Animacje scroll i intro na tych samych elementach i właściwościach się gryzą; scroll animuje opakowania (`.ha-line`, dzieci `.ha-side`), intro elementy wewnętrzne.
+
+### 2026-10-28 — F2: hero, sieć bliżej środka (`/lab/hero-arcs`)
+
+- Zrobione: użytkownik: elementy na tle hero „strasznie do prawej”. `heroNetParams.X` 0 → -1,9, moduł „list” przesunięty w `NODES` (`[7.4, 1.0, -2.2]`), żeby nie wchodził pod lead. Zrzuty 1920/1440/390 i klatka przelotu (dalej trafia w oś rdzenia). Lint, check, build czyste.
+- Zostało: bez zmian względem poprzedniego wpisu.

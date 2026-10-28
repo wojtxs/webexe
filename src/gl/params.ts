@@ -532,7 +532,7 @@ export const heroNetParams = {
   // Kamera i położenie grupy
   FOV: 30,
   CAM_Z: 14,
-  X: 0,
+  X: -1.9,
   Y: -0.45,
   ROT_X: 0.08,
   ROT_Y: -0.32,
