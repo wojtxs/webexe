@@ -234,3 +234,14 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Lekcje:
   - `node -e` w Bash na Windowsie psuje `\s` w wyrażeniach regularnych, więc podmiany parametrów robi skrypt `setp.mjs` w scratchpadzie;
   - sticky lista liczona przez `onToggle` per krok gubi stan przy skoku scrolla; pewniej liczyć aktywny krok z `getBoundingClientRect` w `onUpdate`.
+
+### 2026-10-28 — F2: hero, paleta v2 i „sieć systemów” (`/lab/hero-arcs`)
+
+- Zrobione: użytkownik: „jest już o wiele lepiej”, ale kolory, czcionka i łuki nie siedzą. Przysłał planszę marki: Węgiel `#15110E`, Gradient x „Bursztyn”, Kawa `#2A221C`, Kość `#F7F4F0`, Comfortaa 700 + Plus Jakarta Sans.
+  - `tokens.css`: paleta v2 obok Laguny (stare spike'i działają). Hex Bursztynu (`#F59E0B` → `#EA580C`) odczytany z planszy, do potwierdzenia. Pochodne (`--c-kawa-line`, `--c-kawa-raise`, `--c-kosc-muted`, `--c-kosc-line`, `--c-ink-warm`) to moje propozycje. Nowy `--f-accent`.
+  - `src/gl/NetScene.ts` + `tube.vert/frag` zamiast łuków: moduły aplikacji (RoundedBoxGeometry, ekrany z canvasu: wykres, lista, kanban, formularz, licznik; same szkielety) połączone przewodami z rdzeniem, czyli ikoną x z logo. Impulsy danych: moduł pyta, rdzeń błyska i zwykle odpowiada, moduł błyska po odebraniu. Kliknięcie puszcza zapytania ze wszystkich modułów, przytrzymanie serie. Intro: rdzeń, moduły, rysujące się przewody. `heroNetParams`.
+  - Typografia: nagłówki Jakarta 800, wordmark i znaki x w Comfortaa 700, akcent w Bursztynie (Comfortaa w akcencie do porównania pod `?accent=comfortaa`).
+  - Zrzuty 1440 (hero, Manifest, kroki, finał, panel jasny) i 390. Lint, check i build czyste.
+- Zostało: ocena na żywo; potwierdzenie hexów Bursztynu i pochodnych; przeniesienie palety v2 do `DESIGN.md` (zastępuje Lagunę, wymaga zgody); `ArcScene` zostaje w repo nieużywany do porównania.
+- Decyzje: obiekt hero = sieć modułów z rdzeniem x (kojarzy się z oprogramowaniem i integracjami, niesie znak marki); Comfortaa tylko w wordmarku i znakach x, bo obok Jakarty 800 w nagłówku wyglądała za miękko.
+- Lekcje: kontrast brył na Węglu wymaga jaśniejszego korpusu (`--c-kawa-raise`) i mocniejszego światła; ciemna Kawa na Węglu znika.
