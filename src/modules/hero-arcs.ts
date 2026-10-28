@@ -50,6 +50,29 @@ function chartPaths(w: number, h: number) {
   return { line, area: `${line}L${2 * w} ${h}L0 ${h}Z` };
 }
 
+/** kapsuła (odcinek z okrągłymi końcami); ten sam kierunek obiegu, więc suma działa w nonzero */
+function capsule(ax: number, ay: number, bx: number, by: number, r: number) {
+  const l = Math.hypot(bx - ax, by - ay) || 1;
+  const nx = (-(by - ay) / l) * r;
+  const ny = ((bx - ax) / l) * r;
+  const f = (v: number) => v.toFixed(1);
+  return (
+    `M${f(ax + nx)} ${f(ay + ny)}L${f(bx + nx)} ${f(by + ny)}` +
+    `A${f(r)} ${f(r)} 0 0 0 ${f(bx - nx)} ${f(by - ny)}L${f(ax - nx)} ${f(ay - ny)}` +
+    `A${f(r)} ${f(r)} 0 0 0 ${f(ax + nx)} ${f(ay + ny)}Z`
+  );
+}
+
+/** znak x jak na ekranie rdzenia (NetScene drawFace): ramiona 0,4 × 0,46, kreska 0,13 szerokości */
+function xPath(cx: number, cy: number, size: number) {
+  const dx = size * 0.2;
+  const dy = size * 0.23;
+  const r = size * 0.065;
+  return (
+    capsule(cx - dx, cy - dy, cx + dx, cy + dy, r) + capsule(cx + dx, cy - dy, cx - dx, cy + dy, r)
+  );
+}
+
 let cleanup: (() => void) | null = null;
 
 const HeroArcs: Module = {
@@ -70,8 +93,11 @@ const HeroArcs: Module = {
     const mouse = new Mouse({ lerp: 0.12, pacePx: p.PACE_PX, paceLerp: p.PACE_LERP });
     let scene: NetScene | null = null;
     let disposed = false;
-    const view = { intro: reduced ? 1 : 0, scroll: 0, outro: 0 };
-    /** panel zasłania cały ekran: GL nie renderuje */
+    const view = { intro: reduced ? 1 : 0, scroll: 0, outro: 0, gather: 0 };
+    const nav = root.querySelector<HTMLElement>('[data-ha-nav]');
+    /** tryb ze scenami scrolla (bez reduced motion) */
+    let live = false;
+    /** Manifest lub panel zasłania cały ekran: GL nie renderuje */
     let covered = false;
     let dirty = true;
 
@@ -93,12 +119,18 @@ const HeroArcs: Module = {
       if (cursor && fine && !reduced) {
         cursor.style.transform = `translate3d(${mouse.eased.x}px, ${mouse.eased.y}px, 0)`;
       }
-      if (!scene || covered || (reduced && !dirty)) return;
-      scene.intro = view.intro;
-      scene.scroll = view.scroll;
-      scene.outro = view.outro;
-      scene.update(dt, reduced);
-      dirty = false;
+      // zasłonięte: maska x pełna, a CTA jeszcze poniżej ekranu
+      covered = live && st.reveal >= 1 && cta.getBoundingClientRect().top > window.innerHeight;
+      if (scene && !covered && (!reduced || dirty)) {
+        scene.intro = view.intro;
+        scene.scroll = view.scroll;
+        scene.outro = view.outro;
+        // przed finałem sieć jest złożona; rozproszenie startuje dopiero przy CTA
+        scene.gather = view.gather > 0 ? view.gather : 1;
+        scene.update(dt, reduced);
+        dirty = false;
+      }
+      renderReveal();
     };
     gsap.ticker.add(tick);
 
@@ -116,7 +148,10 @@ const HeroArcs: Module = {
       cursor?.classList.remove('is-down');
     };
     const onMove = (e: PointerEvent) => {
-      cursor?.classList.toggle('is-on', fine && !reduced && inArcs(e));
+      cursor?.classList.toggle(
+        'is-on',
+        fine && !reduced && !covered && st.reveal < 0.5 && inArcs(e)
+      );
     };
     window.addEventListener('pointerdown', onDown);
     window.addEventListener('pointerup', onUp);
@@ -294,14 +329,44 @@ const HeroArcs: Module = {
       }
     };
 
+    // --- Maska x: ten sam kształt co ikona rdzenia, rośnie od niej na cały ekran ---
+    const reveal = root.querySelector<HTMLElement>('[data-ha-reveal]');
+    const st = { reveal: 0, glow: 0 };
+    let lastClip = '';
+    const renderReveal = () => {
+      if (!reveal || !live) return;
+      let clip: string;
+      if (st.reveal <= 0) clip = 'polygon(50% 50%, 50% 50%, 50% 50%)';
+      else if (st.reveal >= 1) clip = 'none';
+      else {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const hs = scene?.hubScreen() ?? { x: w / 2, y: h / 2, size: Math.min(w, h) * 0.4 };
+        const r = st.reveal;
+        const s0 = Math.max(hs.size, 40);
+        const s1 = (Math.hypot(w, h) / 0.13) * 1.3;
+        const size = s0 * Math.pow(s1 / s0, r);
+        const k = r * r;
+        clip = `path('${xPath(hs.x + (w / 2 - hs.x) * k, hs.y + (h / 2 - hs.y) * k, size)}')`;
+      }
+      if (clip !== lastClip) {
+        reveal.style.clipPath = clip;
+        lastClip = clip;
+      }
+      reveal.style.setProperty('--glow', st.glow.toFixed(3));
+    };
+
     const ctx = gsap.context(() => {
-      // --- Intro ---
       const lines = q(hero, '[data-ha-line]');
+      const outerLines = q(hero, '.ha-line');
       const side = hero.querySelector('[data-ha-side]');
+      const sideParts = side ? Array.from(side.children) : [];
+      const ruleWrap = hero.querySelector('.ha-rule');
       const rule = hero.querySelector('[data-ha-rule]');
       const marquee = hero.querySelector('[data-ha-marquee]');
-      const nav = root.querySelector('[data-ha-nav]');
       const track = hero.querySelector<HTMLElement>('[data-ha-track]');
+      const manifest = root.querySelector<HTMLElement>('[data-ha-manifest]');
+      const xLines = manifest ? q<SVGLineElement>(manifest, '[data-ha-xmark] line') : [];
 
       // statyczny wykres też dostaje kształt
       if (reduced) {
@@ -313,55 +378,167 @@ const HeroArcs: Module = {
         }
         return;
       }
+      live = true;
+      root.dataset.live = '';
 
+      // --- Intro po załadowaniu ---
       gsap
         .timeline({ delay: 0.15 })
         .to(view, { intro: 1, duration: 2.4, ease: 'power2.out' }, 0)
         .from(lines, { yPercent: 110, duration: 1.1, ease, stagger: 0.09 }, 0.35)
-        .from(nav, { autoAlpha: 0, y: -12, duration: 0.8, ease: easeOut }, 0.6)
+        .from(
+          nav,
+          { autoAlpha: 0, y: -12, duration: 0.8, ease: easeOut, clearProps: 'transform' },
+          0.6
+        )
         .from(side, { autoAlpha: 0, y: 24, duration: 0.9, ease: easeOut }, 0.9)
         .from(rule, { scaleX: 0, duration: 1.2, ease }, 1)
         .from(marquee, { autoAlpha: 0, duration: 1 }, 1.3);
 
       // marquee bez końca: zestaw ma połowę szerokości ścieżki
-      if (track) {
-        gsap.to(track, { xPercent: -50, duration: 40, ease: 'none', repeat: -1 });
-      }
+      if (track) gsap.to(track, { xPercent: -50, duration: 40, ease: 'none', repeat: -1 });
 
-      // --- Scroll: hero odjeżdża, łuki rosną, panel wjeżdża ---
-      const heroMain = hero.querySelector('.ha-hero-main');
-      gsap.to(heroMain, {
-        yPercent: -30,
-        autoAlpha: 0.15,
-        ease: 'none',
-        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
+      // --- 1. Przelot: hero się rozjeżdża, kamera leci w rdzeń, x otwiera Manifest ---
+      const split = manifest
+        ? SplitText.create(q(manifest, '[data-ha-words]'), { type: 'words', wordsClass: 'ha-word' })
+        : null;
+      gsap.set(xLines, { drawSVG: '0%' });
+      const tl = gsap.timeline({ defaults: { ease: 'none' } });
+      outerLines.forEach((l, i) => {
+        tl.to(
+          l,
+          { xPercent: (i % 2 ? 1 : -1) * 70, autoAlpha: 0, duration: 0.26, ease: 'power2.in' },
+          0.02 + i * 0.02
+        );
       });
-      gsap.to(view, {
-        scroll: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: panel,
-          start: 'top bottom',
-          end: 'top top',
-          scrub: true,
-          onUpdate: () => (dirty = true),
-        },
+      tl.to(sideParts, { y: 90, autoAlpha: 0, duration: 0.18, stagger: 0.03, ease: 'power2.in' }, 0)
+        .to([ruleWrap, track], { y: 70, autoAlpha: 0, duration: 0.18 }, 0.02)
+        .to(dots, { autoAlpha: 0, duration: 0.2 }, 0)
+        .to(view, { scroll: 1, duration: 0.52, ease: 'power1.inOut' }, 0.04)
+        .to(st, { reveal: 1, duration: 0.2, ease: 'power2.in' }, 0.48)
+        .to(st, { glow: 1, duration: 0.08 }, 0.48)
+        .to(st, { glow: 0, duration: 0.14 }, 0.6);
+      if (split) {
+        tl.fromTo(
+          split.words,
+          { opacity: 0.08, yPercent: 30 },
+          { opacity: 1, yPercent: 0, duration: 0.04, stagger: 0.24 / split.words.length },
+          0.7
+        );
+      }
+      tl.to(xLines, { drawSVG: '100%', duration: 0.04, stagger: 0.02 }, 0.95).to(
+        {},
+        { duration: 0.03 }
+      );
+      ScrollTrigger.create({
+        trigger: root.querySelector('[data-ha-intro]'),
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.6,
+        animation: tl,
+        onUpdate: () => (dirty = true),
+      });
+
+      // --- 2. Dwa rzędy usług w przeciwne strony, przechył z prędkości scrolla ---
+      const rowsWrap = root.querySelector<HTMLElement>('[data-ha-rows]');
+      q(root, '[data-ha-row]').forEach((row) => {
+        const dir = Number(row.dataset.haRow);
+        gsap.fromTo(
+          row,
+          { xPercent: dir > 0 ? 0 : -33 },
+          {
+            xPercent: dir > 0 ? -33 : 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: rowsWrap,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 0.4,
+            },
+          }
+        );
+      });
+      const skew = rowsWrap
+        ? gsap.quickTo(rowsWrap, 'skewX', { duration: 0.6, ease: 'power3' })
+        : null;
+
+      // --- 3. Jak pracujemy: stos kart, lista, pasek postępu ---
+      buildLoops();
+      const navSteps = q(root, '[data-ha-nav-step]');
+      const stepEls = q(root, '[data-ha-step]');
+      const setActive = () => {
+        const line = window.innerHeight * 0.55;
+        let active = 0;
+        stepEls.forEach((el, i) => {
+          if (el.getBoundingClientRect().top < line) active = i;
+        });
+        navSteps.forEach((n, j) => n.classList.toggle('is-active', j === active));
+      };
+      const process = root.querySelector('[data-ha-process]');
+      ScrollTrigger.create({
+        trigger: process,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: setActive,
+        onRefresh: setActive,
       });
       gsap.fromTo(
-        panel,
-        { scale: 0.94 },
+        root.querySelector('[data-ha-steps-bar]'),
+        { scaleY: 0 },
         {
-          scale: 1,
+          scaleY: 1,
           ease: 'none',
-          scrollTrigger: { trigger: panel, start: 'top bottom', end: 'top 15%', scrub: true },
+          scrollTrigger: { trigger: process, start: 'top 55%', end: 'bottom bottom', scrub: true },
         }
       );
-      if (dots) {
-        gsap.to(dots, {
-          autoAlpha: 0,
-          ease: 'none',
-          scrollTrigger: { trigger: panel, start: 'top 60%', end: 'top top', scrub: true },
+      stepEls.forEach((step, i) => {
+        const card = step.querySelector('[data-ha-ui]');
+        ScrollTrigger.create({
+          trigger: card,
+          start: 'top bottom',
+          end: 'bottom top',
+          onToggle: (self) => (self.isActive ? loops[i]?.play() : loops[i]?.pause()),
         });
+        gsap.from(step, {
+          y: 120,
+          rotate: 2,
+          ease: 'none',
+          scrollTrigger: { trigger: step, start: 'top bottom', end: 'top 40%', scrub: true },
+        });
+        const next = stepEls[i + 1];
+        if (next) {
+          gsap.to(step, {
+            scale: 0.9,
+            '--dim': 0.6,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: next,
+              start: 'top bottom',
+              end: () => `top ${parseFloat(getComputedStyle(next).top) || 0}px`,
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          });
+        }
+      });
+
+      // --- 4. Finał: moduły zlatują się w sieć, litery CTA wyjeżdżają ---
+      ScrollTrigger.create({
+        trigger: cta,
+        start: 'top bottom',
+        end: 'top 10%',
+        onUpdate: (self) => {
+          view.gather = self.progress;
+          dirty = true;
+        },
+        onLeaveBack: () => (view.gather = 0),
+      });
+      gsap.to(view, {
+        outro: 1,
+        ease: 'none',
+        scrollTrigger: { trigger: cta, start: 'top bottom', end: 'bottom bottom', scrub: true },
+      });
+      if (dots) {
         gsap.fromTo(
           dots,
           { autoAlpha: 0 },
@@ -373,91 +550,60 @@ const HeroArcs: Module = {
           }
         );
       }
-      ScrollTrigger.create({
-        trigger: panel,
-        start: 'top top',
-        end: 'bottom bottom',
-        onToggle: (self) => (covered = self.isActive),
-      });
-      gsap.to(view, {
-        outro: 1,
-        ease: 'none',
-        scrollTrigger: { trigger: cta, start: 'top bottom', end: 'bottom bottom', scrub: true },
-      });
+      const ctaText = cta.querySelector<HTMLElement>('[data-ha-cta-text]');
+      if (ctaText) {
+        const chars = SplitText.create(ctaText, { type: 'chars,words' }).chars;
+        gsap
+          .timeline({
+            scrollTrigger: { trigger: cta, start: 'top 70%', end: 'top 5%', scrub: 0.5 },
+          })
+          .from(chars, { yPercent: 120, rotate: 8, autoAlpha: 0, ease: 'none', stagger: 0.03 })
+          .from(
+            cta.querySelector('.ha-cta-link .ha-x'),
+            { scale: 0, rotate: -270, ease: 'none' },
+            '>-0.2'
+          );
+      }
 
-      // szybki scroll odpala smugę
+      // --- Cała strona: pasek postępu, nav, przechył rzędów, impulsy przy szybkim scrollu ---
+      gsap.to(document.querySelector('[data-ha-scrollbar]'), {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: { start: 0, end: 'max', scrub: 0.3 },
+      });
       let cool = 0;
       ScrollTrigger.create({
         start: 0,
         end: 'max',
         onUpdate: (self) => {
+          const v = self.getVelocity();
+          const y = self.scroll();
+          nav?.classList.toggle('is-hidden', self.direction === 1 && y > 160);
+          nav?.classList.toggle('is-solid', y > window.innerHeight * 0.4);
+          skew?.(gsap.utils.clamp(-10, 10, -v / 280));
           const now = performance.now();
-          if (Math.abs(self.getVelocity()) > 1400 && now > cool && !covered) {
+          if (Math.abs(v) > 1400 && now > cool && !covered) {
             scene?.fire(1.6);
             cool = now + 220;
           }
         },
       });
 
-      // --- Manifest: słowo po słowie, potem znak x ---
-      const manifest = root.querySelector<HTMLElement>('[data-ha-manifest]');
-      if (manifest) {
-        const split = SplitText.create(q(manifest, '[data-ha-words]'), { type: 'words' });
-        const xLines = q<SVGLineElement>(manifest, '[data-ha-xmark] line');
-        gsap.set(xLines, { drawSVG: '0%' });
-        gsap
-          .timeline({
-            scrollTrigger: { trigger: manifest, start: 'top 75%', end: 'bottom 55%', scrub: true },
-          })
-          .fromTo(split.words, { opacity: 0.12 }, { opacity: 1, ease: 'none', stagger: 0.1 })
-          .to(xLines, { drawSVG: '100%', duration: 0.6, stagger: 0.3, ease: 'power2.out' });
+      // magnes na CTA
+      const link = cta.querySelector<HTMLElement>('[data-ha-cta-link]');
+      if (link && fine) {
+        const mx = gsap.quickTo(link, 'x', { duration: 0.6, ease: 'power3' });
+        const my = gsap.quickTo(link, 'y', { duration: 0.6, ease: 'power3' });
+        link.addEventListener('pointermove', (e) => {
+          const r = link.getBoundingClientRect();
+          mx((e.clientX - r.left - r.width / 2) * 0.12);
+          my((e.clientY - r.top - r.height / 2) * 0.2);
+        });
+        link.addEventListener('pointerleave', () => {
+          mx(0);
+          my(0);
+        });
       }
-
-      // --- Jak pracujemy: aktywny krok i pętle mini-UI ---
-      buildLoops();
-      // aktywny = ostatni krok, którego góra minęła 55% ekranu (odporne na skoki scrolla)
-      const navSteps = q(root, '[data-ha-nav-step]');
-      const stepEls = q(root, '[data-ha-step]');
-      const setActive = () => {
-        const line = window.innerHeight * 0.55;
-        let active = 0;
-        stepEls.forEach((el, i) => {
-          if (el.getBoundingClientRect().top < line) active = i;
-        });
-        navSteps.forEach((n, j) => n.classList.toggle('is-active', j === active));
-      };
-      ScrollTrigger.create({
-        trigger: root.querySelector('[data-ha-process]'),
-        start: 'top bottom',
-        end: 'bottom top',
-        onUpdate: setActive,
-        onRefresh: setActive,
-      });
-      stepEls.forEach((step, i) => {
-        const card = step.querySelector('[data-ha-ui]');
-        ScrollTrigger.create({
-          trigger: card,
-          start: 'top bottom',
-          end: 'bottom top',
-          onToggle: (self) => (self.isActive ? loops[i]?.play() : loops[i]?.pause()),
-        });
-        gsap.from(step.children, {
-          autoAlpha: 0,
-          y: 40,
-          duration: 0.9,
-          ease: easeOut,
-          stagger: 0.08,
-          scrollTrigger: { trigger: step, start: 'top 80%', once: true },
-        });
-      });
-
-      // --- CTA: tekst wjeżdża spod łuków ---
-      gsap.from(cta.querySelector('[data-ha-cta-link]'), {
-        yPercent: 40,
-        autoAlpha: 0,
-        ease: 'none',
-        scrollTrigger: { trigger: cta, start: 'top 80%', end: 'top 20%', scrub: true },
-      });
     }, root);
 
     const onResize = () => {
@@ -500,6 +646,8 @@ const HeroArcs: Module = {
       mouse.destroy();
       scene?.destroy();
       scene = null;
+      delete root.dataset.live;
+      if (reveal) reveal.style.clipPath = '';
     };
   },
 

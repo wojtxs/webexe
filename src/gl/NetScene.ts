@@ -20,6 +20,7 @@ import {
   MeshBasicMaterial,
   MeshStandardMaterial,
   PerspectiveCamera,
+  Quaternion,
   PlaneGeometry,
   PointLight,
   SRGBColorSpace,
@@ -81,6 +82,7 @@ interface Node {
   base: Vector3;
   phase: number;
   appear: number;
+  scatter: Vector3;
 }
 
 interface Link {
@@ -215,6 +217,8 @@ export class NetScene {
   scroll = 0;
   outro = 0;
   hold = false;
+  /** 0 = moduły rozproszone, 1 = sieć złożona (finał przy CTA) */
+  gather = 1;
 
   private renderer: WebGLRenderer;
   private scene = new Scene();
@@ -227,6 +231,12 @@ export class NetScene {
   private nextIdle = 0.8;
   private nextHold = 0;
   private parallax = { x: 0, y: 0 };
+  private hubW = new Vector3();
+  private hubN = new Vector3();
+  private camPos = new Vector3();
+  private camLook = new Vector3();
+  private tmpV = new Vector3();
+  private tmpQ = new Quaternion();
 
   private constructor(
     wrap: HTMLElement,
@@ -273,6 +283,9 @@ export class NetScene {
         base: new Vector3(...d.pos),
         phase: i * 1.7,
         appear: 0,
+        scatter: new Vector3(rand(-1, 1) * 8, rand(-1, 1) * 5, rand(3, 9)).multiplyScalar(
+          i === 0 ? 0.4 : 1
+        ),
       });
       if (hub) this.hubLight.position.set(d.pos[0], d.pos[1], d.pos[2] + 1.4);
     });
@@ -365,6 +378,21 @@ export class NetScene {
     this.links.forEach((l, i) => window.setTimeout(() => this.send(l, 1, speedMul), i * 45));
   }
 
+  /** rdzeń na ekranie (CSS px): środek i szerokość ekranu ikony; do maski x w module */
+  hubScreen(): { x: number; y: number; size: number } {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const hub = this.nodes[0]!.group;
+    const c = this.tmpV.copy(this.hubW).project(this.camera);
+    const x = (c.x * 0.5 + 0.5) * w;
+    const y = (0.5 - c.y * 0.5) * h;
+    const half = (NODES[0]!.size[0] - 0.2) / 2;
+    const e = hub.localToWorld(new Vector3(half, 0, 0.21)).project(this.camera);
+    const ex = (e.x * 0.5 + 0.5) * w;
+    const ey = (0.5 - e.y * 0.5) * h;
+    return { x, y, size: 2 * Math.hypot(ex - x, ey - y) };
+  }
+
   resize(): void {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -424,20 +452,26 @@ export class NetScene {
       const s = k <= 0 ? 0.0001 : easeOutBack(k);
       nd.group.scale.setScalar(s);
       const f = reduced ? 0 : p.FLOAT;
+      // finał: moduł wraca z rozproszenia, kolejno od rdzenia
+      const gk = 1 - Math.pow(1 - clamp01((this.gather - (i / n) * 0.3) / 0.7), 3);
+      const off = 1 - gk;
       nd.group.position.set(
-        nd.base.x,
-        nd.base.y + Math.sin(t * 0.6 + nd.phase) * f,
-        nd.base.z + Math.cos(t * 0.45 + nd.phase) * f * 0.6
+        nd.base.x + nd.scatter.x * off,
+        nd.base.y + nd.scatter.y * off + Math.sin(t * 0.6 + nd.phase) * f,
+        nd.base.z + nd.scatter.z * off + Math.cos(t * 0.45 + nd.phase) * f * 0.6
       );
       nd.group.rotation.set(
-        Math.sin(t * 0.4 + nd.phase) * f * 0.25,
-        Math.cos(t * 0.35 + nd.phase) * f * 0.35,
-        0
+        Math.sin(t * 0.4 + nd.phase) * f * 0.25 + off * nd.phase * 0.6,
+        Math.cos(t * 0.35 + nd.phase) * f * 0.35 + off * 1.2,
+        off * 0.8
       );
       nd.flash = Math.max(0, nd.flash - dt * 2.2);
       nd.face.color.setScalar(1 + nd.flash * (i === 0 ? 0.9 : 0.45));
     });
-    const draw = clamp01((this.intro - 0.45) / 0.55);
+    const draw = Math.min(
+      clamp01((this.intro - 0.45) / 0.55),
+      clamp01((this.gather - 0.75) / 0.25)
+    );
     this.links.forEach((l) => (l.u.uDraw!.value = draw * 1.02));
     this.hubLight.intensity = 4 + (this.nodes[0]?.flash ?? 0) * 10;
 
@@ -448,23 +482,37 @@ export class NetScene {
     this.parallax.x += ((reduced ? 0 : mx) - this.parallax.x) * k;
     this.parallax.y += ((reduced ? 0 : my) - this.parallax.y) * k;
 
-    // ujęcie: baza → scroll (obrót, najazd) → finał (sieć przesuwa się za CTA)
+    // ujęcie: baza → scroll (przelot kamery w rdzeń) → finał (sieć z prawej, za CTA)
     const o = this.outro;
-    const s = this.scroll * (1 - o);
+    const fly = this.scroll * (1 - o);
+    const sf = fly * fly * (3 - 2 * fly);
+    const scale = mobile ? p.SCALE_M : 1;
     const g = this.group;
-    g.scale.setScalar(mobile ? p.SCALE_M : 1);
+    const calm = 1 - sf;
+    g.scale.setScalar(scale);
     g.position.set(
       (mobile ? p.X_M : p.X) + o * (mobile ? 0.6 : 2.6),
-      (mobile ? p.Y_M : p.Y) + s * p.SCROLL_RISE + o * (mobile ? 1.2 : 0.5),
+      (mobile ? p.Y_M : p.Y) + o * (mobile ? 1.2 : 0.5),
       0
     );
     g.rotation.set(
-      p.ROT_X + this.parallax.y * p.PARALLAX_Y - s * 0.12,
-      p.ROT_Y + this.parallax.x * p.PARALLAX_X + s * p.SCROLL_ROT - o * 0.2,
+      p.ROT_X + this.parallax.y * p.PARALLAX_Y * calm,
+      p.ROT_Y + this.parallax.x * p.PARALLAX_X * calm - o * 0.2,
       0
     );
-    this.camera.position.set(0, 0, p.CAM_Z - s * p.SCROLL_DOLLY + o * 1.5);
-    this.camera.lookAt(0, 0, -2);
+    g.updateMatrixWorld(true);
+
+    // cel przelotu: przed ekranem rdzenia, na jego osi
+    const hub = this.nodes[0]!.group;
+    hub.getWorldPosition(this.hubW);
+    this.hubN.set(0, 0, 1).applyQuaternion(hub.getWorldQuaternion(this.tmpQ));
+    this.camPos
+      .set(0, 0, p.CAM_Z + o * 1.5)
+      .lerp(this.tmpV.copy(this.hubW).addScaledVector(this.hubN, p.FLY_DIST * scale), sf);
+    this.camera.position.copy(this.camPos);
+    this.camLook.set(0, 0, -2).lerp(this.hubW, sf);
+    this.camera.lookAt(this.camLook);
+    this.camera.updateMatrixWorld();
 
     this.renderer.render(this.scene, this.camera);
   }

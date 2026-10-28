@@ -567,9 +567,8 @@ export const heroNetParams = {
   MOUSE_LERP: 0.06,
   PACE_PX: 40,
   PACE_LERP: 0.08,
-  SCROLL_ROT: 0.35,
-  SCROLL_DOLLY: 3,
-  SCROLL_RISE: 1.2,
+  /** przelot: odległość kamery od ekranu rdzenia na końcu (× skala grupy) */
+  FLY_DIST: 3.4,
 };
 
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */

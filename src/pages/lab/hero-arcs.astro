@@ -47,6 +47,7 @@ const marquee = [...services, ...services, ...services];
     <div class="ha-gl" data-gl-wrap aria-hidden="true"></div>
     <div class="ha-dots" data-ha-dots aria-hidden="true"></div>
     <div class="ha-cursor" data-ha-cursor aria-hidden="true"></div>
+    <div class="ha-scrollbar" data-ha-scrollbar aria-hidden="true"></div>
 
     <div class="ha" data-module="hero-arcs">
       <header class="ha-nav container" data-ha-nav>
@@ -63,92 +64,116 @@ const marquee = [...services, ...services, ...services];
         </a>
       </header>
 
-      <section class="ha-hero" data-ha-hero aria-labelledby="ha-title">
-        <div class="ha-hero-main container">
-          <h1 id="ha-title" class="ha-title">
-            <span class="ha-line">
-              <span class="ha-line-in" data-ha-line>
-                Budujemy
-              </span>
-            </span>
-            <span class="ha-line">
-              <span class="ha-line-in" data-ha-line>
-                oprogramowanie
-              </span>
-            </span>
-            <span class="ha-line">
-              <span class="ha-line-in" data-ha-line>
-                dla firm i zostajemy
-              </span>
-            </span>
-            <span class="ha-line">
-              <span class="ha-line-in" data-ha-line>
-                przy nim <span class="ha-accent">na lata.</span>
-              </span>
-            </span>
-          </h1>
-          <div class="ha-side" data-ha-side>
-            <p class="ha-lead">
-              Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy je
-              razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
-            </p>
-            <div class="ha-actions">
-              <a class="ha-btn ha-btn-primary" href="#kontakt">
-                Porozmawiajmy o projekcie
-              </a>
-              <a class="ha-btn ha-btn-ghost" href="#jak-pracujemy">
-                Jak pracujemy
-              </a>
+      <!-- intro: przypięta scena; scroll leci kamerą w rdzeń, x otwiera Manifest -->
+      <div class="ha-intro" data-ha-intro>
+        <div class="ha-stage" data-ha-stage>
+          <section class="ha-hero" data-ha-hero aria-labelledby="ha-title">
+            <div class="ha-hero-main container">
+              <h1 id="ha-title" class="ha-title">
+                <span class="ha-line">
+                  <span class="ha-line-in" data-ha-line>
+                    Budujemy
+                  </span>
+                </span>
+                <span class="ha-line">
+                  <span class="ha-line-in" data-ha-line>
+                    oprogramowanie
+                  </span>
+                </span>
+                <span class="ha-line">
+                  <span class="ha-line-in" data-ha-line>
+                    dla firm i zostajemy
+                  </span>
+                </span>
+                <span class="ha-line">
+                  <span class="ha-line-in" data-ha-line>
+                    przy nim <span class="ha-accent">na lata.</span>
+                  </span>
+                </span>
+              </h1>
+              <div class="ha-side" data-ha-side>
+                <p class="ha-lead">
+                  Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI.
+                  Projektujemy je razem z wami, wdrażamy etapami i utrzymujemy na własnej
+                  infrastrukturze.
+                </p>
+                <div class="ha-actions">
+                  <a class="ha-btn ha-btn-primary" href="#kontakt">
+                    Porozmawiajmy o projekcie
+                  </a>
+                  <a class="ha-btn ha-btn-ghost" href="#jak-pracujemy">
+                    Jak pracujemy
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="ha-rule container" aria-hidden="true">
+              <span data-ha-rule></span>
+            </div>
+            <div class="ha-marquee" data-ha-marquee>
+              <p class="sr-only">{services.join(', ')}</p>
+              <div class="ha-marquee-track" data-ha-track aria-hidden="true">
+                {[0, 1].map(() => (
+                  <span class="ha-marquee-set">
+                    {marquee.map((s) => (
+                      <span class="ha-marquee-item">
+                        {s}
+                        <span class="ha-x">x</span>
+                      </span>
+                    ))}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <div class="ha-reveal" data-ha-reveal>
+            <div class="ha-manifest container" data-ha-manifest aria-label="Manifest">
+              <p class="ha-problem" data-ha-words>
+                Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku
+                latach nikt nie wie, jak działa, a każda zmiana jest ryzykiem.
+              </p>
+              <p class="ha-answer" data-ha-words>
+                My budujemy tak, żeby dało się to rozwijać <span class="ha-accent">latami</span>. I
+                sami to rozwijamy.
+              </p>
+              <svg class="ha-xmark" viewBox="0 0 40 40" data-ha-xmark aria-hidden="true">
+                <defs>
+                  <linearGradient id="ha-x-grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop class="ha-stop-1" offset="0" />
+                    <stop class="ha-stop-2" offset="1" />
+                  </linearGradient>
+                </defs>
+                <line x1="6" y1="6" x2="34" y2="34" />
+                <line x1="34" y1="6" x2="6" y2="34" />
+              </svg>
             </div>
           </div>
         </div>
-        <div class="ha-rule container" aria-hidden="true">
-          <span data-ha-rule></span>
-        </div>
-        <div class="ha-marquee" data-ha-marquee>
-          <p class="sr-only">{services.join(', ')}</p>
-          <div class="ha-marquee-track" data-ha-track aria-hidden="true">
-            {[0, 1].map(() => (
-              <span class="ha-marquee-set">
-                {marquee.map((s) => (
-                  <span class="ha-marquee-item">
+      </div>
+
+      <section class="ha-panel" data-ha-panel>
+        <div class="ha-rows" data-ha-rows aria-hidden="true">
+          {[1, -1].map((dir) => (
+            <div class="ha-row" data-ha-row={dir}>
+              {[0, 1, 2].map(() =>
+                services.map((s) => (
+                  <span class="ha-row-item">
                     {s}
                     <span class="ha-x">x</span>
                   </span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div class="ha-gap" aria-hidden="true"></div>
-
-      <section class="ha-panel" data-ha-panel>
-        <div class="ha-manifest container" data-ha-manifest aria-label="Manifest">
-          <p class="ha-problem" data-ha-words>
-            Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach
-            nikt nie wie, jak działa, a każda zmiana jest ryzykiem.
-          </p>
-          <p class="ha-answer" data-ha-words>
-            My budujemy tak, żeby dało się to rozwijać <span class="ha-accent">latami</span>. I sami
-            to rozwijamy.
-          </p>
-          <svg class="ha-xmark" viewBox="0 0 40 40" data-ha-xmark aria-hidden="true">
-            <defs>
-              <linearGradient id="ha-x-grad" x1="0" y1="0" x2="1" y2="1">
-                <stop class="ha-stop-1" offset="0" />
-                <stop class="ha-stop-2" offset="1" />
-              </linearGradient>
-            </defs>
-            <line x1="6" y1="6" x2="34" y2="34" />
-            <line x1="34" y1="6" x2="6" y2="34" />
-          </svg>
+                ))
+              )}
+            </div>
+          ))}
         </div>
 
         <div class="ha-process container" id="jak-pracujemy" data-ha-process>
           <h2 class="ha-process-title">Jak pracujemy</h2>
           <ol class="ha-steps-nav" aria-hidden="true">
+            <li class="ha-steps-bar">
+              <i data-ha-steps-bar></i>
+            </li>
             {steps.map((s, i) => (
               <li data-ha-nav-step={i} class={i === 0 ? 'is-active' : ''}>
                 <span class="ha-steps-n">{s.n} / 04</span>
@@ -158,7 +183,7 @@ const marquee = [...services, ...services, ...services];
           </ol>
           <div class="ha-steps">
             {steps.map((s, i) => (
-              <article class="ha-step" data-ha-step={i}>
+              <article class="ha-step" data-ha-step={i} style={`--i:${i}`}>
                 <div class={`ha-card ha-card-${s.ui}`} data-ha-ui={s.ui} aria-hidden="true">
                   {s.ui === 'design' && (
                     <svg class="ha-flow" viewBox="0 0 400 260">
@@ -313,7 +338,8 @@ const marquee = [...services, ...services, ...services];
         <div class="ha-cta-inner container">
           <!-- TODO(treść): CTA końcowe i dane kontaktowe (D9, sekcja 07) -->
           <a class="ha-cta-link" href="#kontakt" data-ha-cta-link>
-            Porozmawiajmy o projekcie<span class="ha-x">x</span>
+            <span data-ha-cta-text>Porozmawiajmy o projekcie</span>
+            <span class="ha-x">x</span>
           </a>
         </div>
       </section>
@@ -439,10 +465,13 @@ const marquee = [...services, ...services, ...services];
 
   /* --- Nawigacja --- */
   .ha-nav {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 3;
+    z-index: 6;
+    transition:
+      transform var(--d-default) var(--ease-default),
+      background-color var(--d-default) var(--ease-out);
     align-items: center;
     padding-block: var(--s-6);
   }
@@ -602,34 +631,35 @@ const marquee = [...services, ...services, ...services];
     font-weight: var(--w-h1);
   }
 
-  .ha-gap {
-    height: 45vh;
-    height: 45svh;
-  }
-
-  /* --- Panel: domyślnie ciemny raise, ?panel=light jasna Piana --- */
-  .ha-panel {
+  /* --- Panel i Manifest: domyślnie Kawa, ?panel=light Kość --- */
+  .ha-panel,
+  .ha-reveal {
     --pn-bg: var(--c-kawa);
     --pn-ink: var(--c-kosc);
     --pn-muted: var(--c-kosc-muted);
     --pn-dim: color-mix(in srgb, var(--c-kosc) 22%, transparent);
     --pn-card: var(--c-wegiel);
+    --pn-step: var(--c-kawa-line);
     --pn-line: var(--c-kawa-line);
     --pn-sk: color-mix(in srgb, var(--c-kosc) 14%, transparent);
     position: relative;
-    padding-block: var(--s-32);
-    border-radius: var(--r-panel);
     background: var(--pn-bg);
     color: var(--pn-ink);
-    transform-origin: 50% 0;
   }
 
-  :global(html[data-panel='light']) .ha-panel {
+  .ha-panel {
+    padding-bottom: var(--s-32);
+    border-radius: 0 0 var(--r-panel) var(--r-panel);
+  }
+
+  :global(html[data-panel='light']) .ha-panel,
+  :global(html[data-panel='light']) .ha-reveal {
     --pn-bg: var(--c-kosc);
     --pn-ink: var(--c-wegiel);
     --pn-muted: var(--c-ink-warm);
     --pn-dim: color-mix(in srgb, var(--c-wegiel) 22%, transparent);
     --pn-card: var(--c-biel);
+    --pn-step: var(--c-biel);
     --pn-line: var(--c-kosc-line);
     --pn-sk: var(--c-kosc-line);
   }
@@ -1331,5 +1361,188 @@ const marquee = [...services, ...services, ...services];
       font-size: var(--t-h1);
       line-height: var(--lh-h1);
     }
+  }
+  /* ======================================================================
+     Choreografia scrolla. Bez JS i przy reduced motion wszystko stoi w zwykłym
+     przepływie; moduł dodaje [data-live] i dopiero wtedy włączają się sceny.
+     ====================================================================== */
+
+  /* pasek postępu strony */
+  .ha-scrollbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 7;
+    width: 100%;
+    height: 2px;
+    background: var(--g-bursztyn);
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+  }
+
+  /* nav: chowa się przy scrollu w dół, po zjechaniu z hero dostaje tło */
+  .ha-nav:global(.is-hidden) {
+    transform: translateY(-110%);
+  }
+
+  .ha-nav:global(.is-solid) {
+    background: color-mix(in srgb, var(--c-wegiel) 82%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  /* --- Manifest: statycznie blok po hero --- */
+  .ha-reveal {
+    display: grid;
+    align-content: center;
+    padding-block: var(--s-32);
+  }
+
+  .ha-reveal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--g-bursztyn);
+    opacity: var(--glow, 0);
+    pointer-events: none;
+  }
+
+  .ha-manifest {
+    position: relative;
+    padding-bottom: 0;
+  }
+
+  /* --- Live: hero przypięte, Manifest w tej samej scenie pod maską x --- */
+  .ha[data-live] .ha-intro {
+    height: 460vh;
+    height: 460svh;
+  }
+
+  .ha[data-live] .ha-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .ha[data-live] .ha-hero {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+  }
+
+  .ha[data-live] .ha-reveal {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding-block: var(--s-16);
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%);
+    will-change: clip-path;
+  }
+
+  /* --- Dwa rzędy usług: jadą w przeciwne strony --- */
+  .ha-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    overflow: hidden;
+    padding-block: var(--s-24) var(--s-32);
+  }
+
+  .ha-row {
+    display: flex;
+    width: max-content;
+    font-size: var(--t-impact);
+    font-weight: var(--w-impact);
+    line-height: var(--lh-impact);
+    letter-spacing: var(--ls-impact);
+    white-space: nowrap;
+    will-change: transform;
+  }
+
+  .ha-row[data-ha-row='-1'] {
+    color: var(--pn-dim);
+  }
+
+  .ha-row-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding-right: 0.35em;
+  }
+
+  .ha-row-item .ha-x {
+    font-size: 0.8em;
+  }
+
+  /* --- Jak pracujemy: karty nachodzą na siebie --- */
+  .ha-steps-nav li.ha-steps-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * var(--s-4));
+    width: 2px;
+    overflow: hidden;
+    border-radius: var(--r-pill);
+    background: var(--pn-line);
+  }
+
+  .ha-steps-nav {
+    position: sticky;
+  }
+
+  .ha-steps-bar i {
+    display: block;
+    height: 100%;
+    background: var(--g-bursztyn);
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  .ha-step {
+    position: relative;
+    padding: var(--s-6);
+    border: 1px solid var(--pn-line);
+    border-radius: var(--r-panel);
+    background: var(--pn-step, var(--pn-bg));
+    transform-origin: 50% 0;
+  }
+
+  .ha-step::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--c-wegiel);
+    opacity: var(--dim, 0);
+    pointer-events: none;
+  }
+
+  .ha[data-live] .ha-steps {
+    gap: 30vh;
+    padding-bottom: 10vh;
+  }
+
+  .ha[data-live] .ha-step {
+    position: sticky;
+    top: calc(var(--s-24) + var(--i) * var(--s-4));
+  }
+
+  .ha-step .ha-card {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* słowa po SplitText w akcencie dostają gradient same (dzieci nie dziedziczą clip text) */
+  .ha-accent :global(.ha-word) {
+    background: var(--g-bursztyn);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* --- CTA: litery i magnes --- */
+  .ha-cta-link {
+    display: inline-block;
   }
 </style>
