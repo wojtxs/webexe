@@ -245,3 +245,15 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zostało: ocena na żywo; potwierdzenie hexów Bursztynu i pochodnych; przeniesienie palety v2 do `DESIGN.md` (zastępuje Lagunę, wymaga zgody); `ArcScene` zostaje w repo nieużywany do porównania.
 - Decyzje: obiekt hero = sieć modułów z rdzeniem x (kojarzy się z oprogramowaniem i integracjami, niesie znak marki); Comfortaa tylko w wordmarku i znakach x, bo obok Jakarty 800 w nagłówku wyglądała za miękko.
 - Lekcje: kontrast brył na Węglu wymaga jaśniejszego korpusu (`--c-kawa-raise`) i mocniejszego światła; ciemna Kawa na Węglu znika.
+
+### 2026-10-28 — F2: choreografia scrolla (`/lab/hero-arcs`)
+
+- Zrobione: użytkownik: hero „spoko na ten moment”, ale scroll „bardzo nudny”, ma być extra jak na sprawdzonych stronach. Commit `feat(lab): hero — choreografia scrolla…`.
+  - **Przelot w rdzeń** (wzór: landonorris „przez kask”, igloo/edolus kamera scrollem). Intro przypięte przez `position: sticky` (460svh, bez `pin`). Wiersze nagłówka rozjeżdżają się na boki, lead i marquee opadają. Kamera NetScene leci przez sieć na oś ekranu rdzenia. Maska `clip-path: path()` w kształcie tego samego x (dwie kapsuły, nonzero) startuje z rozmiaru ikony (`NetScene.hubScreen()`, projekcja) i rośnie wykładniczo na cały ekran, z błyskiem Bursztynu. Pod nią Manifest: słowa wjeżdżają, na końcu DrawSVG rysuje x.
+  - **Dwa rzędy usług** (wzór: landonorris) w przeciwne strony, `skewX` z prędkości scrolla (`quickTo`).
+  - **Stos kart** w Jak pracujemy: sticky z przesunięciem `--i`, poprzednia karta skaluje się do 0,9 i przygasa, nowa wjeżdża z obrotem. Pasek postępu przy liście.
+  - **Finał**: moduły wracają z rozproszenia (`gather`), przewody rysują się na nowo, litery CTA wjeżdżają (SplitText chars), x się obraca, magnes na linku.
+  - Nav fixed (chowa się w dół, tło po zjechaniu), pasek postępu strony. GL nie renderuje pod pełną maską.
+  - Reduced motion: bez `[data-live]` wszystko w zwykłym przepływie (sprawdzone zrzutem z emulacją). Zrzuty 1440 (14 klatek) i 390 (5 klatek). Lint, check i build czyste.
+- Zostało: ocena płynności na żywo (clip-path path na całym ekranie, przelot), strojenie tempa (`.ha-intro` 460svh, pozycje na osi), dotyk na mobile; akcent po SplitText dostaje gradient osobno (`.ha-word`).
+- Lekcje: `node -e` z dłuższym kodem w Bash na Windowsie łamie się na cudzysłowach; większe podmiany robić plikiem `.mjs` w scratchpadzie. Animacje scroll i intro na tych samych elementach i właściwościach się gryzą; scroll animuje opakowania (`.ha-line`, dzieci `.ha-side`), intro elementy wewnętrzne.
