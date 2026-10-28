@@ -47,6 +47,8 @@
   --w-body: 400;
   --w-small: 500;
   --w-label: 600;
+  /* lekki krój nagłówków: spike /lab/hero-arcs (wzór cerebrium), do decyzji w DESIGN.md */
+  --w-display-light: 400;
 
   /* --- Line-height --- */
   --lh-impact: 0.88;

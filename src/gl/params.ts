@@ -462,6 +462,67 @@ export const heroHmParams = {
   LINE_WIDTH: 1,
 };
 
+/**
+ * Hero „łuki” (2026-10-28, wzór: cerebrium.ai): ciemna Głębia, grube matowe łuki-wstęgi
+ * w gradiencie Laguny wyłaniają się z dołu, wzdłuż nich biegną smugi światła (sygnał między
+ * systemami). Jednostki świata, kąty w radianach, czasy w s.
+ */
+export const heroArcsParams = {
+  // Łuki: liczba, promień pierwszego i przyrost, grubość, głębokość wstęgi
+  COUNT: 5,
+  RADIUS: 5.4,
+  RADIUS_STEP: 0.3,
+  THICKNESS: 0.14,
+  DEPTH: 3.2,
+  DEPTH_STEP: 0.4,
+  /** przesunięcie kolejnych łuków w głąb i w bok */
+  Z_STEP: -1.4,
+  X_STEP: 0.6,
+  /** położenie grupy: desktop */
+  X: 4.0,
+  Y: -3.9,
+  ROT_X: -0.22,
+  ROT_Y: -0.85,
+  ROT_Z: 0.12,
+  /** mobile (< 768 px) */
+  X_M: 1.6,
+  Y_M: -0.9,
+  SCALE_M: 0.5,
+
+  // Kamera
+  FOV: 32,
+  CAM_Z: 11,
+
+  // Materiał: matowy, cień w stronę Głębi
+  ALBEDO: 0.8,
+  FOG_NEAR: 13,
+  FOG_FAR: 32,
+  GRAIN: 0.035,
+
+  // Smugi światła
+  STREAK_SPEED: 0.55,
+  STREAK_W: 0.035,
+  STREAK_TAIL: 0.12,
+  STREAK_GLOW: 0.08,
+  /** przerwa między smugami w spoczynku */
+  STREAK_GAP_MIN: 1.4,
+  STREAK_GAP_MAX: 3.2,
+  /** kliknięcie i przytrzymanie: co ile s kolejna smuga i mnożnik prędkości */
+  HOLD_GAP: 0.09,
+  HOLD_SPEED: 1.8,
+
+  // Kursor i scroll
+  PARALLAX_X: 0.1,
+  PARALLAX_Y: 0.05,
+  MOUSE_LERP: 0.06,
+  PACE_PX: 40,
+  PACE_LERP: 0.08,
+  /** scroll: wzrost łuków i najazd kamery na przejściu w panel */
+  SCROLL_RISE: 1.6,
+  SCROLL_DOLLY: 2.2,
+  SCROLL_ROT: 0.25,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 
