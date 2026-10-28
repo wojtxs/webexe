@@ -413,6 +413,55 @@ export const heroBuildParams = {
   SCROLL_SCALE: 0.8,
 };
 
+/**
+ * Hero „HUMAN / MACHINE” (2026-10-28): bohaterem jest sama strona. Warstwa HUMAN to gotowe hero,
+ * warstwa MACHINE to ta sama struktura jako system (siatka, ramki, wymiary z DOM). Pasma szumu
+ * i plama pod kursorem odsłaniają MACHINE, scroll zalewa nią ekran i przekompilowuje hero
+ * w Manifest. Czasy w s, wysokości jako ułamek wysokości ekranu, promienie w CSS px.
+ */
+export const heroHmParams = {
+  // Pasma w spoczynku (poziome, jak pas przez kask u Lando)
+  /** przerwa między pasmami: losowo z przedziału [min, max] */
+  BAND_GAP_MIN: 1.6,
+  BAND_GAP_MAX: 3.4,
+  /** czas życia pasma */
+  BAND_LIFE: 1.1,
+  /** wysokość pasma w szczycie */
+  BAND_H_MIN: 0.05,
+  BAND_H_MAX: 0.15,
+  /** dryf środka pasma w czasie życia */
+  BAND_DRIFT: 0.04,
+  /** postrzępienie krawędzi pasm i plamy */
+  EDGE_NOISE: 0.014,
+  EDGE_SPEED: 0.6,
+
+  // Plama pod kursorem: rośnie z prędkością ruchu, gaśnie, gdy kursor stoi
+  BLOB_RADIUS: 70,
+  BLOB_GROW: 170,
+  BLOB_LERP: 0.12,
+  BLOB_WOBBLE: 0.14,
+
+  // Przełącznik HUMAN / MACHINE: zalanie ekranu (lerp na klatkę)
+  TOGGLE_LERP: 0.07,
+
+  // Scroll: długość sticky tracku w ekranach
+  TRACK_SCREENS: 5,
+
+  // Poziomice w tle (pole pasm jak heroBuildParams)
+  SPEED: 0.05,
+  SCALE: 1.1,
+  NOISE_DETAIL: 4.5,
+  DISTORT_SCALE: 1,
+  DISTORT_INTENSITY: 0.5,
+  CURSOR_SCALE: 3,
+  CURSOR_INTENSITY: 0.2,
+  CURSOR_BOUNCE: -0.75,
+  MOUSE_LERP: 0.1,
+  PACE_PX: 40,
+  PACE_LERP: 0.08,
+  LINE_WIDTH: 1,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 
