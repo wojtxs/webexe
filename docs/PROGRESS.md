@@ -180,3 +180,33 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Poprawka 2 („tło nie działa jak u Lando, nachodzi na obiekt”): w pasmach rentgenu obiekt był przezroczysty, więc poziomice przechodziły przez bryłę. Teraz bryła jest pełna w obu stanach (rentgen leży na wypełnieniu w kolorze tła), a wokół obiektu jest miękka strefa w kolorze tła (alfa A rozszerzona na dwóch promieniach), więc poziomice kończą się przed krawędzią. Lekcja: tło ma być za bohaterem, a bohater nigdy nie może być przezroczysty.
 - Poprawka 3 (wybór użytkownika: „obiekt cały, rentgen pod kursorem”): pasma zniknęły z bryły. `>_` w spoczynku jest zawsze całym renderem, poziomice płyną i uginają się tylko w tle, a rentgen pokazuje się w plamie pod kursorem (promień `XRAY_RADIUS` + wzrost z prędkością, krawędź postrzępiona szumem, kontur Laguny tylko na bryle). Plama gaśnie, gdy kursor wyjdzie z okna. Linie rentgenu przycięte do bryły (`XRAY_HALO` 0.01). Odchodzimy tu od Lando (u nich pasma leżą na twarzy), bo przy naszym obiekcie pasy na bryle czytały się jak naklejki. Lekcja: przy dwóch nieudanych poprawkach z rzędu trzeba zapytać o kierunek z gotowymi opcjami, zamiast zgadywać trzeci raz.
 - Życie w spoczynku („nic się nie dzieje, u Lando cały czas coś się dzieje”): co ~6 s fala sygnału przechodzi ukośnie przez poziomice w tle (linie rozjaśniają się Laguną, `prompt-bg.frag` zamiast `contour.frag`) i tym samym frontem przecina `>_` pasem rentgenu z postrzępioną krawędzią i konturem. Do tego wędrujący cień na bryle (szum o niskiej częstotliwości), błysk światła po chromie co ~4,6 s i dryf paralaksy, gdy nie ma kursora. Rentgen pod kursorem bez zmian. Wszystko po intro (zegar rusza przy scan = 1), w reduced motion wyłączone. Parametry `SWEEP_*`, `PULSE_*`, `GLINT_*`, `SHADOW*`, `IDLE_DRIFT`.
+
+### 2026-10-28 — F2: hero „HUMAN / MACHINE” (`/lab/hero-hm`)
+
+- Zrobione: `>_` odrzucony po 4 poprawkach („słabo i nieprofesjonalnie”). Badanie na żywo w Chrome:
+  - **landonorris.com**: bohater centralny, bez nagłówka w hero, duch kasku widoczny stale, poziome pasma co 1–2 s z szarym ogonem-cieniem w tle, plama pod kursorem bez obrysu, przejście scrollem w kartę z dwoma rzędami tekstu i podpisem;
+  - **itsoffbrand.com**: jeden shader-obiekt, tekst zmienia kolor na kuli;
+  - **Awwwards (ok. 190 Sites of the Day)**: edolus, cerebrium, why.zero, basement.studio (przełącznik HUMAN / MACHINE: cała strona jako tekstowy mirror), darkroom.engineering, igloo.inc.
+- Zrobione: testy assetów w Blenderze 4.5.14 LTS portable (`E:\tools\blender-4.5.14`, pobrany za zgodą, suma SHA-256 sprawdzona). Skrypt w scratchpadzie (`blender/wx_tests.py`) robi x z kabli i x z taśmy gaffer, każdy w stanie A i B, z ziarnem i winietą. Szkło i chrom odrzucone przez użytkownika jako kicz.
+- Zrobione: spike `/lab/hero-hm`, w którym bohaterem jest sama strona.
+  - `src/gl/ContourScene.ts`: same poziomice na Pianie, kursor je ugina.
+  - `src/modules/hero-hm.ts`: MACHINE to klon HUMAN (siatka, ramki z wymiarami z DOM, obrys nagłówków, linie bazowe, specyfikacja fontu). Jedna maska `clip-path: path()` jest sumą podścieżek o jednym kierunku (nonzero): poziome pasma w spoczynku, plama pod kursorem rosnąca z prędkością, front intro, front scrolla i przełącznik.
+  - Scroll (sticky 5 ekranów): MACHINE zalewa ekran, wiersze hero wylatują, pod pełnym MACHINE HUMAN podmienia scenę, Manifest dekoduje się ScrambleText, front cofa się i odsłania Manifest, znak x rysuje się DrawSVG.
+  - `heroHmParams`, `?debug`.
+  - Zrzuty 1440 (intro, spoczynek z pasmem, 5 klatek scrolla) i 390. Check, lint i build czyste. Commit `faaaa58`.
+- Zostało:
+  - ocena na żywo (płynność `clip-path: path()` na całym ekranie przy 60 fps, czytelność);
+  - przełącznik MACHINE na razie tylko zalewa ekran, prawdziwy tekstowy mirror strony to osobne zadanie;
+  - reduced motion: układ statyczny bez maski, przełącznik nie działa;
+  - dotyk: plama tylko z `pointermove`;
+  - obrys fontu zmiennego pokazuje wewnętrzne kontury liter (wygląda jak druciak, do oceny);
+  - etykiety przełącznika (Human / Machine) to `TODO(treść)`.
+- Decyzje:
+  - kierunek hero = HUMAN / MACHINE (zgoda użytkownika na spike);
+  - asset 3D odpada, bo jakość zależy od typografii i ruchu, a nie od renderu;
+  - Blender zostaje jako narzędzie do assetów pobocznych.
+- **Konflikt do decyzji:** `DESIGN.md` (Zakazy) i `BRIEF.md` (Ton) zabraniają „estetyki terminala i hakera” oraz etykiet w monospace, a MACHINE na nich stoi. Jeśli koncept przejdzie, trzeba zmienić oba zapisy (za zgodą użytkownika) albo przerobić MACHINE na blueprint bez mono.
+- Lekcje:
+  - przed kolejną rundą poprawek obejrzeć referencję na żywo; zrzuty klatka po klatce pokazały rzeczy, których nie było w analizie (duch B widoczny stale, cień jako ogon pasma, brak nagłówka w hero);
+  - `scroll:N` w `cdp-shot.mjs` to wysokości ekranu, nie piksele;
+  - w `C:\Program Files\Blender Foundation` zostają resztki po odinstalowaniu, a sama obecność folderu nie znaczy, że Blender jest zainstalowany; sprawdzaj `blender.exe`.
