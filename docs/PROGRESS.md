@@ -210,3 +210,27 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - przed kolejną rundą poprawek obejrzeć referencję na żywo; zrzuty klatka po klatce pokazały rzeczy, których nie było w analizie (duch B widoczny stale, cień jako ogon pasma, brak nagłówka w hero);
   - `scroll:N` w `cdp-shot.mjs` to wysokości ekranu, nie piksele;
   - w `C:\Program Files\Blender Foundation` zostają resztki po odinstalowaniu, a sama obecność folderu nie znaczy, że Blender jest zainstalowany; sprawdzaj `blender.exe`.
+
+### 2026-10-28 — F2: hero „łuki” (`/lab/hero-arcs`)
+
+- Zrobione: HUMAN / MACHINE odrzucony („dziwne i kiczowate”). Użytkownik wybrał wzór **cerebrium.ai** i **ciemne tło**. Wymaganie: „zajebiste i nowoczesne technologicznie”, dużo animacji i scroll w GSAP, ale ma sprzedawać, bez skrajności. Cerebrium obejrzane na żywo w Chrome: hero, łuki, kursor „click and hold”, marquee logotypów, jasny panel ze sticky listą funkcji i kartami z żywym UI, sekcja z kulą.
+- Zrobione: spike `/lab/hero-arcs` (commit `3104c20`).
+  - `src/gl/ArcScene.ts` + `arc.vert/frag`: 5 łuków z `ExtrudeGeometry` (wycinek pierścienia wyciągnięty w głąb). Materiał matowy w gradiencie Laguny, światło w poprzek wstęgi, mgła do Głębi i ziarno. Smugi światła po przedniej krawędzi: w spoczynku co 1,4–3,2 s, po kliknięciu fala przez wszystkie łuki, przy przytrzymaniu serie, przy szybkim scrollu pojedyncza smuga. Paralaksa za kursorem, intro z łukami wyrastającymi z dołu, scroll z najazdem kamery, finał przy CTA w innym ujęciu. GL nie renderuje, gdy panel zasłania ekran.
+  - Hero: nagłówek z BRIEF w lekkiej wadze z lewej na dole, lead i dwa CTA z prawej, linia i marquee usług z separatorem x (zamiast logotypów). Nawigacja: logo, pigułka z linkami, CTA w Lagunie. Kropki nad łukami jak na cerebrium.
+  - Panel (ciemny raise, jasny pod `?panel=light`) wjeżdża na hero ze skalą 0,94 → 1. Manifest odsłania się słowo po słowie (SplitText, scrub), na końcu DrawSVG rysuje znak x.
+  - Jak pracujemy: sticky lista 4 kroków z licznikiem, aktywny liczony z pozycji kroków. Każdy krok ma kartę z żywym mini-UI w pętli GSAP, która gra tylko na ekranie: diagram procesu z sygnałem, składana aplikacja, „system przygotowuje / człowiek zatwierdza”, monitoring z płynącym wykresem. Same szkielety, bez wymyślonych liczb i tekstów.
+  - Reduced motion: statyczna klatka GL, treść widoczna od razu, mini-UI w stanie końcowym. Bez WebGL zostaje poświata z CSS.
+  - `heroArcsParams`, `?debug`. Zrzuty 1440 (hero, panel, 4 karty, finał) i 390. Check, lint i build czyste.
+- Zostało:
+  - ocena użytkownika na żywo (płynność, kursor, smugi);
+  - stan startowy pętli mini-UI: przed pierwszym odtworzeniem karta pokazuje stan końcowy i przeskakuje do początku;
+  - kursor-kółko bez napisu, bo napis byłby treścią spoza BRIEF;
+  - CTA końcowe to `TODO(treść)` (D9, sekcja 07);
+  - nie mierzyłem fps na zintegrowanym GPU.
+- Decyzje:
+  - kierunek: sprawdzony wzorzec (cerebrium) w barwach webexe zamiast autorskiego gimmicku;
+  - nowy token `--w-display-light: 400` dla lekkich nagłówków. **Do zatwierdzenia w DESIGN.md**, bo DESIGN mówi h1 800;
+  - konflikt mono/terminal z poprzedniego wpisu jest nieaktualny, ten spike nie używa mono.
+- Lekcje:
+  - `node -e` w Bash na Windowsie psuje `\s` w wyrażeniach regularnych, więc podmiany parametrów robi skrypt `setp.mjs` w scratchpadzie;
+  - sticky lista liczona przez `onToggle` per krok gubi stan przy skoku scrolla; pewniej liczyć aktywny krok z `getBoundingClientRect` w `onUpdate`.
