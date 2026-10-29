@@ -606,6 +606,35 @@ export const heroDotParams = {
   PACE_LERP: 0.08,
 };
 
+/** /lab/hero-code: znak x z kodu, jedna scena przez całą stronę (mechanika wzorem endurosat) */
+export const heroCodeParams = {
+  /** komórka znaku (CSS px): desktop i mobile */
+  CELL_W: 9,
+  CELL_H: 15,
+  CELL_W_M: 7,
+  CELL_H_M: 12,
+  /** komórka atlasu glifów (px) */
+  ATLAS_CELL: 48,
+  /** promień ramienia (× rozmiar znaku); grubszy niż DotScene, bo komórki są większe */
+  ARM: 0.12,
+  /** kod w tle: krycie i zasięg jaśniejszej plamy wokół znaku (× rozmiar) */
+  BG_ALPHA: 0.16,
+  BG_REACH: 0.9,
+  /** przesuw kodu (wiersze na sekundę) i za scrollem (wiersze na ekran) */
+  LINES_PER_S: 0.6,
+  LINES_PER_SCREEN: 6,
+  LIGHT_ANGLE: -2.3,
+  SWEEP_EVERY: 5.5,
+  /** latarka pod kursorem (CSS px) */
+  LENS_R: 120,
+  RIPPLE_SPEED: 600,
+  HOLD_GAP: 0.25,
+  /** wygładzanie stanu sceny za scrollem (lerp na klatkę 60 fps) */
+  FOLLOW: 0.1,
+  PACE_PX: 40,
+  PACE_LERP: 0.08,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 
