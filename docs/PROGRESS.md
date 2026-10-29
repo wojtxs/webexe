@@ -2,7 +2,7 @@
 
 Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza jest zamknięta dopiero wtedy, gdy spełnia swój warunek wyjścia.
 
-**Aktualna faza:** F2 (spike „warstwy systemu” zbudowany, bramka D2 czeka na ocenę na żywo). F0 nadal otwarte: decyzje i assety.
+**Aktualna faza:** F2 od zera: wszystkie spike'i hero usunięte z mastera (archiwum na gałęzi `archive/spikes`). F0 nadal otwarte: decyzje i assety.
 **Decyzje otwarte:** D2–D11 w `BRIEF.md`
 
 ## F0: Treść i kierunek (bez Claude Code albo tylko pomocniczo)
@@ -283,3 +283,10 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zostało: ocena użytkownika na żywo; 60 fps na iGPU (ok. 15 tys. komórek, tanio); dopracowanie przejść między stanami (szkic → budowa przełącza glify skokowo przy 0,5); spike szafy: klatki B wyrenderowane, `encode.mjs` i commit tylko jeśli wrócimy do planu B.
 - Decyzje: z referencji bierzemy mechanikę i rytm, motyw zawsze z naszego świata (kod, systemy, automatyzacja); jeden obiekt przez całą stronę = znak x.
 - Lekcje: przed budową sceny dla nowego wzoru potwierdzić przełożenie motywu (krótki wybór z rekomendacją), bo dosłowne przeniesienie (kosmos) użytkownik od razu odrzucił.
+
+### 2026-10-29 — porządki: usunięte wszystkie spike'i hero
+
+- Zrobione: na prośbę użytkownika wyrzucone z mastera wszystkie spike'i i style frame'y hero: strony `/lab/hero*`, moduły `src/modules/hero-*.ts` i `lib/story.ts`, cały `src/gl/` (sceny, shadery, params, debug), tekstury `public/gl/`, źródła `assets-src/hero-prompt` i `assets-src/hero-rack` (z surowymi klatkami z Blendera), wpisy `hero-prompt` w `assets-src/manifest.json`, linki w `/lab`. Zostały: sandbox `/lab` z siatką (F1), `grid-overlay`, `core/`, tokeny (łącznie z językiem v3 „mrok + kod”, który był niezacommitowany), nagranie referencyjne w `docs/refs/NN-/`.
+- Niezacommitowana praca (rack, scan, agent, dark, flow, system, zmiany w code/build) przed usunięciem poszła commitem `1259204` na gałąź `archive/spikes`. Surowe klatki Blendera nie były w repo i są skasowane; da się je odtworzyć `rack.py` z archiwum.
+- Zostało: zależności `three` i `lil-gui` zostają w `package.json` (three jest w stacku, lil-gui do strojenia GL), do decyzji użytkownika. Hero do zbudowania od nowa, najlepiej z referencją od użytkownika.
+- Decyzje: spike'i nie wracają na master, a gdy coś się przyda, wyciągamy to z `archive/spikes` albo z historii.

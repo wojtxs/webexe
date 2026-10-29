@@ -29,6 +29,18 @@
   --c-kosc-line: #e9e2d9;
   --c-ink-warm: #6e6157;
 
+  /* --- Język v3 (2026-10-29, lab): mrok + kod. Prawie czarne tło z siatką, płaski Bursztyn,
+     Unbounded w nagłówkach, JetBrains Mono w drobnym tekście. Do przeniesienia w DESIGN.md. */
+  --c-noc: #0a0908;
+  --c-noc-raise: #121110;
+  --c-noc-line: #1b1916;
+  --c-noc-edge: #34302b;
+  --c-szary: #8a847c;
+  --c-swiatlo: #ededea;
+  --c-akcent: #ffa31a;
+  --f-display: 'Unbounded', 'Plus Jakarta Sans Variable', sans-serif;
+  --f-code: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+
   /* --- Kolory pochodne --- */
   --c-piana-line: #d5eae5;
   --c-piana-deep: #bcd9d2;
