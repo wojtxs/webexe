@@ -571,6 +571,41 @@ export const heroNetParams = {
   FLY_DIST: 3.4,
 };
 
+/** /lab/hero-arcs: znak x jako raster kropek (DotScene) */
+export const heroDotParams = {
+  /** środek znaku (× szerokość, × wysokość od góry) i rozmiar (× wysokość) jak w masce x modułu */
+  CX: 0.71,
+  CY: 0.35,
+  SIZE: 0.68,
+  /** mobile (< 768 px): rozmiar × szerokość */
+  CX_M: 0.5,
+  CY_M: 0.25,
+  SIZE_M: 1.05,
+  /** promień ramienia (× rozmiar); maska x w module ma 0,065 */
+  ARM: 0.092,
+  /** odstęp kropek (CSS px) */
+  GAP: 7.5,
+  GAP_M: 6,
+  /** raster tła: rozmiar kropki (px), zasięg (× rozmiar znaku), krycie */
+  BG_DOT: 1.6,
+  BG_REACH: 0.75,
+  BG_ALPHA: 0.35,
+  /** kąt światła (rad, y w dół: -2,3 = z lewej góry) */
+  LIGHT_ANGLE: -2.3,
+  SWEEP_EVERY: 5.5,
+  MOUSE_R: 110,
+  MOUSE_AMP: 10,
+  MOUSE_PACE_AMP: 26,
+  RIPPLE_SPEED: 520,
+  HOLD_GAP: 0.25,
+  /** rozsypka w intro i finale (px) */
+  SCATTER: 420,
+  /** przelot: ile razy raster rośnie przy pełnym scrollu intro */
+  FLY_ZOOM: 5,
+  PACE_PX: 40,
+  PACE_LERP: 0.08,
+};
+
 /** 0 poziomice, 1 kropki, 2 schodki na siatce, 3 kreskowanie */
 export type BackgroundMode = 0 | 1 | 2 | 3;
 

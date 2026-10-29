@@ -1,5 +1,5 @@
 /**
- * hero-arcs.ts — spike hero (tylko /lab/hero-arcs), wzór: cerebrium.ai. Obiekt: „sieć systemów” (NetScene).
+ * hero-arcs.ts — spike hero (tylko /lab/hero-arcs), wzór: cerebrium.ai. Obiekt: znak x jako raster kropek (DotScene).
  *
  * 1. Intro: łuki wyrastają z dołu (GL), wiersze nagłówka wyjeżdżają spod maski, potem lead,
  *    przyciski, linia i marquee usług.
@@ -21,9 +21,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
-import { NetScene } from '@gl/NetScene';
+import { DotScene } from '@gl/DotScene';
 import { Mouse } from '@gl/Mouse';
-import { heroNetParams as p } from '@gl/params';
+import { heroDotParams as p } from '@gl/params';
 import { easeFromToken } from '@gl/ease';
 import { loadDebug } from '@gl/debug';
 import { hasWebGL } from '@gl/support';
@@ -63,7 +63,7 @@ function capsule(ax: number, ay: number, bx: number, by: number, r: number) {
   );
 }
 
-/** znak x jak na ekranie rdzenia (NetScene drawFace): ramiona 0,4 × 0,46, kreska 0,13 szerokości */
+/** znak x jak w logo: ramiona 0,4 × 0,46 rozmiaru, kreska 0,13 szerokości */
 function xPath(cx: number, cy: number, size: number) {
   const dx = size * 0.2;
   const dy = size * 0.23;
@@ -91,7 +91,7 @@ const HeroArcs: Module = {
 
     // --- GL; bez WebGL zostaje poświata z CSS ---
     const mouse = new Mouse({ lerp: 0.12, pacePx: p.PACE_PX, paceLerp: p.PACE_LERP });
-    let scene: NetScene | null = null;
+    let scene: DotScene | null = null;
     let disposed = false;
     const view = { intro: reduced ? 1 : 0, scroll: 0, outro: 0, gather: 0 };
     const nav = root.querySelector<HTMLElement>('[data-ha-nav]');
@@ -102,7 +102,7 @@ const HeroArcs: Module = {
     let dirty = true;
 
     if (wrap && hasWebGL()) {
-      NetScene.create(wrap, mouse)
+      DotScene.create(wrap, mouse)
         .then((s) => {
           if (disposed) return s.destroy();
           scene = s;
@@ -583,7 +583,7 @@ const HeroArcs: Module = {
           skew?.(gsap.utils.clamp(-10, 10, -v / 280));
           const now = performance.now();
           if (Math.abs(v) > 1400 && now > cool && !covered) {
-            scene?.fire(1.6);
+            scene?.fire();
             cool = now + 220;
           }
         },
@@ -614,20 +614,18 @@ const HeroArcs: Module = {
 
     // strojenie pod ?debug
     let gui: Awaited<ReturnType<typeof loadDebug>> = null;
-    void loadDebug('hero sieć systemów').then((g) => {
+    void loadDebug('hero raster x').then((g) => {
       if (!g || disposed) return g?.destroy();
       gui = g;
       const keys = [
-        ['X', -6, 8],
-        ['Y', -8, 2],
-        ['ROT_X', -1, 1],
-        ['ROT_Y', -2, 2],
-        ['CAM_Z', 4, 20],
-        ['PULSE_SPEED', 0.1, 2],
-        ['PULSE_GAP_MIN', 0.05, 4],
-        ['PULSE_GAP_MAX', 0.1, 6],
-        ['PARALLAX_X', 0, 0.5],
-        ['PARALLAX_Y', 0, 0.5],
+        ['CX', 0, 1],
+        ['CY', 0, 1],
+        ['SIZE', 0.2, 2],
+        ['ARM', 0.03, 0.2],
+        ['LIGHT_ANGLE', -3.14, 3.14],
+        ['MOUSE_AMP', 0, 40],
+        ['MOUSE_PACE_AMP', 0, 80],
+        ['SWEEP_EVERY', 1, 15],
       ] as const;
       keys.forEach(([k, a, b]) => g.add(p, k, a, b, 0.01));
     });

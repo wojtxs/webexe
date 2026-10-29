@@ -262,3 +262,13 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 
 - Zrobione: użytkownik: elementy na tle hero „strasznie do prawej”. `heroNetParams.X` 0 → -1,9, moduł „list” przesunięty w `NODES` (`[7.4, 1.0, -2.2]`), żeby nie wchodził pod lead. Zrzuty 1920/1440/390 i klatka przelotu (dalej trafia w oś rdzenia). Lint, check, build czyste.
 - Zostało: bez zmian względem poprzedniego wpisu.
+
+### 2026-10-29 — F2: hero, znak x jako raster kropek (`/lab/hero-arcs`)
+
+- Zrobione: sieć modułów odrzucona („ostry AI slop”: pływające karty dashboardów, clay 3D, losowy układ). W tej sesji odpadły też „x z linii” (relief z linii) i „zaćmienie” (tarcza ze światłem), żadne niezacommitowane. Użytkownik podał referencje (terminal-industries, heronaiapp, iyo, weevolveit, sohub, shift5, igloo, good-fella, prometheusfuels), obejrzane na żywo. Wspólny mianownik: prawdziwa rzecz w technicznym przetworzeniu, nie abstrakcyjne kształty. Wybrany kierunek Good Fella (obraz z pomarańczowych kropek na czerni), bez generowania obrazów (fal bez kredytów), więc bohaterem jest znak x z logo.
+  - `src/gl/DotScene.ts` + `dot.vert/frag`: siatka punktów na cały ekran (CSS px), znak liczony w shaderze (dwie kapsuły jak maska x modułu, profil rury → normalna → światło → rozmiar kropki jak w druku półtonowym), gradient Bursztynu po przekątnej, drobny raster tła gaśnie od znaku. Światło wolno krąży, co ~5,5 s fala po przekątnej. Kursor rozpycha kropki, klik puszcza falę uderzeniową, przytrzymanie serię. Intro i finał składają kropki z rozsypki, przelot scrollem przybliża raster ×5 do środka znaku, a maska x modułu otwiera Manifest.
+  - `heroDotParams`, `?debug`. `NetScene` zostaje w repo nieużywany.
+  - Zrzuty 1920/1440/390 i dwie klatki przelotu. Lint, check i build czyste.
+- Zostało: ocena użytkownika na żywo; 60 fps na iGPU (~30–45 tys. punktów, 5 wywołań odległości na wierzchołek); dotyk tylko przez przeciąganie; jeśli kierunek przejdzie, rozważyć prawdziwy obraz w rastrze (kierunek Good Fella w pełnej wersji) albo wariant „Terminal” (scena → rentgen), który użytkownik wskazał jako plan B.
+- Decyzje: hero bez obiektów-ilustracji; jedyna grafika to znak marki w rastrze.
+- Lekcje: przed kolejnym konceptem poprosić o referencje. Dziewięć linków rozstrzygnęło kierunek szybciej niż trzy moje próby. Fal może nie mieć kredytów, więc zawsze miej wariant proceduralny.
