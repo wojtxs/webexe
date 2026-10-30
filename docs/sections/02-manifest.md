@@ -1,6 +1,6 @@
 # 02 — Manifest
 
-**Status:** zaakceptowany (2026-10-30)
+**Status:** done (2026-10-30), poza trace 60 fps w Chrome DevTools (na tym komputerze nie ma Chrome, patrz log sesji w `PROGRESS.md`)
 **Zależności:** F3 (greybox: `src/sections/Manifest.astro`, `src/modules/x-zoom.ts`), komponenty `Grid` i `XMark`. Bez assetów i bez decyzji z `BRIEF.md`.
 **Wzorzec:** `docs/INSPIRACJE.md`, wiersz „Struktura strony” i konflikt 2 (wypełnianie scrollem tylko w Manifeście). `docs/reference/alpanet-analiza.md`, sekcja 3: wiersz 2 (Manifest, tekst zapełnia się słowo po słowie) i wiersz 7 (sticky 100vh, koło skaluje się 1 → 100 i staje się tłem). Klatek w `docs/refs/02-*/` brak (F0 otwarte).
 

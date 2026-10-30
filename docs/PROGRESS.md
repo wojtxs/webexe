@@ -2,7 +2,7 @@
 
 Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza jest zamknięta dopiero wtedy, gdy spełnia swój warunek wyjścia.
 
-**Aktualna faza:** F2: materiał D3 i spec hero (blokuje dalsze sekcje). F3 (greybox) zrobione poza kolejnością 2026-10-30, czeka na przegląd rytmu. Kierunek wyznacza `docs/INSPIRACJE.md` (od 2026-10-30, zamiast landonorris.com). F0 nadal otwarte: decyzje i klatki referencyjne.
+**Aktualna faza:** F2: materiał D3 i spec hero (blokuje 01, 03, 04). F3 zamknięte 2026-10-30, a 02 Manifest z F5 zrobiony, bo nie zależy od żadnej decyzji. Kierunek wyznacza `docs/INSPIRACJE.md` (od 2026-10-30, zamiast landonorris.com). F0 nadal otwarte: decyzje i klatki referencyjne.
 **Decyzje otwarte:** D2–D11 w `BRIEF.md` (D3 częściowo rozstrzygnięte)
 
 ## F0: Treść i kierunek (bez Claude Code albo tylko pomocniczo)
@@ -44,7 +44,7 @@ Spike'a nie robimy: karta hero to prosty DOM, a ryzyko leży w materiale i wygl�
 - [x] Statyczna siatka z węzłami x pod wszystkimi sekcjami, zgrubne przejście przez x na końcu Manifestu
 - [x] Wysokości sticky tracków zgrubnie ustawione (hero 300vh, x-zoom 250vh)
 
-**Warunek wyjścia:** przewinięcie całej strony daje dobry rytm i kolejność, a decyzje o zmianach kolejności są zapisane poniżej. *(Czeka na przegląd użytkownika na żywo.)*
+**Warunek wyjścia:** przewinięcie całej strony daje dobry rytm i kolejność, a decyzje o zmianach kolejności są zapisane poniżej. *(Rytm zaakceptowany przez użytkownika 2026-10-30.)*
 
 ## F4: Motyw + 01 Hero
 
@@ -55,7 +55,7 @@ Spike'a nie robimy: karta hero to prosty DOM, a ryzyko leży w materiale i wygl�
 
 Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptujesz, potem build.
 
-- [ ] 02 Manifest (wypełnianie scrollem, zoom przez x)
+- [x] 02 Manifest (wypełnianie scrollem, zoom przez x), tag `manifest-v1`; brak tylko trace 60 fps w Chrome
 - [ ] 03 Realizacje i dowody (zależy od D3)
 - [ ] 04 Produkt (zależy od D3)
 - [ ] 05 Jak pracujemy (akordeon, D10, D11)
@@ -342,3 +342,19 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - Wszystkie `TODO(treść)`: D3 (realizacje, produkt, karta hero), D4, D7, D8, D9, D10.
 - Decyzje: F3 zrobione przed F2, bo F2 czeka na materiał D3 od użytkownika. Rough ruch (rozszerzenie karty i zoom przez x) wszedł do greyboxu, bo bez niego tory sticky to ekrany pustki i rytmu nie da się ocenić. Treść z wersji 1 (D10) i CTA (D9) wstawione roboczo z `TODO(treść)`. `three` usunięte z `package.json` (było nieużywane po zmianie kierunku).
 - Lekcje: `.section > :not(.grid-sys) { position: relative }` nadpisałoby `position: sticky` (wyższa specyficzność), dlatego siatka ma `z-index: -1`, a sekcja `isolation: isolate`. `from()` ze staggerem w osi czasu ScrollTriggera nie renderuje od razu stanu startowego późniejszych celów: stan startowy ustawiaj `gsap.set`. Hook `post-edit.mjs` odpala ESLint także na plikach spoza repo (scratchpad) i zgłasza błąd konfiguracji.
+
+### 2026-10-30 — F5: 02 Manifest (`/build-section 02-manifest`)
+
+- Zrobione:
+  - Użytkownik zaakceptował rytm greyboxu („pasuje”), więc F3 jest zamknięte.
+  - Spec `docs/sections/02-manifest.md` z `_TEMPLATE.md`. Cztery decyzje według rekomendacji: krycie 0.2 → 1, „Problem” w `--c-ink-muted`, x osobno na środku sceny, x w Głębi.
+  - S1 statyka: `data-scroll-fill` w DOM i w `ARCHITECTURE.md`, x 8 / 6 / 5 rem, tor 250vh (200vh poniżej 768 px).
+  - S2 ruch: moduł `scroll-fill.ts` (SplitText `words`, scrub od `top 75%` do `bottom 45%`, akcent `.accent` pominięty przez `ignore` i wypełniany w całości). `x-zoom.ts` bez zmian.
+  - S3 GL: nie dotyczy. S4: 390, 834, reduced motion i bez JS sprawdzone na zrzutach, bez zmian w kodzie.
+- Sprawdzone: zakrycie ekranu przy progresie 0.95 i 1 (zero jasnych pikseli) na 1920 × 1080, 1440 × 900, 834 × 1112, 390 × 844 i po resize w trakcie toru (1440 → 1920, 1920 → 390). Przełączanie reduced motion tam i z powrotem nie dubluje `.sr-only` ani słów. Wysokości akapitów po podziale są takie same jak bez niego (brak CLS). Long tasks przy przewijaniu: brak. Check, lint i build czyste.
+- Zostało:
+  - Trace 60 fps w Chrome DevTools. Edge sterowany przez Playwright ma `requestAnimationFrame` stale na ~32 Hz, także w trybie headed, więc pomiar klatek tutaj nic nie mówi. Ten sam brak Chrome blokuje `visual-qa`.
+  - Przed rysowaniem w środku sceny stoi kropka (zaokrąglony koniec kreski o długości 0). Wygląda jak węzeł, zostawiłem.
+  - Poza sekcją: na 390 przy reduced motion napis `TODO(treść)` w karcie hero nachodzi na etykiety warstw (zniknie z materiałem D3).
+- Decyzje: patrz sekcja „Decyzje” w specu. Nazwa dostępna z SplitText (`aria: 'auto'` daje `aria-label` na `<p>`) odrzucona na rzecz `.sr-only` + `aria-hidden`, bo rola `paragraph` nie przyjmuje nazwy.
+- Lekcje: `background-clip: text` na rodzicu i `color: transparent` dziedziczone przez słowa `inline-block` z SplitText to ryzyko niewidocznego akcentu, dlatego akcent idzie przez `ignore`. Skrypty pomiarowe: `ScrollTrigger` i `gsap` nie są na `window` w buildzie, więc test init → destroy → init robię przez przełączanie `prefers-reduced-motion` (revert i ponowny init w `gsap.matchMedia`) i liczenie elementów DOM.
