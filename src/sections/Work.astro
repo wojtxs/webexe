@@ -21,11 +21,11 @@ const proofCells = [1, 2, 3, 4, 5, 6, 7, 8];
 
   <div class="container">
     <!-- TODO(treść): nagłówek sekcji, roboczo nazwa z mapy w BRIEF -->
-    <h2 id="work-title" class="section__title t-h2">
+    <h2 id="work-title" class="section__title t-h2" data-split="words">
       Realizacje
     </h2>
 
-    <ol class="work__list">
+    <ol class="work__list" data-module="squeeze">
       {projects.map((n) => (
         <li class="work__item">
           <article class="work-card">

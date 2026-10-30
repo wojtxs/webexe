@@ -14,6 +14,10 @@
  */
 
 import gsap from 'gsap';
+import { CustomEase } from 'gsap/CustomEase';
+import { cssVar } from './css';
+
+gsap.registerPlugin(CustomEase);
 
 type MotionFn = () => void | (() => void);
 
@@ -51,4 +55,24 @@ export function addMotion(register: (ctx: MotionContext) => void, scope?: Elemen
   );
 
   return () => mm.revert();
+}
+
+/**
+ * Easing z tokenu CSS (np. '--ease-default': cubic-bezier(...)) jako nazwa easingu GSAP.
+ * Jedno źródło krzywych dla CSS i JS (docs/DESIGN.md, Ruch).
+ */
+export function easeToken(token: string): string {
+  const name = `token${token}`;
+  if (CustomEase.get(name)) return name;
+  const match = cssVar(token).match(/cubic-bezier(([^)]+))/);
+  if (!match) return 'none';
+  CustomEase.create(name, match[1].replace(/s+/g, ''));
+  return name;
+}
+
+/** Czas z tokenu CSS (np. '--d-slow': 1.1s) w sekundach. */
+export function durationToken(token: string): number {
+  const value = cssVar(token);
+  const n = parseFloat(value);
+  return value.endsWith('ms') ? n / 1000 : n;
 }

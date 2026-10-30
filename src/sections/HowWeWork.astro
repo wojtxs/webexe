@@ -27,7 +27,7 @@ const steps = [
   },
   {
     n: '03 / 04',
-    title: 'Automatyzujemy',
+    title: 'Automaty­zujemy', // miękki dział dla zwiniętej kolumny akordeonu
     text: 'Powtarzalną pracę przejmuje automat albo agent AI. Tam, gdzie decyzja ma znaczenie, system przygotowuje, a człowiek zatwierdza.',
     examples: [
       'Automatyczne przetwarzanie dokumentów i danych',
@@ -54,14 +54,14 @@ const steps = [
   <Grid />
 
   <div class="container">
-    <h2 id="hww-title" class="section__title t-h2">
+    <h2 id="hww-title" class="section__title t-h2" data-split="words">
       Jak pracujemy
     </h2>
   </div>
 
   <ol class="container hww__steps">
     {steps.map((step) => (
-      <li class="hww__step">
+      <li class="hww__step" tabindex="0">
         <div class="hww__head">
           <p class="hww__num t-label muted">{step.n}</p>
           <h3 class="hww__title t-h3">{step.title}</h3>

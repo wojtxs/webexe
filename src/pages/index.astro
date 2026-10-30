@@ -1,6 +1,7 @@
 ---
 // One-pager według mapy w docs/BRIEF.md. Loader (00) i warstwa globalna dochodzą w F6.
 import Base from '../layouts/Base.astro';
+import Corners from '../components/Corners.astro';
 import Hero from '../sections/Hero.astro';
 import Manifest from '../sections/Manifest.astro';
 import Work from '../sections/Work.astro';
@@ -11,6 +12,7 @@ import Contact from '../sections/Contact.astro';
 ---
 
 <Base>
+  <Corners slot="chrome" />
   <Hero />
   <Manifest />
   <Work />

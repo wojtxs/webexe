@@ -36,6 +36,12 @@
   width: 8rem;
   height: 8rem;
   color: var(--c-glebia);
+  pointer-events: none;
+}
+
+/* Tylko kreska jest trafiana przez sondę nav-theme (data-nav-theme="dark" na opakowaniu) */
+.xzoom__mark path {
+  pointer-events: visibleStroke;
 }
 
 .xzoom__mark .xmark {

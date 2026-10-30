@@ -113,3 +113,14 @@
     display: none;
   }
 }
+
+/* --- Reveal słów (split-reveal) ---
+   Maska słowa ma zapas na ogonki i akcenty (ę, j, y, Ż), żeby nie ucinała liter w spoczynku. */
+.js-motion [data-split] {
+  opacity: 0;
+}
+
+.split-word-mask {
+  padding-block: 0.12em 0.18em;
+  margin-block: -0.12em -0.18em;
+}

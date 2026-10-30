@@ -1,16 +1,22 @@
 /* ==========================================================================
-   05 Jak pracujemy — greybox (F3).
-   Desktop: 4 kolumny po 3 kolumny siatki na pełną wysokość ekranu.
+   05 Jak pracujemy — eksperyment: akordeon (docs/INSPIRACJE.md, wiersz Oferta).
+   Desktop: 4 kolumny na pełną wysokość ekranu; wskazana (hover, focus) rośnie
+   z flex-grow 1 do 2.4 i odsłania opis. Gdy nic nie jest wskazane, otwarta jest pierwsza.
    Poniżej 992 px: panele sticky na pełny ekran, każdy najeżdża na poprzedni.
    ========================================================================== */
 
 .hww__steps {
+  display: flex;
+  gap: var(--grid-gap);
   min-height: 100vh;
   list-style: none;
 }
 
 .hww__step {
-  grid-column: span 3;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: clip;
+  transition: flex-grow var(--d-default) var(--ease-default);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -25,9 +31,28 @@
   gap: var(--s-4);
 }
 
+/* Stała szerokość opisu: tekst nie przelewa się w trakcie rozszerzania kolumny */
 .hww__body {
   display: grid;
   gap: var(--s-8);
+  width: 30rem;
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--ease-out);
+}
+
+.hww__step:is(:hover, :focus-within),
+.hww__steps:not(:hover, :focus-within) .hww__step:first-child {
+  flex-grow: 2.4;
+}
+
+.hww__step:is(:hover, :focus-within) .hww__body,
+.hww__steps:not(:hover, :focus-within) .hww__step:first-child .hww__body {
+  opacity: 1;
+  transition-delay: 0.15s;
+}
+
+.hww__step:focus-visible {
+  outline-offset: -3px;
 }
 
 .hww__examples {
@@ -45,6 +70,11 @@
   .hww__steps {
     display: block;
     min-height: 0;
+  }
+
+  .hww__body {
+    width: auto;
+    opacity: 1;
   }
 
   .hww__step {

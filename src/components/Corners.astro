@@ -1,0 +1,46 @@
+---
+/**
+ * Corners — stałe elementy w rogach ekranu (docs/INSPIRACJE.md, wiersz Nawigacja):
+ * wordmark w lewym górnym, stałe CTA w prawym górnym, mapa rozdziałów w lewym dolnym.
+ * Punkty mapy to znaki x, bieżący rozdział ma x w gradiencie (motyw, DESIGN.md).
+ * Kolory rogów zmienia nav-theme według [data-nav-theme] pod rogiem; mapę prowadzi chapter-map.
+ */
+import Button from './Button.astro';
+import Wordmark from './Wordmark.astro';
+import XMark from './XMark.astro';
+
+// TODO(treść): etykiety rozdziałów; roboczo nazwy z mapy w BRIEF, „Start” dla hero
+const chapters = [
+  { id: 'hero', label: 'Start' },
+  { id: 'manifest', label: 'Manifest' },
+  { id: 'realizacje', label: 'Realizacje' },
+  { id: 'produkt', label: 'Produkt' },
+  { id: 'jak-pracujemy', label: 'Jak pracujemy' },
+  { id: 'poznaj-nas', label: 'Poznaj nas' },
+  { id: 'kontakt', label: 'Kontakt' },
+];
+---
+
+<header class="corners" data-module="nav-theme">
+  <a class="corners__brand" href="#hero" aria-label="webexe, początek strony">
+    <Wordmark />
+  </a>
+
+  <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
+  <Button href="#kontakt" class="corners__cta">
+    Porozmawiajmy o projekcie
+  </Button>
+
+  <nav class="chapters" aria-label="Rozdziały strony" data-module="chapter-map">
+    <ol class="chapters__list">
+      {chapters.map((chapter) => (
+        <li>
+          <a class="chapters__link" href={`#${chapter.id}`} data-chapter={chapter.id}>
+            <XMark class="chapters__x" />
+            <span class="chapters__label t-label">{chapter.label}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</header>

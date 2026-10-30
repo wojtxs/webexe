@@ -28,6 +28,7 @@
 .work-card__media {
   aspect-ratio: 16 / 10;
   margin-bottom: var(--s-2);
+  transform: scale(calc(1 - var(--squeeze, 0)));
 }
 
 .work-card__desc {

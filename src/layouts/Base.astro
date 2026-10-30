@@ -55,6 +55,14 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <link rel="preload" href={pjsNormalUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={pjsLatinExtUrl} as="font" type="font/woff2" crossorigin />
 
+    <!-- Ukrycie nagłówków do czasu reveal'u słów (split-reveal); fallback po 3 s, bez ruchu nic nie ukrywa -->
+    <script is:inline>
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('js-motion');
+        setTimeout(() => document.documentElement.classList.remove('js-motion'), 3000);
+      }
+    </script>
+
     <slot name="head" />
   </head>
   <body>
@@ -77,13 +85,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
       </defs>
     </svg>
 
-    <!-- Nawigacja — placeholder, wypełniony w F6 -->
-    <nav aria-label="Nawigacja główna" data-nav>
-      <!-- TODO: nav -->
-    </nav>
+    <!-- Stałe elementy w rogach ekranu (strona główna) -->
+    <slot name="chrome" />
 
     <!-- Treść strony -->
-    <main id="main-content">
+    <main id="main-content" data-module="split-reveal">
       <slot />
     </main>
 

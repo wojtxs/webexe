@@ -358,3 +358,16 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - Poza sekcją: na 390 przy reduced motion napis `TODO(treść)` w karcie hero nachodzi na etykiety warstw (zniknie z materiałem D3).
 - Decyzje: patrz sekcja „Decyzje” w specu. Nazwa dostępna z SplitText (`aria: 'auto'` daje `aria-label` na `<p>`) odrzucona na rzecz `.sr-only` + `aria-hidden`, bo rola `paragraph` nie przyjmuje nazwy.
 - Lekcje: `background-clip: text` na rodzicu i `color: transparent` dziedziczone przez słowa `inline-block` z SplitText to ryzyko niewidocznego akcentu, dlatego akcent idzie przez `ignore`. Skrypty pomiarowe: `ScrollTrigger` i `gsap` nie są na `window` w buildzie, więc test init → destroy → init robię przez przełączanie `prefers-reduced-motion` (revert i ponowny init w `gsap.matchMedia`) i liczenie elementów DOM.
+
+### 2026-10-30 — eksperyment: ruch Chipsy (gałąź `eksperyment/ruch-chipsy`)
+
+- Kontekst: użytkownik uznał stronę za „bezpieczną” i poprosił o coś ciekawszego, z zabezpieczeniem obecnej wersji. Bezpieczna wersja: tag `wersja-bezpieczna-2026-10-30` i gałąź `backup/wersja-bezpieczna` (= `master` w chwili startu).
+- Zrobione (mechanika z `INSPIRACJE.md`, bez nowej treści i zależności):
+  - Reveal słów w nagłówkach (`split-reveal` na `<main>`, `data-split="words"`): słowo wjeżdża spod maski, `--d-slow` + `--ease-default` z tokenów (`easeToken`, `durationToken` w `core/motion.ts`), stagger 0.04, raz. H1 jako intro po wczytaniu. Ukrycie do czasu podziału: `html.js-motion` z fallbackiem 3 s.
+  - `core/split.ts`: wspólny dostępny podział (`.sr-only` + `aria-hidden`), używany też przez `scroll-fill`.
+  - Rogi ekranu (`Corners.astro` w slocie `chrome` w `Base.astro`): wordmark, stałe CTA, mapa rozdziałów z punktami x (bieżący w gradiencie, z etykietą). `nav-theme` sprawdza tło pod rogami przez `elementsFromPoint`; znak x w x-zoom ma `data-nav-theme="dark"`, więc po zoomie rogi przechodzą na ciemny motyw. `chapter-map` ustawia `aria-current` i przewija Lenisem.
+  - Ściskanie kart realizacji przy szybkim scrollu (`squeeze`: prędkość Lenisa → `--squeeze`, max 0.08).
+  - Akordeon w 05 na desktopie (CSS: `flex-grow` 1 → 2.4 na hover i focus, pierwsza kolumna otwarta domyślnie, opis o stałej szerokości 30 rem). Kroki mają `tabindex="0"`.
+- Zostało / do oceny: dwa CTA w hero (róg i hero), mapa rozdziałów zachodzi na treść przy lewej krawędzi (akordeon, wordmark w stopce), etykiety mapy to `TODO(treść)`. Przed przeniesieniem do `master`: wpisy w `ARCHITECTURE.md` (`data-split="words"`, moduły, slot `chrome`) i specy 05 oraz warstwy globalnej.
+- Lekcje: `hyphens: auto` nie dzieli polskich słów w Edge, więc w tytule akordeonu jest miękki dział (`­`). Hit-testing (`elementsFromPoint`) trafia w pełną geometrię kreski SVG mimo niedorysowania przez DrawSVG, dlatego sondy motywu stoją przy lewej krawędzi, a opakowanie x ma `pointer-events: none`.
+
