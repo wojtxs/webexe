@@ -2,7 +2,7 @@
 
 **Status:** draft | zaakceptowany | w budowie | done
 **Zależności:** (fazy, moduły, assety, decyzje)
-**Wzorzec z oryginału:** (sekcja analizy + klatki w `docs/refs/NN-*/`)
+**Wzorzec:** (wiersz z `docs/INSPIRACJE.md` + sekcja analizy w `docs/reference/` + klatki w `docs/refs/NN-*/`)
 
 ## Cel
 
@@ -24,7 +24,7 @@ Szkic ASCII dla 1440 i 390 oraz opis różnic na 834. Wyrównanie, kolumny siatk
 
 ## Interakcje i ruch
 
-Każda pozycja jako: **wyzwalacz → efekt → liczby** (czas, easing, zakres progresu scrolla, odległości w rem/px, parametry shadera). Bez słów typu „płynnie”, „ładnie” czy „jak u Lando”.
+Każda pozycja jako: **wyzwalacz → efekt → liczby** (czas, easing, zakres progresu scrolla, odległości w rem/px, parametry shadera). Bez słów typu „płynnie”, „ładnie” czy „jak w referencji”.
 
 | # | Wyzwalacz | Efekt | Liczby |
 |---|---|---|---|
@@ -39,7 +39,7 @@ ID z `ASSETS.md` i ścieżki w `public/`.
 
 ## Etapy implementacji
 
-Warstwy w kolejności, a po każdej build i commit. Np.: S1 statyka, S2 ruch DOM, S3 GL, S4 mobile + reduced motion + fallbacki.
+Warstwy w kolejności, a po każdej build i commit. Np.: S1 statyka, S2 ruch DOM, S3 GL (jeśli sekcja go ma), S4 mobile + reduced motion + fallbacki.
 
 ## Kryteria akceptacji
 

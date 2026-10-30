@@ -2,13 +2,13 @@
 
 ## Zasada główna
 
-Z landonorris.com bierzemy **mechanikę**: jedną sygnaturę, pasma szumu, poziomice w tle, choreografię na sticky trackach i fluid scaling. **Wygląd** bierzemy z brand boardu webexe (`assets-src/brand/brand-board.png`). Palety Lando (limonka na butelkowej zieleni) nie używamy w żadnej formie.
+**Mechanikę** bierzemy z `docs/INSPIRACJE.md`: układ i narrację z alpanet.pl, ruch i interakcje z chipsa.design. **Wygląd** bierzemy z brand boardu webexe (`assets-src/brand/brand-board.png`). Z referencji nie bierzemy kolorów, krojów ani promieni w żadnej formie.
 
-Odwagę wydajemy w jednym miejscu, czyli w pasmach odsłaniających system pod powierzchnią. Reszta strony jest spokojna i zdyscyplinowana. Jeśli jakiś element nie wspiera sygnatury ani CTA, wylatuje.
+Odwagę wydajemy w motywie: siatce systemu z węzłami x i przejściu przez znak x na końcu Manifestu. Reszta strony jest spokojna i zdyscyplinowana, a kolor wnoszą przede wszystkim nasze realizacje. Jeśli jakiś element nie wspiera motywu, showcase'u ani CTA, wylatuje.
 
 ## Kolory
 
-Struktura jest jak u Lando (jasne tło, ciemny kolor marki, jeden akcent), ale kolory są nasze. Wartości bazowe pobrane z brand boardu:
+Struktura: jasne tło, ciemny kolor marki, jeden akcent. Wartości bazowe pobrane z brand boardu:
 
 | Token | Hex | Rola |
 |---|---|---|
@@ -23,16 +23,16 @@ Pochodne kolory (do weryfikacji okiem w F1, kontrast sprawdzony):
 
 | Token | Hex | Rola | Kontrast |
 |---|---|---|---|
-| `--c-piana-line` | `#D5EAE5` | poziomice na jasnym tle | dekoracja |
-| `--c-piana-deep` | `#BCD9D2` | obrysy, separatory na jasnym | dekoracja |
-| `--c-glebia-line` | `#16292F` | poziomice na ciemnym tle | dekoracja |
-| `--c-glebia-raise` | `#1F363D` | podniesione powierzchnie na ciemnym | dekoracja |
+| `--c-piana-line` | `#D5EAE5` | linie siatki na jasnym tle | dekoracja |
+| `--c-piana-deep` | `#BCD9D2` | obrysy, separatory i węzły siatki na jasnym | dekoracja |
+| `--c-glebia-line` | `#16292F` | linie siatki na ciemnym tle | dekoracja |
+| `--c-glebia-raise` | `#1F363D` | podniesione powierzchnie i węzły siatki na ciemnym | dekoracja |
 | `--c-ink-muted` | `#566B6F` | tekst drugorzędny na Pianie | 4.98:1 ✓ |
 | `--c-ink-muted-dark` | `#9DB5B0` | tekst drugorzędny na Głębi | 7.79:1 ✓ |
 | `--c-laguna-ink` | `#0E7490` | linki tekstowe na jasnym tle | 4.74:1 ✓ |
 
 Reguły:
-- **Gradient Laguna pojawia się tylko w czterech miejscach:** na literze x (w wordmarku i jako znak), w tle głównego CTA, w odcieniach kursora i obrysów w GL oraz w słowach-akcentach (patrz typografia). Nigdy nie jest tłem sekcji, nie robi „poświaty” i nie wypełnia bloków tekstu.
+- **Gradient Laguna pojawia się tylko w czterech miejscach:** na literze x (w wordmarku, jako znak i w aktywnym węźle siatki), w tle głównego CTA, w kursorze oraz w słowach-akcentach (patrz typografia). Nigdy nie jest tłem sekcji, nie robi „poświaty” i nie wypełnia bloków tekstu.
 - **CTA z gradientem ma tekst w kolorze Głębi** (kontrast 4.59–6.67:1). Biały tekst na gradiencie nie przechodzi (3.68:1).
 - **Laguna jako kolor tekstu na jasnym tle przechodzi tylko przy dużym rozmiarze** (3.26:1, czyli od 24 px w górę). Do małego tekstu bierz `--c-laguna-ink`.
 - **Focus ring:** 2 px `--c-laguna-start` z offsetem 3 px. Na Pianie daje 3.26:1, co spełnia wymóg 3:1 dla elementów nietekstowych.
@@ -45,7 +45,7 @@ Reguły:
 | **Plus Jakarta Sans** (variable, wght 200–800) | wszystko: nagłówki, tekst, UI | self-host woff2, subset latin + latin-ext (polskie znaki), preload |
 | **Comfortaa 700** | wordmark i słowa-akcenty | wordmark zawsze jako SVG, nie jako tekst. Font ładujemy tylko na akcenty |
 
-Odpowiednik Brier z oryginału to **Comfortaa 700, małymi literami, wypełniony gradientem Laguna** (`background-clip: text`). Reguły:
+Słowa-akcenty to **Comfortaa 700, małymi literami, wypełniony gradientem Laguna** (`background-clip: text`). Reguły:
 - Używamy go **tylko** w Manifeście (02) i w stopce (07).
 - Maksymalnie jeden akcent na ekran.
 - Minimum 32 px.
@@ -70,7 +70,7 @@ Na mobile (makieta 390) skalę nadpisujemy: impact 3.5, h1 2.5, h2 2, h3 1.5, le
 
 ## Fluid scaling
 
-Technika z oryginału, z naszymi makietami. Cały layout jest w `rem`, a `html { font-size }` liczy się z szerokości viewportu.
+Cały layout jest w `rem`, a `html { font-size }` liczy się z szerokości viewportu.
 
 ```css
 :root  { --min-w: 992px; --max-w: 1920px; --design-w: 1440; --unit: 16; }
@@ -101,16 +101,22 @@ Makiety referencyjne mają 1440 (desktop), 834 (tablet) i 390 (mobile). Wymiar z
 | Lenis | `lerp 0.1`, `syncTouch` testowany na iOS | — |
 
 Zasady:
-- **Ruch odpowiada na scroll albo wskaźnik.** Sam z siebie porusza się tylko szum pasm i to bardzo wolno.
+- **Ruch odpowiada na scroll albo wskaźnik.** Sam z siebie nic się nie porusza (bez pętli, lewitacji i obracających się odznak). Jedyny wyjątek to wideo z naszą treścią, które gra tylko wtedy, gdy jest w widoku.
 - **Jeden zorkiestrowany moment na sekcję.** Nie animujemy każdego elementu „fade + slide-up”.
-- Hover na przyciskach to efekt „roll” na znakach (technika z oryginału, sekcja 6.5 analizy).
-- **Reduced motion:** Lenis wyłączony (natywny scroll), reveale stają się natychmiastowe albo dostają opacity ≤ 0.2 s, scrub-y zamieniają się w stany końcowe, a GL renderuje statyczną klatkę.
+- Hover na przyciskach to efekt „roll” na znakach.
+- **Reduced motion:** Lenis wyłączony (natywny scroll), reveale stają się natychmiastowe albo dostają opacity ≤ 0.2 s, scrub-y zamieniają się w stany końcowe, wideo stoi na posterze, a GL (jeśli sekcja go ma) renderuje statyczną klatkę.
 
 ## Motywy sygnaturowe
 
-1. **Pasma.** Szum simplex pocięty na pasma jak poziomice. W hero przełączają warstwę „ręczna robota” i warstwę „system”. W tle całej strony rysują poziomice, których kolory zmieniają się per sekcja (`data-gl-change-*`).
-2. **Znak x.** Dwie kreski o zaokrąglonych końcach. Rysuje się w loaderze, na końcu Manifestu (zamiast podpisu Lando) i jako separator w wierszach tekstu. W stopce występuje jako obiekt 3D (dwie kapsuły, materiał z gradientem Laguna).
-3. **Wordmark webexe.** Mały w nawigacji, wielki w scroll-out hero i w stopce. Zawsze SVG, a x zawsze ma gradient.
+1. **Siatka systemu z węzłami x** (motyw przewodni z `INSPIRACJE.md`). Cała strona stoi na jednej widocznej siatce. To jest uporządkowany system, który budujemy i przy którym zostajemy.
+   - Linie pionowe co 3 kolumny siatki 12-kolumnowej, czyli 4 kolumny wizualne. Na tablecie i mobile 2 kolumny wizualne.
+   - Kolory: linie `--c-piana-line`, węzły `--c-piana-deep` na jasnym; linie `--c-glebia-line`, węzły `--c-glebia-raise` na ciemnym.
+   - Węzeł to znak x w miejscu, gdzie linia przecina granicę bloku. Gradient Laguna ma tylko węzeł aktywny: bieżąca sekcja w mapie rozdziałów i CTA.
+   - Karty i zdjęcia stoją na kolumnach siatki, przesunięte w pionie (stagger).
+   - Siatka jest statyczna: nie płynie i nie reaguje na kursor.
+   - Gdzie motyw pracuje w poszczególnych sekcjach, opisuje `INSPIRACJE.md` (sekcja 4).
+2. **Znak x.** Dwie kreski o zaokrąglonych końcach. Rysuje się w loaderze i na końcu Manifestu, gdzie zoom przez jego środek otwiera ciemną część strony. Stoi w węzłach siatki, w punktach mapy rozdziałów i jako separator w wierszach tekstu. Nie ma wersji 3D.
+3. **Wordmark webexe.** Mały w nawigacji, wielki w stopce. Zawsze SVG, a x zawsze ma gradient.
 
 ## Zakazy (typowe oznaki generyka)
 

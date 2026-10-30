@@ -14,7 +14,7 @@ Przeczytaj w tej kolejności:
 2. `docs/DESIGN.md`
 3. Te fragmenty `docs/ARCHITECTURE.md`, których dotyczy sekcja.
 4. Klatki w `docs/refs/NN-*/`.
-5. Wskazane w specu sekcje `docs/reference/landonorris-analiza.md`. Opisują technikę, a nie kod do skopiowania.
+5. Wiersz sekcji w `docs/INSPIRACJE.md` i wskazane w specu sekcje analiz w `docs/reference/`. Opisują technikę, a nie kod do skopiowania.
 
 ## 2. Plan (plan mode)
 

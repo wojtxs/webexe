@@ -1,35 +1,27 @@
 # ARCHITECTURE — webexe
 
-Model jest ten sam co w oryginale: **serwerowy HTML + zachowania w JS podpinane przez `data-*`**. Webflow zastępuje Astro, a bundle agencji zastępują nasze moduły TS. Opis technik oryginału jest w `docs/reference/landonorris-analiza.md` (sekcje 4–8). Tam, gdzie oryginał robi coś słabo (sekcja 10 analizy), robimy lepiej.
+Model: **serwerowy HTML + zachowania w JS podpinane przez `data-*`**. Astro generuje statyczny HTML, a nasze moduły TS dokładają ruch. Mechanikę sekcji opisuje `docs/INSPIRACJE.md`, a techniki referencji `docs/reference/`. Tam, gdzie referencje robią coś słabo (waga, reduced motion, alty), robimy lepiej.
 
 ## Struktura
 
 ```
 src/
   pages/            index.astro · polityka-prywatnosci.astro · 404.astro · lab/[...].astro (sandbox, noindex, tylko dev)
-  layouts/          Base.astro (head, fonty, nav, .gl-wrap, loader, scroll indicator)
-  sections/         Hero.astro · Manifest.astro · Solutions.astro · Examples.astro · Work.astro · About.astro · Footer.astro
-  components/       Button.astro · Wordmark.astro · XMark.astro · …
+  layouts/          Base.astro (head, fonty, nav, loader, kursor, scroll indicator)
+  sections/         Hero.astro · Manifest.astro · Work.astro · Product.astro · HowWeWork.astro · About.astro · Contact.astro
+  components/       Button.astro · Wordmark.astro · XMark.astro · Grid.astro (siatka z węzłami x) · …
   styles/           tokens.css · fluid.css · base.css · utils.css · sections/*.css
   core/
-    app.ts          bootstrap: fonty → scroll → moduły → GL → loader
+    app.ts          bootstrap: fonty → scroll → moduły → loader
     lifecycle.ts    rejestr modułów, init/destroy, skan [data-module]
     scroll.ts       Lenis + gsap.ticker + ScrollTrigger, lenisStart/Stop
     motion.ts       gsap.matchMedia: kontekst „full” i „reduced”
     events.ts       mała szyna zdarzeń (app:ready, app:resize, nav:open)
-    css.ts          cssColor('--c-…') → THREE.Color, cssVar()
-  modules/          hero.ts · split-lines.ts · btn-roll.ts · nav-theme.ts · marquee.ts · horizontal.ts · live-stats.ts …
-  gl/
-    Experience.ts   singleton: renderer, kamera, pętla na gsap.ticker, rejestr scen
-    Sizes.ts  Time.ts  Mouse.ts (eased + pace)  Camera.ts (pixel-perfect)
-    Resources.ts    LoadingManager, tekstury, (Draco/KTX2 dopiero, gdy będą potrzebne)
-    DomPlane.ts     płaszczyzna zsynchronizowana z elementem [data-gl]
-    params.ts       parametry scen (liczby). Kolory zawsze przez cssColor()
-    debug.ts        lil-gui + stats, tylko import.meta.env.DEV i ?debug
-    scenes/         BackgroundScene.ts · HeroScene.ts · XMarkScene.ts …
-    shaders/        noise.glsl · bands.frag · contour.frag · composite.frag · *.vert
+    css.ts          cssVar() (cssColor() wraca dopiero razem z GL)
+  modules/          card-expand.ts · scroll-fill.ts · x-zoom.ts · split-lines.ts · accordion.ts · cursor.ts · menu.ts · chapter-map.ts · counter.ts · btn-roll.ts · nav-theme.ts · live-stats.ts …
+  gl/               tylko wtedy, gdy spec sekcji wymaga WebGL (patrz „GL (opcjonalny)”)
 public/
-  gl/textures/hero/   hero-a.webp · hero-b.webp · hero-alpha.webp · hero-depth.webp · hero-static.webp
+  media/              nagrania i postery: hero, work, product (D3)
   fonts/              (jeśli nie przez @fontsource)
 assets-src/           oryginały i manifest generowania (nie trafia do builda)
 ```
@@ -45,15 +37,14 @@ export interface Module {
 
 - `lifecycle.ts` skanuje `[data-module]`, importuje moduł dynamicznie (`import()`, code-splitting) i woła `init(el)`.
 - Każdy moduł tworzy animacje w `const ctx = gsap.context(() => { … }, root)`, a w `destroy()` woła `ctx.revert()`. Odpina też listenery, `ResizeObserver` i `IntersectionObserver`.
-- W wersji 1 nie ma routera SPA. Kontrakt `init/destroy` jest od pierwszego dnia, żeby przejścia stron (Taxi.js albo View Transitions) w F6 nie wymagały przepisywania modułów.
+- W wersji 1 nie ma routera SPA ani przejść między stronami. Kontrakt `init/destroy` jest od pierwszego dnia, żeby ewentualne przejścia (View Transitions) nie wymagały przepisywania modułów.
 
 ## API atrybutów `data-*`
 
 | Atrybut | Znaczenie |
 |---|---|
 | `data-module="hero"` | inicjalizuje `modules/hero.ts` na tym elemencie |
-| `data-gl="hero"` | element, z którym synchronizuje się płaszczyzna sceny GL |
-| `data-gl-change-from` / `-to` / `-start` / `-end` | kolory tła GL na sekcji, jako pary tokenów, np. `piana,piana-line` → `glebia,glebia-line` |
+| `data-gl="…"` | tylko z GL: element, z którym synchronizuje się scena |
 | `data-nav-theme="light\|dark"` | motyw nawigacji, gdy sekcja jest pod navem |
 | `data-sticky` | `.sticky-track` z progresem dla ScrollTriggera |
 | `data-split="lines"` + `data-split-delay="0.2"` | reveal linii (SplitText, maska `clip-path`) |
@@ -66,35 +57,41 @@ Nowy atrybut dopisujesz najpierw do tej tabeli, potem do kodu.
 
 ## Scroll
 
-- Lenis z `autoRaf: false` jest napędzany przez `gsap.ticker`, wywołuje `lenis.on('scroll', ScrollTrigger.update)` i ma `gsap.ticker.lagSmoothing(0)` (snippet w analizie, sekcja 15).
+- Lenis z `autoRaf: false` jest napędzany przez `gsap.ticker`, wywołuje `lenis.on('scroll', ScrollTrigger.update)` i ma `gsap.ticker.lagSmoothing(0)`.
 - Przypięcia robimy przez `.sticky-track` (wysokość np. `200vh`) z `.sticky-item` (`position: sticky; top: 0; height: 100vh`). Progres liczy ScrollTrigger z `scrub: true`. **Nigdy `pin: true`.**
-- Galeria pozioma: wysokość = `trackWidth - innerWidth + 100vh`, a paralaksa elementów idzie przez `containerAnimation`.
+- Jeden `gsap.ticker` na wszystko (scroll, kursor, prędkość scrolla). Bez osobnych pętli rAF w modułach.
 - Przy reduced motion Lenis się nie startuje i działa natywny scroll.
 
 ## Tekst
 
-- SplitText 3.13+ dzieli tekst na linie z maską `clip-path` i uruchamia się dopiero po `document.fonts.ready`.
-- Dostępność: najpierw sprawdź wbudowaną obsługę `aria` w SplitText (aktualne docs przez Context7). Jeśli nie wystarcza, stosujesz wzorzec z oryginału: oryginał w `.sr-only`, a animowana kopia z `aria-hidden`.
+- SplitText 3.13+ dzieli tekst na linie albo słowa z maską `clip-path` i uruchamia się dopiero po `document.fonts.ready`.
+- Dostępność: najpierw sprawdź wbudowaną obsługę `aria` w SplitText (aktualne docs przez Context7). Jeśli nie wystarcza, oryginalny tekst idzie do `.sr-only`, a animowana kopia dostaje `aria-hidden`.
 
-## GL
+## Wideo
 
-- **Jeden renderer, jeden canvas.** `.gl-wrap` ma `position: fixed; z-index: -1`. Ustawienia: `alpha: true`, `autoClear = false`, `powerPreference: 'high-performance'`.
-- **Pixel ratio:** desktop `min(dpr, 1.25)`, mobile `min(dpr, 1.5)`. Mobile startuje z 1.5, a nie 2 jak w oryginale, i podnosimy to tylko, jeśli pomiar pozwoli.
-- **Kamera pixel-perfect:** `fov = 2·atan(h/2/z)`, czyli 1 jednostka = 1 px CSS.
-- **Każda scena renderuje do własnego `WebGLRenderTarget`**, a tekstura trafia na `DomPlane` w scenie głównej. Scena renderuje się tylko wtedy, gdy jej element jest w viewporcie (IntersectionObserver ustawia flagę `isRendering`).
-- **Szum jest liczony w shaderze**, bez tekstury szumu. `noise.glsl` (simplex 3D) to jeden plik współdzielony przez hero i tło.
-- Obsługujemy `webglcontextlost` / `restored`. Bez WebGL działają fallbacki statyczne (`hero-static.webp`, tło CSS).
-- Parametry są w `params.ts`, a strojenie odbywa się w `lil-gui` pod `?debug`. Wartości ze strojenia przepisujesz z powrotem do `params.ts`.
+- `<video muted loop playsinline>` z dwoma źródłami (AV1 w MP4, potem zwykłe MP4) i posterem. Wymiary w atrybutach, żeby nie było CLS.
+- Ładowanie leniwe: `preload="none"` albo `metadata`, `src` podpinany przez IntersectionObserver. Odtwarzanie tylko w widoku, pauza po wyjściu.
+- Mobile dostaje osobne, lżejsze pliki. Reduced motion: wideo nie startuje, widać poster.
 
-## Ładowanie (lepiej niż w oryginale)
+## GL (opcjonalny)
 
-Oryginał ładuje za loaderem wszystko z całej strony (58 requestów, 1.3 MB JS). U nas:
+Bazowy stack jest bez WebGL. three.js dochodzi tylko wtedy, gdy spec sekcji uzasadni efekt, którego nie da się zrobić w DOM, CSS albo wideo, i wtedy jak nowa zależność (zasada 8 w `CLAUDE.md`). Dziś jedynym kandydatem jest przejście obraz → wideo na kartach realizacji (03) przy `(hover: hover) and (pointer: fine)`.
 
-1. **Krytyczne dla hero** są: fonty, `hero-a`, `hero-b`, `hero-alpha`, `hero-depth` i kompilacja shaderów hero. Tylko na to czeka loader.
-2. **Twardy limit loadera to 2.5 s.** Jeśli assety nie zdążą, hero startuje w trybie statycznym (`hero-static.webp`) i podmienia się na GL, kiedy będzie gotowe.
-3. **Pozostałe sceny** importujemy dynamicznie i ładujemy, gdy ich element jest w odległości 1.5 viewportu.
-4. H1 jest w DOM-ie od pierwszego renderu, nie czeka na GL.
-5. Assety mają hash albo wersję w nazwie, długi cache i są self-hostowane, łącznie z dekoderami i ewentualnym `rive.wasm`.
+Jeśli GL wejdzie:
+
+- **Jeden renderer, jeden canvas.** Sceny włączają się tylko na urządzeniach z `(hover: hover) and (pointer: fine)`, a w pozostałych przypadkach działa wersja DOM.
+- **Pixel ratio:** desktop `min(dpr, 1.25)`, mobile `min(dpr, 1.5)`.
+- Scena renderuje się tylko wtedy, gdy jej element jest w viewporcie (IntersectionObserver).
+- Kolory zawsze przez `cssColor('--c-…')`. Parametry w `gl/params.ts`, strojenie w `lil-gui` pod `?debug`.
+- Obsługujemy `webglcontextlost` / `restored`. Bez WebGL sekcja jest kompletna w wersji DOM.
+
+## Ładowanie
+
+1. **Krytyczne dla hero** są fonty i poster karty hero. Tylko na to czeka loader.
+2. **Twardy limit loadera to 2.5 s.** Wideo hero startuje, kiedy będzie gotowe, a do tego czasu widać poster.
+3. **Pozostałe media** ładujemy leniwie, gdy ich element jest w odległości 1.5 viewportu.
+4. H1 jest w DOM-ie od pierwszego renderu i na nic nie czeka.
+5. Assety mają hash albo wersję w nazwie, długi cache i są self-hostowane.
 
 ## Budżety (sprawdzane w F7, ale pilnowane od F1)
 
@@ -109,4 +106,4 @@ Oryginał ładuje za loaderem wszystko z całej strony (58 requestów, 1.3 MB JS
 
 ## Deploy
 
-`npm run build` daje statyczny `dist/`, który trafia na VPS (rsync albo pipeline naszej platformy) i jest serwowany przez nginx lub Caddy. Kompresja brotli/gzip, `Cache-Control: immutable` dla `/_astro/*` i `/gl/*`, krótki cache dla HTML. HTTP/2 albo HTTP/3.
+`npm run build` daje statyczny `dist/`. Trafia do obrazu Docker z serwerem statycznym (nginx albo Caddy), który działa na naszym VPS. Konfiguracja obrazu powstaje w F7. Kompresja brotli/gzip, `Cache-Control: immutable` dla `/_astro/*` i `/media/*`, krótki cache dla HTML. HTTP/2 albo HTTP/3.

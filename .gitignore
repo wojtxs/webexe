@@ -30,3 +30,6 @@ yarn-error.log*
 
 # Assets (oryginały nie trafiają do repo, tylko przetworzone)
 assets-src/brand/brand-board.png
+
+# Nagranie referencyjne landonorris.com (78 MB), tylko lokalnie
+docs/archive/refs-landonorris/

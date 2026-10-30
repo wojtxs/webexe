@@ -2,19 +2,19 @@
 
 Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza jest zamknięta dopiero wtedy, gdy spełnia swój warunek wyjścia.
 
-**Aktualna faza:** F2 od zera: wszystkie spike'i hero usunięte z mastera (archiwum na gałęzi `archive/spikes`). F0 nadal otwarte: decyzje i assety.
-**Decyzje otwarte:** D2–D11 w `BRIEF.md`
+**Aktualna faza:** F2: materiał D3 i spec hero. Kierunek wyznacza `docs/INSPIRACJE.md` (od 2026-10-30, zamiast landonorris.com). F0 nadal otwarte: decyzje i klatki referencyjne.
+**Decyzje otwarte:** D2–D11 w `BRIEF.md` (D3 częściowo rozstrzygnięte)
 
 ## F0: Treść i kierunek (bez Claude Code albo tylko pomocniczo)
 
 - [x] D1: oferta (budujemy i utrzymujemy oprogramowanie dla firm)
+- [x] Kierunek: `docs/INSPIRACJE.md` (alpanet.pl + chipsa.design), mapa strony w `BRIEF.md`
 - [ ] Rozstrzygnięte D6, D8, D9, D10 i D11
 - [ ] `assets-src/brand/webexe.svg` (x jako osobna ścieżka) oraz `x-mark.svg`
-- [ ] Nagrania ekranu z landonorris.com dla każdej sekcji-wzorca, klatki kluczowe wyciągnięte do `docs/refs/NN-*/`:
+- [ ] Nagrania ekranu alpanet.pl i chipsa.design dla każdej sekcji-wzorca z `INSPIRACJE.md`, klatki kluczowe wyciągnięte do `docs/refs/NN-*/`:
       `ffmpeg -i hero.mov -vf "fps=4" docs/refs/01-hero/frame_%03d.png`, a potem wybierasz 5–8 klatek
-- [ ] Assety HERO-A, B, ALPHA i DEPTH dla **obu wariantów** z `ASSETS.md` (osobna sesja generowania). Na spike F2 wystarczą wersje robocze.
 
-**Warunek wyjścia:** BRIEF bez blokujących decyzji dla F1–F3 i robocze assety hero.
+**Warunek wyjścia:** BRIEF bez blokujących decyzji dla F2–F3 i klatki referencyjne dla sekcji 01–03.
 
 ## F1: Fundament
 
@@ -27,54 +27,57 @@ Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza 
 
 **Warunek wyjścia:** pusta makieta z siatką skaluje się proporcjonalnie od 992 do 1920 px, scroll jest płynny na desktopie i na telefonie, przy reduced motion działa natywny scroll, `npm run build` przechodzi czysto.
 
-## F2: Spike maski hero (w `/lab`)
+## F2: Materiał D3 i spec hero (zamiast spike'a maski)
 
-- [x] Minimalny GL: renderer, kamera pixel-perfect, `DomPlane`, `Mouse` z eased + pace
-- [x] Shader pasm (`bands.frag`) mieszający HERO-A i HERO-B z alfą, kursor ugina pasma tylko w ruchu
-- [x] Panel `lil-gui` z parametrami ze speca 01
-- [x] Przełącznik wariantów hero (1 / 2) w `lil-gui`
+Spike'a nie robimy: karta hero to prosty DOM, a ryzyko leży w materiale i wyglądzie, nie w technice. Stary spike maski (pasma, GL) jest w historii i na gałęzi `archive/spikes`, a jego spec w `docs/archive/01-hero.md`.
 
-**Warunek wyjścia (bramka D2):** wybrany jeden wariant hero, a efekt wygląda świetnie na żywo i trzyma 60 fps. Jeśli żaden nie działa, zmieniamy koncept hero **przed** F3.
+- [ ] Minimum 4 projekty: tytuł, krótki opis, zrzuty, nagrania (D3). Opisy do `BRIEF.md` po akceptacji, pliki do `assets-src/manifest.json`
+- [ ] Style frame karty hero: nieruchoma klatka w docelowej jakości, z prawdziwym materiałem
+- [ ] Nowy `docs/sections/01-hero.md` z `_TEMPLATE.md` (osobna sesja)
+
+**Warunek wyjścia (bramka D2):** zaakceptowany style frame i spec hero.
 
 ## F3: Greybox całej strony
 
+- [ ] Porządki w kodzie po zmianie kierunku: `three` i `@types/three` z `package.json` (za zgodą), `cssColor()` z `src/core/css.ts`, `.gl-wrap` z `Base.astro` i `utils.css`, palety v2 i v3 z `tokens.css`, sekcje w `index.astro` według mapy z `BRIEF.md`. `lil-gui` zostaje
 - [ ] Wszystkie sekcje 01–07 jako statyczny HTML/CSS z prawdziwą treścią z BRIEF i szarymi blokami w miejscu wizualów
+- [ ] Statyczna siatka z węzłami x pod wszystkimi sekcjami, zgrubne przejście przez x na końcu Manifestu
 - [ ] Wysokości sticky tracków zgrubnie ustawione
 
 **Warunek wyjścia:** przewinięcie całej strony daje dobry rytm i kolejność, a decyzje o zmianach kolejności są zapisane poniżej.
 
-## F4: GL core + 01 Hero
+## F4: Motyw + 01 Hero
 
-- [ ] GL core docelowy (Experience, Resources, render targety, IO-visibility, fallbacki)
-- [ ] `BackgroundScene` (poziomice + `data-gl-change-*`)
-- [ ] 01 Hero według `docs/sections/01-hero.md`, etapy H1–H5
+- [ ] Siatka z węzłami x jako komponent globalny (`Grid.astro`), aktywny węzeł w gradiencie
+- [ ] 01 Hero według nowego `docs/sections/01-hero.md`
 
 ## F5: Sekcje
 
 Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptujesz, potem build.
 
-- [ ] 02 Manifest
-- [ ] 03 Rozwiązania
-- [ ] 04 Przykłady
-- [ ] 05 Realizacje (zależy od D3)
+- [ ] 02 Manifest (wypełnianie scrollem, zoom przez x)
+- [ ] 03 Realizacje i dowody (zależy od D3)
+- [ ] 04 Produkt (zależy od D3)
+- [ ] 05 Jak pracujemy (akordeon, D10, D11)
 - [ ] 06 Poznaj nas (zależy od D4)
-- [ ] 07 Kontakt / stopka (+ X-3D)
+- [ ] 07 Kontakt / stopka (D7, D9)
 
 ## F6: Warstwa globalna
 
-- [ ] Nawigacja: motyw per sekcja, menu fullscreen, `lenis.stop()` przy otwartym menu
+- [ ] Nawigacja w rogach: menu wyrastające z przycisku, mapa rozdziałów z punktami x, stałe CTA, motyw per sekcja, `lenis.stop()` przy otwartym menu
+- [ ] Kursor z etykietą (tylko `pointer: fine`)
 - [ ] 00 Loader (rysowanie znaku x, limit 2.5 s, przekazanie `app:ready`)
-- [ ] Przejścia stron (Taxi.js albo View Transitions), `/404`, `/polityka-prywatnosci`
-- [ ] Scroll indicator, easter egg (np. inny seed pasm przy każdym wejściu)
+- [ ] `/404`, `/polityka-prywatnosci`
+- [ ] Scroll indicator
 
 ## F7: Hardening i deploy
 
 - [ ] Budżety z ARCHITECTURE.md, Lighthouse, trace wydajności
 - [ ] A11y: alty, focus, kolejność, reduced motion, czytniki ekranu
 - [ ] SEO: meta, OG, sitemap, `robots.txt`, schema.org `Organization`
-- [ ] Mobile: sceny uproszczone tam, gdzie trzeba
+- [ ] Mobile: natywny scroll na dotyku (do decyzji w specu hero), lżejsze wideo, stos paneli zamiast akordeonu
 - [ ] Kontakt według D7, analityka według D7
-- [ ] Deploy na VPS, cache, kompresja, monitoring uptime
+- [ ] Deploy: obraz Docker z serwerem statycznym na VPS, cache, kompresja, monitoring uptime
 
 ## Log decyzji
 
@@ -91,6 +94,7 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 | 2026-10-27 | Hero: „wstęga z kodu” zamiast „Przez x”: jedna wstęga z prawdziwym kodem strony zawiązana w pętlę na Głębi, kursor ją prasuje (kod ostrzeje), scroll rozwija ją w płachtę pod Manifest; do potwierdzenia na żywo | pomysły z x nie siadały; benchmark użytkownika to całe portfolio OFF+BRAND (jeden obiekt, pustka, szlif), bez twarzy, hero ma sugerować software bez tłumaczenia. Wybór po klatkach z fal.ai (krajobraz z kodu, sygnał, wstęga). Wstęga nie potrzebuje 3D-artysty ani szkła z bloomem |
 | 2026-10-28 | Hero: „Build” zamiast wstęgi: terminal `npm run build` i blueprint strony (siatka, ramki z wymiarami z DOM, nagłówek w obrysie) rysują się na żywo, linia skanu renderuje gotowe hero, kursor to rentgen odsłaniający blueprint; nagłówek wersalikami; bez WebGL; nowy token `--f-mono` (krój systemowy); do potwierdzenia na żywo | wstęga odrzucona („do wyjebania, nie pasuje do firmy software”), dwie serie par A/B do maski (monolit, papierologia, szkic, bonsai, dłoń, zegarek) też. Build pokazuje, że jesteśmy software housem, samą stroną. DOM i typografia dają jakość pod kontrolą, czego nie dawały obiekty liczone w three.js |
 | 2026-10-28 | Hero: bohater po intro Build to obiekt `>_` (prompt terminala, chrom i szkło) jako zdjęcie z mapami w GL, rentgen w pasmach szumu jak twarz/kask u Lando; soczewka DOM usunięta; hero sticky 2 × vh, wejście w Manifest z blokiem kursora | użytkownikowi podobało się intro, ale hero „w ogóle nie odwzorowuje Lando”. Wybór z 4 obiektów (kursor, klawisz Enter, `>_`, procesor) po klatkach A/B z pasmami. Zdjęcie z mapami zamiast 3D liczonego na żywo, bo to daje jakość renderu (wniosek z 7 odrzuconych konceptów) |
+| 2026-10-30 | Kierunek z `docs/INSPIRACJE.md` (alpanet.pl: układ i narracja, chipsa.design: ruch i interakcje) zamiast landonorris.com. Strona showcase'owa z realizacjami w centrum, bez kosztorysu i konfiguratora. Motyw „siatka z węzłami x” zamiast pasm i poziomic. three.js tylko na żądanie speca sekcji. Obowiązuje wygląd z `DESIGN.md` (Laguna), palety v2 i v3 do usunięcia. D3: minimum 4 projekty. Deploy w Dockerze | żaden koncept hero z kierunku Lando nie przeszedł; referencje użytkownika dają sprawdzony układ i ruch, a showcase opiera stronę na prawdziwych realizacjach zamiast na efekcie GL |
 
 ## Log sesji
 
@@ -290,3 +294,31 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Niezacommitowana praca (rack, scan, agent, dark, flow, system, zmiany w code/build) przed usunięciem poszła commitem `1259204` na gałąź `archive/spikes`. Surowe klatki Blendera nie były w repo i są skasowane; da się je odtworzyć `rack.py` z archiwum.
 - Zostało: zależności `three` i `lil-gui` zostają w `package.json` (three jest w stacku, lil-gui do strojenia GL), do decyzji użytkownika. Hero do zbudowania od nowa, najlepiej z referencją od użytkownika.
 - Decyzje: spike'i nie wracają na master, a gdy coś się przyda, wyciągamy to z `archive/spikes` albo z historii.
+
+### 2026-10-30 — narzędzia: Playwright, DevTools, pluginy
+
+- Zrobione: sekcja „Narzędzia” w `CLAUDE.md`. `visual-qa` robi screeny i reduced motion przez Playwright MCP, a trace, konsolę i sieć przez Chrome DevTools MCP. Setup w README to lista komend do odtworzenia środowiska. Usunięty `.mcp.json` (i `disabledMcpjsonServers` w `settings.local.json`). Naprawiony lokalny wpis `playwright`.
+- Zostało: sprawdzić `visual-qa` z Playwright przy najbliższej sekcji.
+- Decyzje: konfiguracja MCP wyłącznie z komend w README (playwright local, chrome-devtools i fal user, Context7 z pluginu), bez `.mcp.json`. Breakpoint tabletu w `CLAUDE.md` poprawiony z 768 na 834, zgodnie z `DESIGN.md` i `build-section`.
+- Lekcje: w Git Bash `cmd /c` w `claude mcp add` zapisuje się jako `cmd C:/` i serwer nie startuje. Komendy MCP wpisywać bez wrappera albo w PowerShell.
+
+### 2026-10-30 — draft INSPIRACJE.md (alpanet + chipsa)
+
+- Zrobione: `docs/INSPIRACJE.md` (draft): role referencji, tabela 10 obszarów (główna referencja, co bierzemy, czego nie), konflikty z rekomendacjami, motyw „system na siatce, węzły to znak x”, 11 pytań.
+- Zostało: odpowiedzi na pytania i akceptacja. Potem aktualizacja `BRIEF.md` (Mapa strony), `DESIGN.md` i `CLAUDE.md`.
+- Decyzje: brak, wszystkie rekomendacje czekają na akceptację.
+- Lekcje: `alpanet-analiza.md` jest ucięta po sekcji 6. Przed pracą na referencji sprawdzić, czy plik jest kompletny.
+
+### 2026-10-30 — zmiana kierunku: INSPIRACJE.md zamiast landonorris.com
+
+- Zrobione: dokumenty przepisane pod kierunek z `INSPIRACJE.md`, kod nieruszony.
+  - `CLAUDE.md`: projekt (showcase, bez kosztorysu, CTA według D9), motyw przewodni, stack bez three.js i Rive, deploy w Dockerze, mapa dokumentów z `INSPIRACJE.md` i `docs/archive/`, zasada 9 o nowych referencjach.
+  - `BRIEF.md`: nowa mapa strony (00–07, kolumna „Zależy od”), D2, D3, D10, D11, numer sekcji „Jak pracujemy” (05).
+  - `DESIGN.md`: zasada główna, motyw „siatka z węzłami x” zamiast pasm, znak x bez 3D, role tokenów linii, reguły ruchu bez szumu. Wartości tokenów bez zmian.
+  - `ARCHITECTURE.md`: bez GL w bazie, sekcja „GL (opcjonalny)”, nowa sekcja „Wideo”, sekcje i moduły pod nową mapę, deploy w Dockerze.
+  - `ASSETS.md`: HERO-MEDIA/POSTER, WORK, LOGO, PRODUCT zamiast HERO-A/B, EX, X-3D i HDRI.
+  - `INSPIRACJE.md`: status, kolejność, odpowiedzi na pytania. `_TEMPLATE.md`, `README.md` i `build-section` bez odwołań do Lando.
+  - Do `docs/archive/`: `01-hero.md`, `HANDOFF-2026-10-27.md`, `assets-hero-pasma.md`, nagranie landonorris (`refs-landonorris/`, w `.gitignore`).
+- Zostało: F2 (materiał D3, style frame, nowy spec hero). Porządki w kodzie są pierwszym zadaniem F3. Pytania otwarte w `INSPIRACJE.md` (sekcja 5). Tokeny ruchu z Chipsy i natywny scroll na dotyku do decyzji przy specu hero.
+- Decyzje: patrz wiersz z 2026-10-30 w logu decyzji.
+- Lekcje: „showcase” bez materiału nie istnieje. D3 przestało być opcjonalne i blokuje teraz hero, realizacje i produkt, więc materiał trzeba zebrać przed jakimkolwiek kodem sekcji.
