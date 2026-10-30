@@ -46,10 +46,12 @@ import '../styles/sections/work.css';
     </ol>
 
     <!-- TODO(treść): DEMO, zmyślone liczby i klienci z src/data/demo.ts; docelowo D3 -->
-    <ul class="proof" aria-label="Dowody">
+    <ul class="proof" aria-label="Dowody" data-module="odometer">
       {demoNumbers.map((item) => (
         <li class="proof__cell proof__cell--number">
-          <span class="proof__value t-h2">{item.value}</span>
+          <span class="proof__value t-h2" data-odometer>
+            {item.value}
+          </span>
           <span class="t-small muted">{item.label}</span>
         </li>
       ))}

@@ -393,3 +393,10 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Sprawdzone: 1440 i 390 (zrzuty i sonda pozycji pojazdów w czasie), reduced motion, konsola bez błędów poza znanym 404 favicony. Lint, check i build czyste.
 - Zostało / do oceny: rogi ekranu nachodzą na treść (wordmark nad otwartą ciemną kolumną znika, bo `nav-theme` patrzy na motyw sekcji). Odczucie scrolla do potwierdzenia przez użytkownika.
 - Lekcje: DrawSVG traktuje istniejący `stroke-dasharray` z CSS jako widoczny odcinek, więc przy kreskowanych liniach trzeba rysować jawnie `fromTo('0%', '100%')`. Nakładka SVG z `preserveAspectRatio="xMidYMid slice"` i viewBoxem obrazu kadruje się identycznie jak `object-fit: cover`.
+
+### 2026-10-30 — eksperyment: licznik w dowodach (gałąź `eksperyment/ruch-chipsy`)
+
+- Zrobione: `modules/odometer.ts` na `.proof`. Cyfry w `[data-odometer]` przewijają się w oknach (kolumna 0–9 ×2) do wartości przy wejściu na ekran, a pełna wartość jest w `.sr-only`. Reduced motion i bez JS: zwykły tekst. Sprawdzone: wartości docelowe poprawne, konsola czysta, check i build czyste.
+- Zostało (użytkownik chce, sesja przerwana limitem):
+  1. Realizacje na żywo. Plan: `?base` + eksport geometrii w `faktury.html` (ramki pól, kartka), `przeplywy.html` (łamane połączeń) i `serwis.html` (nowe zgłoszenie jako sprite ze zrzutu elementu). Nakładki SVG jak w hero, moduł `work-live` gra je na hover (dotyk: w widoku). Pętla floty wydzielona z `hero-live.ts`, etykieta przy kursorze „Podgląd na żywo” (moduł `cursor-label` na sekcji). Kolory nakładek tylko z tokenów, więc bursztynowe elementy zostają statyczne w bazie.
+  2. Loader (00): x rysuje się dwiema kreskami (`pathLength=1`, dashoffset), panel Głębi zjeżdża w górę, potem wejście hero (H1 przez bramkę `core/intro.ts` w `split-reveal`, `[data-intro]` dla leadu, CTA, karty i rogów). Limit 2,5 s od startu nawigacji (`timeScale`), Lenis zatrzymany na czas loadera, ukrywanie przez `html.js-motion`.
