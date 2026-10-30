@@ -1,5 +1,5 @@
 /* ==========================================================================
-   02 Manifest — greybox (F3). Tekst + tor x-zoom 250vh.
+   02 Manifest (docs/sections/02-manifest.md). Tekst + tor x-zoom 250vh (200vh na mobile).
    Tor nie ma dolnego paddingu: ostatnia klatka zoomu jest w całości w Głębi
    i przechodzi bez szwu w ciemną sekcję 03.
    ========================================================================== */
@@ -47,6 +47,22 @@
   .manifest__problem,
   .manifest__answer {
     grid-column: 1 / -1;
+  }
+
+  .xzoom__mark {
+    width: 6rem;
+    height: 6rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .xzoom {
+    height: 200vh;
+  }
+
+  .xzoom__mark {
+    width: 5rem;
+    height: 5rem;
   }
 }
 

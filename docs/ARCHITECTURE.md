@@ -49,6 +49,7 @@ export interface Module {
 | `data-sticky` | `.sticky-track` z progresem dla ScrollTriggera |
 | `data-card-expand="card\|window\|fade"` | części `card-expand`: karta, okno startowe (prostokąt z siatki CSS), treść gasnąca pod kartą |
 | `data-x-zoom="mark"` | opakowanie znaku x skalowane przez `x-zoom` |
+| `data-scroll-fill="text"` | akapit wypełniany scrollem słowo po słowie przez `scroll-fill` (tylko Manifest) |
 | `data-split="lines"` + `data-split-delay="0.2"` | reveal linii (SplitText, maska `clip-path`) |
 | `data-btn-roll` | hover „roll” na znakach przycisku |
 | `data-marquee` + `-speed` / `-direction` | marquee (pauza przez IntersectionObserver) |

@@ -1,8 +1,8 @@
 ---
 /**
- * 02 Manifest — greybox (F3). Tekst statyczny (wypełnianie scrollem słowo po słowie w F5),
+ * 02 Manifest (docs/sections/02-manifest.md). Tekst wypełnia się scrollem słowo po słowie,
  * na końcu tor x-zoom: znak x rysuje się dwiema kreskami, zoom przez jego środek
- * otwiera ciemną część strony (docs/INSPIRACJE.md, wiersz Struktura).
+ * otwiera ciemną część strony.
  */
 import Grid from '../components/Grid.astro';
 import XMark from '../components/XMark.astro';
@@ -17,15 +17,15 @@ import '../styles/sections/manifest.css';
 >
   <Grid />
 
-  <div class="container manifest__body">
+  <div class="container manifest__body" data-module="scroll-fill">
     <h2 id="manifest-title" class="sr-only">
       Manifest
     </h2>
-    <p class="manifest__problem t-h3">
+    <p class="manifest__problem t-h3" data-scroll-fill="text">
       Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach nikt nie
       wie, jak działa, a każda zmiana jest ryzykiem.
     </p>
-    <p class="manifest__answer t-h2">
+    <p class="manifest__answer t-h2" data-scroll-fill="text">
       My budujemy tak, żeby dało się to rozwijać <span class="accent">latami</span>. I sami to
       rozwijamy.
     </p>
