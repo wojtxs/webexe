@@ -2,7 +2,7 @@
 
 Claude aktualizuje ten plik na koniec każdej sesji. Fazy idą po kolei, a faza jest zamknięta dopiero wtedy, gdy spełnia swój warunek wyjścia.
 
-**Aktualna faza:** F2: materiał D3 i spec hero. Kierunek wyznacza `docs/INSPIRACJE.md` (od 2026-10-30, zamiast landonorris.com). F0 nadal otwarte: decyzje i klatki referencyjne.
+**Aktualna faza:** F2: materiał D3 i spec hero (blokuje dalsze sekcje). F3 (greybox) zrobione poza kolejnością 2026-10-30, czeka na przegląd rytmu. Kierunek wyznacza `docs/INSPIRACJE.md` (od 2026-10-30, zamiast landonorris.com). F0 nadal otwarte: decyzje i klatki referencyjne.
 **Decyzje otwarte:** D2–D11 w `BRIEF.md` (D3 częściowo rozstrzygnięte)
 
 ## F0: Treść i kierunek (bez Claude Code albo tylko pomocniczo)
@@ -39,12 +39,12 @@ Spike'a nie robimy: karta hero to prosty DOM, a ryzyko leży w materiale i wygl�
 
 ## F3: Greybox całej strony
 
-- [ ] Porządki w kodzie po zmianie kierunku: `three` i `@types/three` z `package.json` (za zgodą), `cssColor()` z `src/core/css.ts`, `.gl-wrap` z `Base.astro` i `utils.css`, palety v2 i v3 z `tokens.css`, sekcje w `index.astro` według mapy z `BRIEF.md`. `lil-gui` zostaje
-- [ ] Wszystkie sekcje 01–07 jako statyczny HTML/CSS z prawdziwą treścią z BRIEF i szarymi blokami w miejscu wizualów
-- [ ] Statyczna siatka z węzłami x pod wszystkimi sekcjami, zgrubne przejście przez x na końcu Manifestu
-- [ ] Wysokości sticky tracków zgrubnie ustawione
+- [x] Porządki w kodzie po zmianie kierunku: `three` i `@types/three` z `package.json` (za zgodą), `cssColor()` z `src/core/css.ts`, `.gl-wrap` z `Base.astro` i `utils.css`, palety v2 i v3 z `tokens.css`, sekcje w `index.astro` według mapy z `BRIEF.md`. `lil-gui` zostaje
+- [x] Wszystkie sekcje 01–07 jako statyczny HTML/CSS z prawdziwą treścią z BRIEF i placeholderami (Biel / `--c-glebia-raise`) w miejscu wizualów
+- [x] Statyczna siatka z węzłami x pod wszystkimi sekcjami, zgrubne przejście przez x na końcu Manifestu
+- [x] Wysokości sticky tracków zgrubnie ustawione (hero 300vh, x-zoom 250vh)
 
-**Warunek wyjścia:** przewinięcie całej strony daje dobry rytm i kolejność, a decyzje o zmianach kolejności są zapisane poniżej.
+**Warunek wyjścia:** przewinięcie całej strony daje dobry rytm i kolejność, a decyzje o zmianach kolejności są zapisane poniżej. *(Czeka na przegląd użytkownika na żywo.)*
 
 ## F4: Motyw + 01 Hero
 
@@ -322,3 +322,23 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zostało: F2 (materiał D3, style frame, nowy spec hero). Porządki w kodzie są pierwszym zadaniem F3. Pytania otwarte w `INSPIRACJE.md` (sekcja 5). Tokeny ruchu z Chipsy i natywny scroll na dotyku do decyzji przy specu hero.
 - Decyzje: patrz wiersz z 2026-10-30 w logu decyzji.
 - Lekcje: „showcase” bez materiału nie istnieje. D3 przestało być opcjonalne i blokuje teraz hero, realizacje i produkt, więc materiał trzeba zebrać przed jakimkolwiek kodem sekcji.
+
+### 2026-10-30 — F3: porządki w kodzie i greybox 01–07
+
+- Zrobione:
+  - Commit dokumentów z trzech poprzednich zadań (narzędzia, `INSPIRACJE.md`, zmiana kierunku).
+  - Porządki: bez `three` i `@types/three`, bez `cssColor()` i `.gl-wrap`, bez palet v2/v3 i tokenów po spike'ach (`--f-mono`, `--t-wordmark-hero`, `--w-display-light`). `addMotion()` ma własny `gsap.matchMedia` na wywołanie, zwraca `revert`, a funkcje `full`/`reduced` mogą zwrócić sprzątanie.
+  - Komponenty: `Grid.astro` (linie co 3 kolumny, poniżej 992 px co połowę; węzły x na górnej granicy sekcji; `activeNode` w gradiencie), `XMark.astro`, `Button.astro`, `Wordmark.astro` (tekst SVG w Comfortaa do czasu D8). Gradient `#x-laguna` w `Base.astro`. Style: `components.css` (motywy `theme-light`/`theme-dark`, siatka, x, CTA, akcent, placeholdery) i `styles/sections/*.css`, klasy typografii `.t-*` w `utils.css`.
+  - Sekcje w `src/sections/`: Hero (karta na torze 300vh), Manifest (tekst + tor x-zoom 250vh), Realizacje (4 karty na kolumnach 1–9 / 4–12, dowody w 8 komórkach), Produkt (laptop + telefon), Jak pracujemy (4 kolumny; poniżej 992 px panele sticky), Poznaj nas (tekst + 2 zdjęcia ze staggerem), Kontakt (CTA, kontakt, formularz, wordmark).
+  - Moduły: `card-expand` (clip-path liczony z prostokąta okna, scrub), `x-zoom` (DrawSVG od środka, zoom przez przecięcie do skali, przy której kreska zakrywa viewport). Reduced motion: bez torów, karta w oknie, x bez zoomu.
+  - Nowe atrybuty `data-card-expand` i `data-x-zoom` w tabeli `ARCHITECTURE.md`.
+  - Zrzuty 1440, 390 i 1440 reduced motion (skrypt na Edge w scratchpadzie sesji). Check, lint i build czyste.
+- Zostało:
+  - Przegląd rytmu na żywo (warunek wyjścia F3). Do oceny: długość torów, karta hero (okno w prawym dolnym rogu), wysokość kolumn w 05, telefon w 04 na 390 wystaje nad laptopa.
+  - Pełna weryfikacja `visual-qa` (834 i 1920 nie oglądane, brak trace). Playwright MCP i Chrome DevTools MCP szukają Chrome, którego nie ma na tym komputerze (są Edge i Brave): albo instalacja Chrome, albo `--browser msedge` w konfiguracji Playwright MCP.
+  - Konsola: 404 na `/favicon.ico` (brak `public/`, FAVICON w F6).
+  - Skip link w `Base.astro` jest zawsze ukryty (`sr-only` bez stanu `:focus`), do poprawy przy nawigacji w F6.
+  - Test init → destroy → init dla nowych modułów (ScrollTrigger nie jest wystawiony na `window`).
+  - Wszystkie `TODO(treść)`: D3 (realizacje, produkt, karta hero), D4, D7, D8, D9, D10.
+- Decyzje: F3 zrobione przed F2, bo F2 czeka na materiał D3 od użytkownika. Rough ruch (rozszerzenie karty i zoom przez x) wszedł do greyboxu, bo bez niego tory sticky to ekrany pustki i rytmu nie da się ocenić. Treść z wersji 1 (D10) i CTA (D9) wstawione roboczo z `TODO(treść)`. `three` usunięte z `package.json` (było nieużywane po zmianie kierunku).
+- Lekcje: `.section > :not(.grid-sys) { position: relative }` nadpisałoby `position: sticky` (wyższa specyficzność), dlatego siatka ma `z-index: -1`, a sekcja `isolation: isolate`. `from()` ze staggerem w osi czasu ScrollTriggera nie renderuje od razu stanu startowego późniejszych celów: stan startowy ustawiaj `gsap.set`. Hook `post-edit.mjs` odpala ESLint także na plikach spoza repo (scratchpad) i zgłasza błąd konfiguracji.
