@@ -70,6 +70,71 @@
   border-radius: inherit;
 }
 
+/* Żywa warstwa nad zrzutem (HeroLive): kadr jak object-fit: cover dzięki preserveAspectRatio slice */
+.hero-live {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-live__route--acc {
+  --live: var(--c-laguna-end);
+}
+
+.hero-live__route--acc2 {
+  --live: var(--c-laguna-start);
+}
+
+.hero-live__trail {
+  fill: none;
+  stroke: var(--live);
+  stroke-linecap: round;
+}
+
+.hero-live__glow {
+  fill: var(--live);
+  opacity: 0.3;
+}
+
+.hero-live__car {
+  fill: var(--c-glebia);
+  stroke: var(--live);
+}
+
+.hero-live__pulse {
+  fill: none;
+  stroke: var(--live);
+  opacity: 0;
+}
+
+.hero-live__bar {
+  fill: url(#hero-live-bar);
+}
+
+.hero-live__stop-start {
+  stop-color: var(--c-laguna-start);
+}
+
+.hero-live__stop-end {
+  stop-color: var(--c-laguna-end);
+}
+
+.hero-live__tip rect {
+  fill: var(--c-glebia-line);
+  stroke: var(--c-glebia-raise);
+}
+
+.hero-live__tip text {
+  fill: var(--c-ink-muted-dark);
+}
+
+.hero-live__tip .hero-live__tip-title {
+  fill: var(--c-piana);
+  font-weight: var(--w-h3);
+}
+
 /* Prawy dolny róg okna i pełnej sceny to ten sam punkt, więc etykiety są widoczne w obu stanach */
 .hero__layers {
   position: absolute;
@@ -83,10 +148,33 @@
 }
 
 .hero__layer {
+  position: relative;
+  isolation: isolate;
   padding: var(--s-2) var(--s-4);
   border-radius: var(--r-pill);
   background-color: var(--c-piana);
   color: var(--c-glebia);
+  transition: color var(--d-default) var(--ease-default);
+}
+
+/* Bieżąca warstwa (hero-live zapala je po kolei): gradient Laguna wjeżdża przez opacity */
+.hero__layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-image: var(--g-laguna);
+  opacity: 0;
+  transition: opacity var(--d-default) var(--ease-default);
+}
+
+.hero__layer.is-on {
+  color: var(--c-biel);
+}
+
+.hero__layer.is-on::before {
+  opacity: 1;
 }
 
 @media (max-width: 991px) {

@@ -64,9 +64,9 @@ export function addMotion(register: (ctx: MotionContext) => void, scope?: Elemen
 export function easeToken(token: string): string {
   const name = `token${token}`;
   if (CustomEase.get(name)) return name;
-  const match = cssVar(token).match(/cubic-bezier(([^)]+))/);
+  const match = cssVar(token).match(/cubic-bezier\(([^)]+)\)/);
   if (!match) return 'none';
-  CustomEase.create(name, match[1].replace(/s+/g, ''));
+  CustomEase.create(name, match[1].replace(/\s+/g, ''));
   return name;
 }
 

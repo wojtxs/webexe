@@ -28,6 +28,7 @@
   .bars { display: flex; align-items: flex-end; gap: 10px; height: 92px; margin-top: 10px; }
   .bars div { flex: 1; display: grid; gap: 6px; justify-items: center; color: var(--faint); font-size: 11px; }
   .bars i { width: 100%; border-radius: 4px 4px 2px 2px; background: var(--panel2); }
+  .base .veh[data-route] .bar > i { visibility: hidden; }
   .bars i.on { background: linear-gradient(180deg, var(--acc), var(--acc2)); }
 </style>
 </head>
@@ -64,12 +65,12 @@
       <div class="right">
         <div class="card">
           <div class="card-h"><h3>Pojazdy w trasie</h3><span class="sub">37</span><div class="r faint" data-icon="filter"></div></div>
-          <div class="veh sel"><div class="row"><span class="plate">WZ 4821K</span><span>Poznań → Gdańsk</span><span class="eta">ETA 16:20</span></div><div class="bar"><i style="width:62%"></i></div><div class="row muted"><span class="av sm b">PL</span>P. Lewandowski · 186 km do celu</div></div>
-          <div class="veh"><div class="row"><span class="plate">PO 1190M</span><span>Wrocław → Łódź</span><span class="eta">ETA 17:05</span></div><div class="bar"><i style="width:31%"></i></div><div class="row muted"><span class="av sm">MK</span>M. Kowal · 151 km do celu</div></div>
+          <div class="veh sel" data-route="wz"><div class="row"><span class="plate">WZ 4821K</span><span>Poznań → Gdańsk</span><span class="eta">ETA 16:20</span></div><div class="bar"><i style="width:62%"></i></div><div class="row muted"><span class="av sm b">PL</span>P. Lewandowski · 186 km do celu</div></div>
+          <div class="veh" data-route="po"><div class="row"><span class="plate">PO 1190M</span><span>Wrocław → Łódź</span><span class="eta">ETA 17:05</span></div><div class="bar"><i style="width:31%"></i></div><div class="row muted"><span class="av sm">MK</span>M. Kowal · 151 km do celu</div></div>
           <div class="veh"><div class="row"><span class="plate">KR 7734A</span><span>Kraków → Warszawa</span><span class="badge warn">+25 min</span></div><div class="bar"><i style="width:88%"></i></div><div class="row muted"><span class="av sm c">TZ</span>T. Zając · 34 km do celu</div></div>
-          <div class="veh"><div class="row"><span class="plate">SK 2051C</span><span>Katowice → Lublin</span><span class="eta">ETA 19:40</span></div><div class="bar"><i style="width:12%"></i></div><div class="row muted"><span class="av sm a">JW</span>J. Wróbel · 288 km do celu</div></div>
-          <div class="veh"><div class="row"><span class="plate">WA 5530P</span><span>Warszawa → Białystok</span><span class="eta">ETA 15:10</span></div><div class="bar"><i style="width:50%"></i></div><div class="row muted"><span class="av sm">RN</span>R. Nowicki · 96 km do celu</div></div>
-          <div class="veh"><div class="row"><span class="plate">ZS 8812E</span><span>Szczecin → Poznań</span><span class="badge blue plain">Powrót</span></div><div class="bar"><i style="width:74%"></i></div><div class="row muted"><span class="av sm b">EG</span>E. Górska · 62 km do celu</div></div>
+          <div class="veh" data-route="sk"><div class="row"><span class="plate">SK 2051C</span><span>Katowice → Lublin</span><span class="eta">ETA 19:40</span></div><div class="bar"><i style="width:12%"></i></div><div class="row muted"><span class="av sm a">JW</span>J. Wróbel · 288 km do celu</div></div>
+          <div class="veh" data-route="wa"><div class="row"><span class="plate">WA 5530P</span><span>Warszawa → Białystok</span><span class="eta">ETA 15:10</span></div><div class="bar"><i style="width:50%"></i></div><div class="row muted"><span class="av sm">RN</span>R. Nowicki · 96 km do celu</div></div>
+          <div class="veh" data-route="zs"><div class="row"><span class="plate">ZS 8812E</span><span>Szczecin → Poznań</span><span class="badge blue plain">Powrót</span></div><div class="bar"><i style="width:74%"></i></div><div class="row muted"><span class="av sm b">EG</span>E. Górska · 62 km do celu</div></div>
         </div>
         <div class="card chart">
           <div class="row" style="display:flex;align-items:baseline;gap:8px"><h3 style="font-size:13px;font-weight:600">Dostawy w tym tygodniu</h3><span class="faint" style="margin-left:auto;font-size:12px">694 zrealizowane</span></div>
@@ -90,7 +91,13 @@
   const border = [[14.2,53.9],[14.9,54.05],[15.5,54.2],[16.4,54.5],[16.9,54.6],[17.7,54.8],[18.3,54.83],[18.6,54.43],[19.4,54.38],[19.65,54.45],[20.5,54.4],[21.5,54.33],[22.8,54.36],[23.5,54.1],[23.9,53.5],[23.9,53.15],[23.6,52.6],[23.2,52.25],[23.65,51.6],[23.9,51.1],[24.1,50.85],[23.5,50.4],[23.0,50.1],[22.7,49.6],[22.55,49.1],[21.6,49.4],[20.9,49.3],[20.1,49.2],[19.4,49.6],[18.85,49.5],[18.0,50.0],[17.6,50.25],[16.9,50.45],[16.3,50.7],[15.0,51.0],[14.8,51.6],[14.6,52.6],[14.15,52.9],[14.4,53.3]];
   const P = ([lon, lat]) => [((lon - 14) * 60).toFixed(1), ((55 - lat) * 96).toFixed(1)];
   const cities = { Gdańsk: [18.65,54.35], Szczecin: [14.55,53.43], Poznań: [16.93,52.41], Warszawa: [21.01,52.23], Białystok: [23.16,53.13], Łódź: [19.46,51.76], Wrocław: [17.04,51.11], Lublin: [22.57,51.25], Katowice: [19.02,50.26], Kraków: [19.94,50.06] };
-  const routes = [['Poznań','Gdańsk',0.62,'acc',true],['Wrocław','Łódź',0.31,'acc'],['Kraków','Warszawa',0.88,'warn'],['Katowice','Lublin',0.12,'acc'],['Warszawa','Białystok',0.5,'acc2'],['Szczecin','Poznań',0.74,'acc2']];
+  // [id, skąd, dokąd, postęp, kolor, wybrany, animowany w hero]
+  const routes = [['wz','Poznań','Gdańsk',0.62,'acc',true,true],['po','Wrocław','Łódź',0.31,'acc',false,true],['kr','Kraków','Warszawa',0.88,'warn',false,false],['sk','Katowice','Lublin',0.12,'acc',false,true],['wa','Warszawa','Białystok',0.5,'acc2',false,true],['zs','Szczecin','Poznań',0.74,'acc2',false,true]];
+  // ?base: zrzut pod żywą warstwę hero (src/data/hero-live.json). Animowane trasy bez przejechanej części,
+  // znacznika i wypełnienia paska; geometria w px ekranu 1440 × 900 trafia do window.__geom.
+  const BASE = location.search.includes('base');
+  if (BASE) document.body.classList.add('base');
+  const geom = { width: innerWidth, height: innerHeight, routes: [], bars: [] };
   const svg = document.getElementById('map');
   const NS = 'http://www.w3.org/2000/svg';
   const el = (tag, attrs, parent = svg) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
@@ -103,11 +110,24 @@
   const glow = el('filter', { id: 'g', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
   el('feGaussianBlur', { stdDeviation: 4 }, glow);
 
-  routes.forEach(([a, b, t, c, sel]) => {
+  routes.forEach(([id, a, b, t, c, sel, anim]) => {
     const [x1, y1] = P(cities[a]).map(Number); const [x2, y2] = P(cities[b]).map(Number);
     const mx = (x1 + x2) / 2 + (y2 - y1) * 0.18; const my = (y1 + y2) / 2 - (x2 - x1) * 0.18;
     const d = `M${x1} ${y1}Q${mx} ${my} ${x2} ${y2}`;
-    el('path', { d, fill: 'none', stroke: `var(--${c})`, 'stroke-width': 1.4, 'stroke-dasharray': '3 5', opacity: 0.6 });
+    const dashed = el('path', { d, fill: 'none', stroke: `var(--${c})`, 'stroke-width': 1.4, 'stroke-dasharray': '3 5', opacity: 0.6 });
+    if (BASE && anim) {
+      const ctm = dashed.getScreenCTM();
+      const L = dashed.getTotalLength();
+      const points = [];
+      for (let i = 0; i <= 48; i++) {
+        const q = dashed.getPointAtLength((L * i) / 48);
+        const s = new DOMPoint(q.x, q.y).matrixTransform(ctm);
+        points.push([+s.x.toFixed(1), +s.y.toFixed(1)]);
+      }
+      geom.scale = +ctm.a.toFixed(3);
+      geom.routes.push({ id, color: c, t0: t, sel: !!sel, points });
+      return;
+    }
     const done = el('path', { d, fill: 'none', stroke: `var(--${c})`, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
     const len = done.getTotalLength(); done.setAttribute('stroke-dasharray', `${len * t} ${len}`);
     const p = done.getPointAtLength(len * t);
@@ -126,6 +146,12 @@
     el('circle', { cx: x, cy: y, r: 3, fill: 'var(--muted)' });
     el('text', { x: x + 7, y: y + 4, fill: 'var(--muted)', 'font-size': 12 }).textContent = name;
   });
+
+  document.querySelectorAll('.veh[data-route]').forEach((row) => {
+    const r = row.querySelector('.bar').getBoundingClientRect();
+    geom.bars.push({ id: row.dataset.route, x: r.x, y: r.y, w: r.width, h: r.height });
+  });
+  window.__geom = geom;
 </script>
 </body>
 </html>

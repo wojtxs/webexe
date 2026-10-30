@@ -1,13 +1,15 @@
 /* ==========================================================================
    05 Jak pracujemy — eksperyment: akordeon (docs/INSPIRACJE.md, wiersz Oferta).
-   Desktop: 4 kolumny na pełną wysokość ekranu; wskazana (hover, focus) rośnie
-   z flex-grow 1 do 2.4 i odsłania opis. Gdy nic nie jest wskazane, otwarta jest pierwsza.
+   Desktop: 4 kolumny na pełną wysokość ekranu. Wskazana (hover, focus) rośnie
+   z flex-grow 1 do 2.6, przechodzi w Głębię i odsłania podgląd etapu i opis.
+   Gdy nic nie jest wskazane, otwarta jest pierwsza. Zwinięte pokazują duży numer.
+   Odstęp między kolumnami to padding <li>, więc kursor w szczelinie nie zwija wszystkiego,
+   a domyślna pierwsza kolumna zależy od :has() na krokach, nie od :hover listy z marginesami.
    Poniżej 992 px: panele sticky na pełny ekran, każdy najeżdża na poprzedni.
    ========================================================================== */
 
 .hww__steps {
   display: flex;
-  gap: var(--grid-gap);
   min-height: 100vh;
   list-style: none;
 }
@@ -15,15 +17,36 @@
 .hww__step {
   flex: 1 1 0;
   min-width: 0;
-  overflow: clip;
   transition: flex-grow var(--d-default) var(--ease-default);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--s-12);
-  padding: var(--s-8) var(--s-6);
+}
+
+.hww__step + .hww__step {
+  padding-left: var(--grid-gap);
+}
+
+.hww__step:focus-visible {
+  outline: none;
+}
+
+.hww__step:focus-visible .hww__card {
+  outline: 2px solid var(--c-laguna-start);
+  outline-offset: 3px;
+}
+
+.hww__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  gap: var(--s-8);
+  height: 100%;
+  overflow: clip;
+  /* Większy margines u góry: karty sięgają krawędzi ekranu, a tam stoją rogi (Corners) */
+  padding: var(--s-16) var(--s-6) var(--s-8);
   border-radius: var(--r-card);
   background-color: var(--surface);
+  transition:
+    background-color var(--d-default) var(--ease-default),
+    color var(--d-default) var(--ease-default);
 }
 
 .hww__head {
@@ -31,7 +54,32 @@
   gap: var(--s-4);
 }
 
-/* Stała szerokość opisu: tekst nie przelewa się w trakcie rozszerzania kolumny */
+/* Podgląd i opis mają stałą szerokość: nic nie przelewa się w trakcie rozszerzania kolumny */
+.hww__visual {
+  align-self: center;
+  width: 30rem;
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--ease-out);
+}
+
+.hww__foot {
+  display: grid;
+  align-items: end;
+}
+
+.hww__foot > * {
+  grid-area: 1 / 1;
+}
+
+.hww__index {
+  color: var(--grid-node);
+  font-size: var(--t-impact);
+  font-weight: var(--w-h1);
+  line-height: 0.8;
+  letter-spacing: var(--ls-h1);
+  transition: opacity var(--d-fast) var(--ease-out);
+}
+
 .hww__body {
   display: grid;
   gap: var(--s-8);
@@ -40,19 +88,29 @@
   transition: opacity var(--d-fast) var(--ease-out);
 }
 
+/* Otwarta kolumna */
 .hww__step:is(:hover, :focus-within),
-.hww__steps:not(:hover, :focus-within) .hww__step:first-child {
-  flex-grow: 2.4;
+.hww__steps:not(:has(.hww__step:is(:hover, :focus-within))) .hww__step:first-child {
+  flex-grow: 2.6;
+
+  --surface: var(--c-glebia);
+  --ink-muted: var(--c-ink-muted-dark);
+  --grid-node: var(--c-glebia-raise);
+
+  color: var(--c-piana);
 }
 
-.hww__step:is(:hover, :focus-within) .hww__body,
-.hww__steps:not(:hover, :focus-within) .hww__step:first-child .hww__body {
+.hww__step:is(:hover, :focus-within) :is(.hww__visual, .hww__body),
+.hww__steps:not(:has(.hww__step:is(:hover, :focus-within)))
+  .hww__step:first-child
+  :is(.hww__visual, .hww__body) {
   opacity: 1;
   transition-delay: 0.15s;
 }
 
-.hww__step:focus-visible {
-  outline-offset: -3px;
+.hww__step:is(:hover, :focus-within) .hww__index,
+.hww__steps:not(:has(.hww__step:is(:hover, :focus-within))) .hww__step:first-child .hww__index {
+  opacity: 0;
 }
 
 .hww__examples {
@@ -72,16 +130,274 @@
     min-height: 0;
   }
 
-  .hww__body {
-    width: auto;
-    opacity: 1;
+  .hww__step + .hww__step {
+    padding-left: 0;
   }
 
   .hww__step {
     position: sticky;
     top: 0;
+  }
+
+  .hww__card {
     min-height: 100vh;
     border-radius: var(--r-panel) var(--r-panel) 0 0;
     border-top: 1px solid var(--grid-node);
   }
+
+  .hww__visual,
+  .hww__body {
+    width: auto;
+    opacity: 1;
+  }
+
+  .hww__index {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Podglądy etapów (HwwViz): okno ciemnego interfejsu
+   -------------------------------------------------------------------------- */
+
+.viz {
+  overflow: hidden;
+  border: 1px solid var(--c-glebia-raise);
+  border-radius: var(--r-chip);
+  background-color: var(--c-glebia-line);
+  color: var(--c-piana);
+  font-size: var(--t-small);
+  line-height: var(--lh-small);
+}
+
+.viz__bar {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--c-glebia-raise);
+  font-weight: var(--w-label);
+}
+
+.viz__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--c-ink-muted-dark);
+  font-weight: var(--w-small);
+}
+
+.viz__body {
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-4);
+}
+
+.viz__dot {
+  display: inline-block;
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-image: var(--g-laguna);
+}
+
+.viz__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--c-glebia-raise);
+}
+
+/* Mapa procesu */
+.viz__map {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.viz__map text {
+  fill: var(--c-piana);
+  font-size: 13px;
+  font-weight: var(--w-label);
+  text-anchor: middle;
+}
+
+.viz__map .viz__note {
+  fill: var(--c-ink-muted-dark);
+  font-weight: var(--w-small);
+  text-anchor: start;
+}
+
+.viz__node {
+  fill: var(--c-glebia-raise);
+  stroke: var(--c-glebia-raise);
+}
+
+.viz__links path {
+  fill: none;
+  stroke: var(--c-ink-muted-dark);
+  stroke-width: 1.5;
+}
+
+.viz__hot,
+.viz__x {
+  fill: none;
+  stroke: url(#x-laguna);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Kod */
+.viz__code {
+  display: grid;
+  font-family: var(--f-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.viz__line {
+  white-space: pre;
+}
+
+.viz__kw {
+  color: var(--c-laguna-start);
+}
+
+.viz__fn {
+  color: var(--c-laguna-end);
+}
+
+.viz__ty {
+  color: var(--c-piana-deep);
+}
+
+.viz__stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  list-style: none;
+}
+
+.viz__stage {
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--c-glebia-raise);
+  border-radius: var(--r-pill);
+  color: var(--c-ink-muted-dark);
+}
+
+.viz__stage--done {
+  background-color: var(--c-glebia-raise);
+  color: var(--c-piana);
+}
+
+.viz__stage--now {
+  border-color: var(--c-laguna-start);
+  color: var(--c-piana);
+}
+
+/* Dziennik agenta */
+.viz__log {
+  display: grid;
+  gap: var(--s-2);
+  list-style: none;
+}
+
+.viz__log li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--s-3);
+}
+
+.viz__time {
+  color: var(--c-ink-muted-dark);
+  font-family: var(--f-mono);
+}
+
+.viz__decision {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border: 1px solid var(--c-glebia-raise);
+  border-radius: var(--r-chip);
+}
+
+.viz__decision > span:first-child {
+  flex: 1;
+}
+
+.viz__btn {
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-chip);
+  background-image: var(--g-laguna);
+  color: var(--c-biel);
+  font-weight: var(--w-label);
+}
+
+.viz__btn--ghost {
+  border: 1px solid var(--c-glebia-raise);
+  background: none;
+  color: var(--c-ink-muted-dark);
+}
+
+/* Monitoring */
+.viz__uptime {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.viz__big {
+  font-size: var(--t-lead);
+  font-weight: var(--w-h3);
+}
+
+.viz__bars {
+  display: flex;
+  gap: 2px;
+  height: 2rem;
+}
+
+.viz__bars span {
+  flex: 1;
+  border-radius: 1px;
+  background-color: var(--c-laguna-end);
+}
+
+.viz__bars .is-down {
+  height: 45%;
+  align-self: end;
+  background-color: var(--c-ink-muted-dark);
+}
+
+.viz__spark {
+  display: block;
+  width: 100%;
+  height: 3rem;
+}
+
+.viz__spark path {
+  fill: none;
+  stroke: var(--c-laguna-start);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.viz__checks {
+  display: grid;
+  gap: var(--s-2);
+  list-style: none;
+}
+
+.viz__checks li {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.viz__checks .viz__meta {
+  margin-left: auto;
 }

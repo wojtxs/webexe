@@ -1,0 +1,233 @@
+---
+/**
+ * HwwViz — podgląd tego, co powstaje na danym etapie (05 Jak pracujemy, eksperyment).
+ * Treść ilustracyjna (DEMO): fikcyjny proces, kod, dziennik agenta i monitoring.
+ *
+ * Ruch opisują atrybuty, a gra je moduł hww.ts:
+ *   data-viz="in | draw | type | bars | press", data-viz-at = sekunda startu.
+ * Bez JS i przy reduced motion widać stan końcowy.
+ */
+interface Props {
+  kind: 'map' | 'code' | 'agent' | 'monitor';
+}
+
+const { kind } = Astro.props;
+
+const nodes = [
+  { x: 10, y: 20, label: 'Zapytanie' },
+  { x: 165, y: 20, label: 'Wycena' },
+  { x: 320, y: 20, label: 'Akceptacja' },
+  { x: 165, y: 150, label: 'Realizacja' },
+  { x: 320, y: 150, label: 'Faktura' },
+];
+
+const code = [
+  [
+    ['kw', 'export async function '],
+    ['fn', 'przypiszZlecenie'],
+    ['', '(z: '],
+    ['ty', 'Zlecenie'],
+    ['', ') {'],
+  ],
+  [
+    ['kw', '  const '],
+    ['', 'kierowca = '],
+    ['kw', 'await '],
+    ['fn', 'wolnyKierowca'],
+    ['', '(z.region);'],
+  ],
+  [
+    ['kw', '  await '],
+    ['', 'zlecenia.'],
+    ['fn', 'zapisz'],
+    ['', '(z.id, { kierowca });'],
+  ],
+  [
+    ['kw', '  await '],
+    ['fn', 'powiadom'],
+    ['', '(kierowca, z.numer);'],
+  ],
+  [
+    ['kw', '  return '],
+    ['', 'kierowca;'],
+  ],
+  [['', '}']],
+];
+
+const stages = [
+  { label: 'Zlecenia', state: 'done' },
+  { label: 'Kierowcy', state: 'now' },
+  { label: 'Raporty', state: 'next' },
+  { label: 'Aplikacja mobilna', state: 'next' },
+];
+
+const log = [
+  { time: '08:14', text: 'Nowa faktura w skrzynce', meta: 'FV/2026/10/0412' },
+  { time: '08:14', text: 'Odczytano 6 pól', meta: 'pewność 97%' },
+  { time: '08:14', text: 'Dopasowano projekt', meta: 'Hala B' },
+  { time: '08:15', text: 'Czeka na zatwierdzenie', meta: 'Marta S.' },
+];
+
+// 45 dni dostępności, jeden z krótkim przestojem
+const uptime = Array.from({ length: 45 }, (_, i) => (i === 31 ? 'down' : 'up'));
+const checks = [
+  { label: 'Kopia zapasowa', meta: 'dziś, 03:00' },
+  { label: 'Certyfikat SSL', meta: 'ważny 74 dni' },
+  { label: 'Aktualizacje', meta: '2 zaplanowane na piątek' },
+];
+---
+
+<div class={`viz viz--${kind}`} aria-hidden="true" data-hww-viz>
+  {kind === 'map' && (
+    <>
+      <div class="viz__bar">
+        <span>Mapa procesu · zamówienie</span>
+        <span class="viz__meta">szkic v2</span>
+      </div>
+      <div class="viz__body">
+        <svg class="viz__map" viewBox="0 0 440 210">
+          <g class="viz__links">
+            <path data-viz="draw" data-viz-at="0.5" d="M120 40H165" />
+            <path data-viz="draw" data-viz-at="0.65" d="M275 40H320" />
+            <path data-viz="draw" data-viz-at="0.8" d="M375 60V105H220V150" />
+            <path data-viz="draw" data-viz-at="0.95" d="M275 170H320" />
+          </g>
+          {nodes.map((node, i) => (
+            <g data-viz="in" data-viz-at={String(i * 0.12)}>
+              <rect class="viz__node" x={node.x} y={node.y} width="110" height="40" rx="8" />
+              <text x={node.x + 55} y={node.y + 25}>
+                {node.label}
+              </text>
+            </g>
+          ))}
+          <rect
+            class="viz__hot"
+            data-viz="draw"
+            data-viz-at="1.4"
+            x="160"
+            y="15"
+            width="120"
+            height="50"
+            rx="11"
+          />
+          <path class="viz__x" data-viz="draw" data-viz-at="1.8" d="M270 5 284 19M284 5 270 19" />
+          <text class="viz__note" data-viz="in" data-viz-at="2" x="165" y="86">
+            ręcznie, w trzech arkuszach
+          </text>
+        </svg>
+        <p class="viz__foot" data-viz="in" data-viz-at="2.4">
+          <span class="viz__dot" />
+          Do zbudowania: wycena w systemie, bez przepisywania
+        </p>
+      </div>
+    </>
+  )}
+
+  {kind === 'code' && (
+    <>
+      <div class="viz__bar">
+        <span>zlecenia.ts</span>
+        <span class="viz__meta">etap 2 z 4</span>
+      </div>
+      <div class="viz__body">
+        <div class="viz__code">
+          {code.map((line, i) => (
+            <span class="viz__line" data-viz="type" data-viz-at={String(0.2 + i * 0.32)}>
+              {line.map(([cls, text]) => (cls ? <span class={`viz__${cls}`}>{text}</span> : text))}
+            </span>
+          ))}
+        </div>
+        <ol class="viz__stages">
+          {stages.map((stage, i) => (
+            <li
+              class={`viz__stage viz__stage--${stage.state}`}
+              data-viz="in"
+              data-viz-at={String(2.3 + i * 0.12)}
+            >
+              {stage.label}
+            </li>
+          ))}
+        </ol>
+        <p class="viz__foot" data-viz="in" data-viz-at="2.9">
+          <span class="viz__dot" />
+          Testy 24 / 24 · wdrożone na serwer testowy
+        </p>
+      </div>
+    </>
+  )}
+
+  {kind === 'agent' && (
+    <>
+      <div class="viz__bar">
+        <span>Agent · faktury</span>
+        <span class="viz__meta">
+          <span class="viz__dot viz__dot--live" />
+          na żywo
+        </span>
+      </div>
+      <div class="viz__body">
+        <ul class="viz__log">
+          {log.map((row, i) => (
+            <li data-viz="in" data-viz-at={String(0.2 + i * 0.45)}>
+              <span class="viz__time">{row.time}</span>
+              <span>{row.text}</span>
+              <span class="viz__meta">{row.meta}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="viz__decision" data-viz="in" data-viz-at="2.1">
+          <span>
+            FV/2026/10/0412 <span class="viz__meta">18 452,30 zł</span>
+          </span>
+          <span class="viz__btn viz__btn--ghost">Odrzuć</span>
+          <span class="viz__btn" data-viz="press" data-viz-at="3">
+            Zatwierdź
+          </span>
+        </div>
+        <p class="viz__foot" data-viz="in" data-viz-at="3.3">
+          <span class="viz__dot" />
+          08:21 Zatwierdzone przez człowieka: Marta S.
+        </p>
+      </div>
+    </>
+  )}
+
+  {kind === 'monitor' && (
+    <>
+      <div class="viz__bar">
+        <span>Monitoring · 3 serwery</span>
+        <span class="viz__meta">
+          <span class="viz__dot viz__dot--live" />
+          wszystko działa
+        </span>
+      </div>
+      <div class="viz__body">
+        <div class="viz__uptime">
+          <span class="viz__meta">Dostępność · 45 dni</span>
+          <span class="viz__big">99,98%</span>
+        </div>
+        <div class="viz__bars" data-viz="bars" data-viz-at="0.2">
+          {uptime.map((day) => (
+            <span class={day === 'down' ? 'is-down' : undefined} />
+          ))}
+        </div>
+        <svg class="viz__spark" viewBox="0 0 400 48" preserveAspectRatio="none">
+          <path
+            data-viz="draw"
+            data-viz-at="0.9"
+            d="M0 30 20 28 40 32 60 26 80 29 100 24 120 27 140 22 160 30 180 25 200 27 220 12 240 26 260 24 280 28 300 23 320 26 340 22 360 25 380 21 400 24"
+          />
+        </svg>
+        <ul class="viz__checks">
+          {checks.map((check, i) => (
+            <li data-viz="in" data-viz-at={String(1.8 + i * 0.25)}>
+              <span class="viz__dot" />
+              {check.label}
+              <span class="viz__meta">{check.meta}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  )}
+</div>

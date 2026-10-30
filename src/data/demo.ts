@@ -8,6 +8,7 @@
  */
 import type { ImageMetadata } from 'astro';
 import faktury from '../assets/demo/faktury.webp';
+import flotaBase from '../assets/demo/flota-base.webp';
 import flota from '../assets/demo/flota.webp';
 import grafikMobile from '../assets/demo/grafik-mobile.webp';
 import grafik from '../assets/demo/grafik.webp';
@@ -56,8 +57,8 @@ export const demoProjects: DemoProject[] = [
   },
 ];
 
-// Hero pokazuje pierwszy projekt
-export const demoHero: DemoShot = demoProjects[0];
+// Hero pokazuje pierwszy projekt: zrzut bez pojazdów, które dorysowuje żywa warstwa (HeroLive)
+export const demoHero: DemoShot = { ...demoProjects[0], image: flotaBase };
 
 export const demoProduct = {
   name: 'Grafik',

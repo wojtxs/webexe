@@ -25,6 +25,8 @@
 
   /* --- Kroje: wordmark i akcenty (Comfortaa 700), tekst (Plus Jakarta Sans) --- */
   --f-accent: 'Comfortaa', 'Plus Jakarta Sans Variable', sans-serif;
+  /* Eksperyment: kod w podglądach 05 Jak pracujemy, kroje systemowe bez pobierania */
+  --f-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, monospace;
 
   /* --- Typografia — skala rem (1 rem = 16 px @1440) --- */
   --t-impact: 8rem;

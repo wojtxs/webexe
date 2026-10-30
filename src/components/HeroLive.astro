@@ -1,0 +1,88 @@
+---
+/**
+ * HeroLive — żywa warstwa nad zrzutem w karcie hero (eksperyment, DEMO).
+ * SVG ma viewBox zrzutu (1440 × 900) i preserveAspectRatio slice, czyli to samo co
+ * object-fit: cover obrazu, więc trasy leżą dokładnie na mapie przy każdym kadrze karty.
+ * Stan początkowy (postęp t0) jest w HTML: bez JS i przy reduced motion wygląda jak pełny zrzut.
+ * Geometria z assets-src/demo/render.mjs (src/data/hero-live.json), ruch w modules/hero-live.ts.
+ */
+import geom from '../data/hero-live.json';
+import { pathD, pointAt, polyline, type Point } from '../core/polyline';
+
+const s = geom.scale;
+const routes = geom.routes.map((route) => {
+  const [x, y] = pointAt(polyline(route.points as Point[]), route.t0);
+  return { ...route, d: pathD(route.points as Point[]), x, y };
+});
+const bars = geom.bars.map((bar) => ({
+  ...bar,
+  t0: routes.find((route) => route.id === bar.id)?.t0 ?? 0,
+}));
+---
+
+<svg
+  class="hero-live"
+  viewBox={`0 0 ${geom.width} ${geom.height}`}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  data-hero-live
+>
+  <defs>
+    <linearGradient id="hero-live-bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" class="hero-live__stop-start"></stop>
+      <stop offset="1" class="hero-live__stop-end"></stop>
+    </linearGradient>
+  </defs>
+
+  {bars.map((bar) => (
+    <rect
+      class="hero-live__bar"
+      data-live-bar={bar.id}
+      x={bar.x}
+      y={bar.y}
+      width={bar.w * bar.t0}
+      height={bar.h}
+      rx={bar.h / 2}
+    />
+  ))}
+
+  {routes.map((route) => (
+    <g class={`hero-live__route hero-live__route--${route.color}`} data-live-route={route.id}>
+      <path
+        class="hero-live__trail"
+        d={route.d}
+        pathLength="1"
+        stroke-dasharray={`${route.t0} 1`}
+        stroke-width={2.4 * s}
+      />
+      <circle class="hero-live__glow" cx={route.x} cy={route.y} r={9 * s} />
+      {route.sel && (
+        <circle
+          class="hero-live__pulse"
+          cx={route.x}
+          cy={route.y}
+          r={6 * s}
+          stroke-width={1.5 * s}
+        />
+      )}
+      <circle
+        class="hero-live__car"
+        cx={route.x}
+        cy={route.y}
+        r={(route.sel ? 6 : 4.5) * s}
+        stroke-width={2.4 * s}
+      />
+      {route.sel && (
+        <g class="hero-live__tip" transform={`translate(${route.x} ${route.y})`}>
+          <rect x={12 * s} y={-30 * s} width={118 * s} height={40 * s} rx={7 * s} />
+          <text class="hero-live__tip-title" x={22 * s} y={-14 * s} font-size={12 * s}>
+            WZ 4821K
+          </text>
+          <text x={22 * s} y={1 * s} font-size={11 * s}>
+            78 km/h · ETA 16:20
+          </text>
+        </g>
+      )}
+    </g>
+  ))}
+</svg>

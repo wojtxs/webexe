@@ -11,7 +11,7 @@
 .dark {
   --bg: #0b171b; --side: #0d1a1e; --panel: #112227; --panel2: #16292f; --line: #1f363d;
   --ink: #e6f4f1; --muted: #93aca7; --faint: #5d7772;
-  --acc: #22c3a6; --acc2: #0891b2; --warn: #f0b35b; --bad: #ef6b5b; --on-acc: #04140f;
+  --acc: #10b981; --acc2: #0891b2; --warn: #f0b35b; --bad: #ef6b5b; --on-acc: #04140f;
 }
 
 .light {
