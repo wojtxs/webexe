@@ -1,0 +1,50 @@
+---
+/**
+ * 03 Realizacje i dowody — greybox (F3). Cała treść zależy od D3 (min. 4 projekty).
+ * Duże karty na kolumnach siatki ze staggerem; dowody w komórkach siatki
+ * (docs/INSPIRACJE.md, wiersze Realizacje i Dowody). Hover obraz → wideo i ściskanie w F5.
+ */
+import Grid from '../components/Grid.astro';
+import '../styles/sections/work.css';
+
+const projects = [1, 2, 3, 4];
+const proofCells = [1, 2, 3, 4, 5, 6, 7, 8];
+---
+
+<section
+  id="realizacje"
+  class="section work theme-dark"
+  data-nav-theme="dark"
+  aria-labelledby="work-title"
+>
+  <Grid />
+
+  <div class="container">
+    <!-- TODO(treść): nagłówek sekcji, roboczo nazwa z mapy w BRIEF -->
+    <h2 id="work-title" class="section__title t-h2">
+      Realizacje
+    </h2>
+
+    <ol class="work__list">
+      {projects.map((n) => (
+        <li class="work__item">
+          <article class="work-card">
+            <div class="work-card__media ph">
+              TODO(treść): obraz i pętla wideo projektu {n} (D3, WORK-{n})
+            </div>
+            <h3 class="work-card__title t-h3">TODO(treść): tytuł projektu {n} (D3)</h3>
+            <p class="work-card__desc muted">TODO(treść): krótki opis projektu {n} (D3)</p>
+          </article>
+        </li>
+      ))}
+    </ol>
+
+    <ul class="proof" aria-label="Dowody">
+      {proofCells.map((n) => (
+        <li class="proof__cell t-small muted">
+          {n <= 4 ? 'TODO(treść): liczba (D3)' : 'TODO(treść): logo klienta za zgodą (D3)'}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,81 @@
+/* ==========================================================================
+   07 Kontakt / stopka — greybox (F3). Nagłówek CTA na kolumnach 1–9,
+   bezpośredni kontakt na 1–5, formularz na 7–12, wordmark na całą szerokość.
+   Węzeł aktywny (gradient) to pierwsza linia siatki, nad nagłówkiem CTA.
+   ========================================================================== */
+
+.contact {
+  padding-bottom: var(--grid-padding);
+}
+
+.contact__inner {
+  row-gap: var(--s-16);
+}
+
+.contact__title {
+  grid-column: 1 / 10;
+}
+
+.contact__direct {
+  grid-column: 1 / 6;
+  display: grid;
+  align-content: start;
+  gap: var(--s-2);
+}
+
+.contact__form {
+  grid-column: 7 / -1;
+  display: grid;
+  gap: var(--s-6);
+  justify-items: start;
+}
+
+.contact__field {
+  display: grid;
+  gap: var(--s-2);
+  width: 100%;
+}
+
+.contact__input {
+  width: 100%;
+  padding: var(--s-4);
+  border: 1px solid var(--c-glebia-raise);
+  border-radius: var(--r-chip);
+  background-color: var(--c-glebia-line);
+  color: var(--c-piana);
+  font: inherit;
+}
+
+.contact__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  color: var(--ink-muted);
+}
+
+.contact__consent a {
+  color: inherit;
+}
+
+.contact__footer {
+  row-gap: var(--s-6);
+  margin-top: var(--s-32);
+}
+
+.contact__wordmark {
+  grid-column: 1 / -1;
+  color: var(--c-piana);
+}
+
+.contact__legal {
+  grid-column: 1 / -1;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 991px) {
+  .contact__title,
+  .contact__direct,
+  .contact__form {
+    grid-column: 1 / -1;
+  }
+}

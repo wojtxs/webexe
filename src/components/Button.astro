@@ -1,0 +1,25 @@
+---
+/**
+ * Button — link albo przycisk. Wariant cta: gradient Laguna, tekst w Głębi (docs/DESIGN.md, Kolory).
+ * Hover „roll” na znakach dochodzi w F6 (data-btn-roll).
+ */
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: 'cta';
+  class?: string;
+}
+
+const { href, type = 'button', variant = 'cta', class: className } = Astro.props;
+const classes = ['btn', `btn--${variant}`, className];
+---
+
+{href ? (
+  <a href={href} class:list={classes}>
+    <slot />
+  </a>
+) : (
+  <button type={type} class:list={classes}>
+    <slot />
+  </button>
+)}

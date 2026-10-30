@@ -54,3 +54,62 @@
     display: none !important;
   }
 }
+
+/* --- Typografia: klasy ze skali w tokens.css --- */
+.t-impact {
+  font-size: var(--t-impact);
+  font-weight: var(--w-impact);
+  line-height: var(--lh-impact);
+  letter-spacing: var(--ls-impact);
+}
+
+.t-h1 {
+  font-size: var(--t-h1);
+  font-weight: var(--w-h1);
+  line-height: var(--lh-h1);
+  letter-spacing: var(--ls-h1);
+}
+
+.t-h2 {
+  font-size: var(--t-h2);
+  font-weight: var(--w-h2);
+  line-height: var(--lh-h2);
+  letter-spacing: var(--ls-h2);
+}
+
+.t-h3 {
+  font-size: var(--t-h3);
+  font-weight: var(--w-h3);
+  line-height: var(--lh-h3);
+  letter-spacing: var(--ls-h3);
+}
+
+.t-lead {
+  font-size: var(--t-lead);
+  font-weight: var(--w-lead);
+  line-height: var(--lh-lead);
+  letter-spacing: var(--ls-lead);
+}
+
+.t-small {
+  font-size: var(--t-small);
+  font-weight: var(--w-small);
+  line-height: var(--lh-small);
+}
+
+.t-label {
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  line-height: var(--lh-label);
+}
+
+.muted {
+  color: var(--ink-muted, var(--c-ink-muted));
+}
+
+/* --- Łamanie linii tylko na desktopie (BRIEF: „/” w treści) --- */
+@media (max-width: 991px) {
+  .br-d {
+    display: none;
+  }
+}

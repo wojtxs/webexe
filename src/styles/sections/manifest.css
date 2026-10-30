@@ -1,0 +1,63 @@
+/* ==========================================================================
+   02 Manifest — greybox (F3). Tekst + tor x-zoom 250vh.
+   Tor nie ma dolnego paddingu: ostatnia klatka zoomu jest w całości w Głębi
+   i przechodzi bez szwu w ciemną sekcję 03.
+   ========================================================================== */
+
+.manifest {
+  position: relative;
+  isolation: isolate;
+}
+
+.manifest__body {
+  row-gap: var(--s-16);
+  padding-top: var(--s-32);
+}
+
+.manifest__problem {
+  grid-column: 1 / 8;
+  color: var(--ink-muted);
+}
+
+.manifest__answer {
+  grid-column: 4 / -1;
+}
+
+.xzoom {
+  height: 250vh;
+}
+
+.xzoom__stage {
+  display: grid;
+  place-items: center;
+}
+
+.xzoom__mark {
+  width: 8rem;
+  height: 8rem;
+  color: var(--c-glebia);
+}
+
+.xzoom__mark .xmark {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 991px) {
+  .manifest__problem,
+  .manifest__answer {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xzoom {
+    height: auto;
+  }
+
+  .xzoom__stage {
+    position: relative;
+    height: auto;
+    padding-block: var(--s-24);
+  }
+}

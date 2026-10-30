@@ -1,0 +1,41 @@
+---
+/**
+ * 02 Manifest — greybox (F3). Tekst statyczny (wypełnianie scrollem słowo po słowie w F5),
+ * na końcu tor x-zoom: znak x rysuje się dwiema kreskami, zoom przez jego środek
+ * otwiera ciemną część strony (docs/INSPIRACJE.md, wiersz Struktura).
+ */
+import Grid from '../components/Grid.astro';
+import XMark from '../components/XMark.astro';
+import '../styles/sections/manifest.css';
+---
+
+<section
+  id="manifest"
+  class="manifest theme-light"
+  data-nav-theme="light"
+  aria-labelledby="manifest-title"
+>
+  <Grid />
+
+  <div class="container manifest__body">
+    <h2 id="manifest-title" class="sr-only">
+      Manifest
+    </h2>
+    <p class="manifest__problem t-h3">
+      Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach nikt nie
+      wie, jak działa, a każda zmiana jest ryzykiem.
+    </p>
+    <p class="manifest__answer t-h2">
+      My budujemy tak, żeby dało się to rozwijać <span class="accent">latami</span>. I sami to
+      rozwijamy.
+    </p>
+  </div>
+
+  <div class="xzoom sticky-track" data-module="x-zoom">
+    <div class="sticky-item xzoom__stage">
+      <div class="xzoom__mark" data-x-zoom="mark">
+        <XMark />
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,187 @@
+/* ==========================================================================
+   Components — motywy tła sekcji, siatka systemu, znak x, przyciski,
+   wordmark, akcent i placeholdery greyboxu. Kolory tylko z tokens.css.
+   ========================================================================== */
+
+/* --- Motywy tła (docs/DESIGN.md: tła to Piana, Biel albo Głębia) --- */
+.theme-light {
+  --grid-line: var(--c-piana-line);
+  --grid-node: var(--c-piana-deep);
+  --surface: var(--c-biel);
+  --ink-muted: var(--c-ink-muted);
+  background-color: var(--c-piana);
+  color: var(--c-glebia);
+}
+
+.theme-dark {
+  --grid-line: var(--c-glebia-line);
+  --grid-node: var(--c-glebia-raise);
+  --surface: var(--c-glebia-raise);
+  --ink-muted: var(--c-ink-muted-dark);
+  background-color: var(--c-glebia);
+  color: var(--c-piana);
+}
+
+/* --- Sekcja ---
+   isolation: siatka (z-index: -1) leży nad tłem sekcji, ale pod całą treścią. */
+.section {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--s-32);
+}
+
+.section__title {
+  grid-column: 1 / -1;
+  margin-bottom: var(--s-16);
+}
+
+/* --- Siatka systemu z węzłami x ---
+   Linia k (0…n) stoi na środku odstępu między grupami kolumn:
+   padding + k * (szerokość treści + gap) / n - gap / 2. */
+.grid-sys {
+  --grid-visual: 4;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.grid-sys__line {
+  --k: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(
+    var(--grid-padding) + var(--k) * (100% - 2 * var(--grid-padding) + var(--grid-gap)) /
+      var(--grid-visual) - var(--grid-gap) / 2
+  );
+  width: 1px;
+  background-color: var(--grid-line);
+}
+
+.grid-sys__line:nth-child(2) {
+  --k: 1;
+}
+
+.grid-sys__line:nth-child(3) {
+  --k: 2;
+}
+
+.grid-sys__line:nth-child(4) {
+  --k: 3;
+}
+
+.grid-sys__line:nth-child(5) {
+  --k: 4;
+}
+
+.grid-sys__node {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--s-4);
+  height: var(--s-4);
+  color: var(--grid-node);
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 991px) {
+  .grid-sys {
+    --grid-visual: 2;
+  }
+
+  .grid-sys__line:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* --- Znak x --- */
+.xmark {
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  overflow: visible;
+}
+
+.xmark--active {
+  stroke: url(#x-laguna);
+}
+
+.x-laguna-start {
+  stop-color: var(--c-laguna-start);
+}
+
+.x-laguna-end {
+  stop-color: var(--c-laguna-end);
+}
+
+/* --- Przyciski --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-8);
+  border: 0;
+  border-radius: var(--r-pill);
+  font: inherit;
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  line-height: var(--lh-label);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn--cta {
+  background: var(--g-laguna);
+  color: var(--c-glebia);
+}
+
+/* --- Słowo-akcent: Comfortaa 700, małe litery, gradient Laguna --- */
+.accent {
+  font-family: var(--f-accent);
+  font-weight: 700;
+  text-transform: lowercase;
+  background: var(--g-laguna);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --- Wordmark --- */
+.wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wordmark text {
+  font-family: var(--f-accent);
+  font-weight: 700;
+  font-size: 270px; /* jednostki viewBox SVG, nie layout */
+  fill: currentColor;
+}
+
+.wordmark__x {
+  fill: url(#x-laguna);
+}
+
+/* --- Placeholder greyboxu: miejsce na wizual (D3, D4) --- */
+.ph {
+  display: grid;
+  place-items: center;
+  padding: var(--s-6);
+  border-radius: var(--r-card);
+  background-color: var(--surface);
+  color: var(--ink-muted);
+  font-size: var(--t-small);
+  font-weight: var(--w-small);
+  line-height: var(--lh-small);
+  text-align: center;
+}
+
+.todo {
+  color: var(--ink-muted);
+}

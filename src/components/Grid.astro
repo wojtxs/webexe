@@ -1,0 +1,24 @@
+---
+/**
+ * Grid — widoczna siatka systemu pod sekcją (docs/DESIGN.md, Motywy, pkt 1).
+ * Linie co 3 kolumny siatki 12-kolumnowej (4 kolumny wizualne), poniżej 992 px co połowę (2).
+ * Węzeł x stoi tam, gdzie linia przecina górną granicę sekcji. activeNode = indeks linii
+ * z węzłem w gradiencie (tylko CTA i bieżąca sekcja w mapie rozdziałów).
+ */
+import XMark from './XMark.astro';
+
+interface Props {
+  nodes?: boolean;
+  activeNode?: number;
+}
+
+const { nodes = true, activeNode = -1 } = Astro.props;
+---
+
+<div class="grid-sys" aria-hidden="true">
+  {Array.from({ length: 5 }, (_, k) => (
+    <span class="grid-sys__line">
+      {nodes && <XMark class="grid-sys__node" active={k === activeNode} />}
+    </span>
+  ))}
+</div>

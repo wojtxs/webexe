@@ -1,0 +1,74 @@
+/* ==========================================================================
+   03 Realizacje i dowody — greybox (F3).
+   Karty na przemian na kolumnach 1–9 i 4–12, dowody w komórkach
+   po 3 kolumny (4 kolumny wizualne siatki).
+   ========================================================================== */
+
+.work__list {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: var(--s-24);
+  list-style: none;
+}
+
+.work__item {
+  grid-column: 1 / 10;
+}
+
+.work__item:nth-child(even) {
+  grid-column: 4 / -1;
+}
+
+.work-card {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.work-card__media {
+  aspect-ratio: 16 / 10;
+  margin-bottom: var(--s-2);
+}
+
+.work-card__desc {
+  max-width: var(--prose-max-width);
+}
+
+.proof {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  margin-top: var(--s-32);
+  list-style: none;
+}
+
+.proof__cell {
+  grid-column: span 3;
+  display: grid;
+  place-items: center;
+  min-height: 10rem;
+  padding: var(--s-6);
+  border-top: 1px solid var(--grid-line);
+  text-align: center;
+}
+
+@media (max-width: 991px) {
+  .work__item,
+  .work__item:nth-child(even) {
+    grid-column: 1 / -1;
+  }
+
+  .work__list {
+    row-gap: var(--s-16);
+  }
+
+  .proof__cell {
+    grid-column: span 4;
+  }
+}
+
+@media (max-width: 767px) {
+  .proof__cell {
+    grid-column: span 2;
+  }
+}

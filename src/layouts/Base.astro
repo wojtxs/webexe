@@ -11,6 +11,7 @@ import '../styles/fluid.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/utils.css';
+import '../styles/components.css';
 
 interface Props extends HTMLAttributes<'html'> {
   title?: string;
@@ -65,6 +66,16 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     >
       Przejdź do treści
     </a>
+
+    <!-- Gradient Laguna dla znaku x (XMark active, wordmark), 135° jak --g-laguna -->
+    <svg class="sr-only" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="x-laguna" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" class="x-laguna-start"></stop>
+          <stop offset="1" class="x-laguna-end"></stop>
+        </linearGradient>
+      </defs>
+    </svg>
 
     <!-- Nawigacja — placeholder, wypełniony w F6 -->
     <nav aria-label="Nawigacja główna" data-nav>

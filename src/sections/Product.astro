@@ -1,0 +1,29 @@
+---
+/**
+ * 04 Produkt — greybox (F3). Jeden produkt naraz na laptopie i telefonie, na telefonie
+ * nagranie ekranu, paralaksa scrollem w F5 (docs/INSPIRACJE.md). Cała treść zależy od D3.
+ */
+import Grid from '../components/Grid.astro';
+import '../styles/sections/product.css';
+---
+
+<section
+  id="produkt"
+  class="section product theme-dark"
+  data-nav-theme="dark"
+  aria-labelledby="product-title"
+>
+  <Grid />
+
+  <div class="container">
+    <h2 id="product-title" class="section__title t-h2">
+      TODO(treść): nazwa produktu (D3)
+    </h2>
+    <p class="product__lead t-lead muted">TODO(treść): jedno, dwa zdania o produkcie (D3)</p>
+
+    <div class="product__devices">
+      <div class="product__laptop ph">TODO(treść): laptop z nagraniem ekranu (D3, PRODUCT-*)</div>
+      <div class="product__phone ph">TODO(treść): telefon z nagraniem (D3, PRODUCT-*)</div>
+    </div>
+  </div>
+</section>

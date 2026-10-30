@@ -1,0 +1,123 @@
+/* ==========================================================================
+   01 Hero — greybox (F3). Tor 300vh, scena sticky 100vh.
+   Bez JS i przy reduced motion karta stoi w oknie (.hero__window).
+   Moduł card-expand dodaje .is-expandable: karta zajmuje całą scenę,
+   a clip-path liczony z prostokąta okna rozszerza ją do pełnego kontenera.
+   ========================================================================== */
+
+.hero {
+  height: 300vh;
+  isolation: isolate;
+}
+
+.hero__inner {
+  height: 100%;
+  grid-template-rows: 1fr;
+  padding-top: var(--s-24);
+  padding-bottom: var(--grid-padding);
+}
+
+.hero__copy {
+  grid-column: 1 / 10;
+  grid-row: 1;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-8);
+}
+
+.hero__lead {
+  max-width: 30rem;
+  color: var(--ink-muted);
+}
+
+.hero__window,
+.hero__card {
+  grid-column: 7 / -1;
+  grid-row: 1;
+  align-self: end;
+  height: 55%;
+}
+
+.hero__window {
+  border-radius: var(--r-card);
+  pointer-events: none;
+}
+
+.hero__card {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: var(--r-card);
+}
+
+.hero.is-expandable .hero__card {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  align-self: stretch;
+  height: auto;
+  overflow: visible;
+  border-radius: 0;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* Prawy dolny róg okna i pełnej sceny to ten sam punkt, więc etykiety są widoczne w obu stanach */
+.hero__layers {
+  position: absolute;
+  right: var(--s-6);
+  bottom: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s-2);
+  list-style: none;
+}
+
+.hero__layer {
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-pill);
+  background-color: var(--c-piana);
+  color: var(--c-glebia);
+}
+
+@media (max-width: 991px) {
+  .hero__inner {
+    grid-template-rows: auto 1fr;
+    row-gap: var(--s-8);
+    padding-top: var(--s-16);
+  }
+
+  .hero__copy {
+    grid-column: 1 / -1;
+    gap: var(--s-6);
+  }
+
+  .hero__window,
+  .hero__card {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: stretch;
+    height: auto;
+  }
+
+  .hero__layers {
+    right: var(--s-4);
+    bottom: var(--s-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    height: auto;
+  }
+
+  .hero__stage {
+    position: relative;
+  }
+}

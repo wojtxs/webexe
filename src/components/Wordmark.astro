@@ -1,0 +1,17 @@
+---
+/**
+ * Wordmark webexe. TODO(D8): docelowo plik SVG od projektanta albo ścieżki z Comfortaa 700,
+ * z x jako osobną ścieżką. Do tego czasu tekst SVG w Comfortaa, rozciągnięty do szerokości viewBox.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<svg class:list={['wordmark', className]} viewBox="0 0 1000 232" role="img" aria-label="webexe">
+  <text x="0" y="212" textLength="1000" lengthAdjust="spacingAndGlyphs">
+    webe<tspan class="wordmark__x">x</tspan>e
+  </text>
+</svg>

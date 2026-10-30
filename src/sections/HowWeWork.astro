@@ -1,0 +1,85 @@
+---
+/**
+ * 05 Jak pracujemy — greybox (F3). Desktop: 4 kolumny na kolumnach wizualnych siatki
+ * (akordeon flex-grow 1 → 3 w F5). Poniżej 992 px: stos paneli sticky (docs/INSPIRACJE.md, Oferta).
+ */
+import Grid from '../components/Grid.astro';
+import '../styles/sections/how-we-work.css';
+
+// TODO(treść): D10, przykładowe rozwiązania z wersji 1 do potwierdzenia
+const steps = [
+  {
+    n: '01 / 04',
+    title: 'Projektujemy',
+    text: 'Zaczynamy od tego, jak naprawdę pracujecie, a nie od technologii. Rozpisujemy proces, mówimy wprost, co warto zbudować, a czego nie, i wyceniamy zakres przed startem.',
+    examples: [],
+  },
+  {
+    n: '02 / 04',
+    title: 'Budujemy',
+    text: 'Aplikacje webowe, panele, systemy wewnętrzne i integracje z tym, czego już używacie. Etapami: najpierw najważniejsza część, potem kolejne, każda po testach.',
+    examples: [
+      'Systemy zarządzania zleceniami i projektami',
+      'Aplikacje do obsługi klientów i pracowników',
+      'Panele administracyjne i systemy wewnętrzne',
+      'Dedykowane narzędzia do zarządzania danymi',
+    ],
+  },
+  {
+    n: '03 / 04',
+    title: 'Automatyzujemy',
+    text: 'Powtarzalną pracę przejmuje automat albo agent AI. Tam, gdzie decyzja ma znaczenie, system przygotowuje, a człowiek zatwierdza.',
+    examples: [
+      'Automatyczne przetwarzanie dokumentów i danych',
+      'Generowanie raportów, ofert i zestawień',
+      'Automatyzacja obiegu informacji',
+      'Wykorzystanie AI do wspomagania codziennych zadań',
+    ],
+  },
+  {
+    n: '04 / 04',
+    title: 'Utrzymujemy',
+    text: 'Serwery, kopie zapasowe, monitoring, aktualizacje i dalszy rozwój. Gdy coś trzeba zmienić, piszecie do ludzi, którzy to zbudowali.',
+    examples: [],
+  },
+];
+---
+
+<section
+  id="jak-pracujemy"
+  class="section hww theme-light"
+  data-nav-theme="light"
+  aria-labelledby="hww-title"
+>
+  <Grid />
+
+  <div class="container">
+    <h2 id="hww-title" class="section__title t-h2">
+      Jak pracujemy
+    </h2>
+  </div>
+
+  <ol class="container hww__steps">
+    {steps.map((step) => (
+      <li class="hww__step">
+        <div class="hww__head">
+          <p class="hww__num t-label muted">{step.n}</p>
+          <h3 class="hww__title t-h3">{step.title}</h3>
+        </div>
+        <div class="hww__body">
+          <p class="hww__text">{step.text}</p>
+          {step.examples.length > 0 && (
+            <div class="hww__examples">
+              <p class="t-label muted">Przykładowe rozwiązania</p>
+              <ul class="hww__list t-small">
+                {step.examples.map((example) => (
+                  <li>{example}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>

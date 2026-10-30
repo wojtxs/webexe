@@ -1,0 +1,58 @@
+---
+/**
+ * 07 Kontakt / stopka — greybox (F3). Krótki formularz (D7) + bezpośredni kontakt,
+ * ostatni węzeł x w gradiencie stoi nad CTA, wielki wordmark (D8) na dole
+ * (docs/INSPIRACJE.md, wiersz Kontakt).
+ */
+import Button from '../components/Button.astro';
+import Grid from '../components/Grid.astro';
+import Wordmark from '../components/Wordmark.astro';
+import '../styles/sections/contact.css';
+---
+
+<section
+  id="kontakt"
+  class="section contact theme-dark"
+  data-nav-theme="dark"
+  aria-labelledby="contact-title"
+>
+  <Grid activeNode={0} />
+
+  <div class="container contact__inner">
+    <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
+    <h2 id="contact-title" class="contact__title t-h1">
+      Porozmawiajmy o projekcie
+    </h2>
+
+    <div class="contact__direct">
+      <p class="t-label muted">TODO(treść): bezpośredni kontakt do founderów (D7)</p>
+      <p class="t-lead">TODO(treść): e-mail</p>
+      <p class="t-lead">TODO(treść): telefon</p>
+    </div>
+
+    <!-- TODO(treść): D7, obsługa wysyłki (nasz serwer pocztowy albo mailto) -->
+    <form class="contact__form" novalidate>
+      <label class="contact__field">
+        <span class="t-label">TODO(treść): etykieta pola kontaktu (D7)</span>
+        <input class="contact__input" type="text" name="kontakt" autocomplete="email" />
+      </label>
+      <label class="contact__consent t-small">
+        <input type="checkbox" name="zgoda" />
+        <span>
+          TODO(treść): zgoda na kontakt, z linkiem do{' '}
+          <a href="/polityka-prywatnosci">polityki prywatności</a>
+        </span>
+      </label>
+      <Button type="button" class="contact__submit">
+        TODO(treść): przycisk wysyłki (D7, D9)
+      </Button>
+    </form>
+  </div>
+
+  <footer class="container contact__footer">
+    <Wordmark class="contact__wordmark" />
+    <a class="contact__legal t-small" href="/polityka-prywatnosci">
+      Polityka prywatności
+    </a>
+  </footer>
+</section>

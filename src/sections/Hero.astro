@@ -1,0 +1,55 @@
+---
+/**
+ * 01 Hero — greybox (F3). Karta z nagraniem projektu rozszerza się na sticky torze
+ * od okna w prawym dolnym rogu do pełnego kontenera (docs/INSPIRACJE.md, wiersz Hero).
+ * Docelowy spec: docs/sections/01-hero.md (F2). Materiał karty: D3.
+ */
+import Button from '../components/Button.astro';
+import Grid from '../components/Grid.astro';
+import '../styles/sections/hero.css';
+
+const layers = ['Aplikacje', 'Integracje', 'Automatyzacje', 'Utrzymanie'];
+---
+
+<section
+  id="hero"
+  class="hero theme-light sticky-track"
+  data-nav-theme="light"
+  data-module="card-expand"
+  aria-labelledby="hero-title"
+>
+  <Grid nodes={false} />
+
+  <div class="sticky-item hero__stage">
+    <div class="container hero__inner">
+      <div class="hero__copy" data-card-expand="fade">
+        <h1 id="hero-title" class="hero__title t-h1">
+          Budujemy <br class="br-d" />
+          oprogramowanie <br class="br-d" />
+          dla firm i zostajemy <br class="br-d" />
+          przy nim na lata.
+        </h1>
+        <p class="hero__lead t-lead">
+          Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy je
+          razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
+        </p>
+        <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
+        <Button href="#kontakt" class="hero__cta">
+          Porozmawiajmy o projekcie
+        </Button>
+      </div>
+
+      <div class="hero__window" data-card-expand="window" aria-hidden="true"></div>
+
+      <figure class="hero__card" data-card-expand="card">
+        <div class="hero__media ph">TODO(treść): nagranie projektu (D3, HERO-MEDIA)</div>
+        <figcaption class="sr-only">TODO(treść): opis nagrania (D3)</figcaption>
+        <ul class="hero__layers" aria-label="Warstwy systemu">
+          {layers.map((layer) => (
+            <li class="hero__layer t-label">{layer}</li>
+          ))}
+        </ul>
+      </figure>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,23 @@
+---
+/**
+ * XMark — znak x: dwie kreski o zaokrąglonych końcach (docs/DESIGN.md, Motywy).
+ * Kolor z currentColor, wariant active ma gradient Laguna (#x-laguna z Base.astro).
+ * Placeholder do czasu wordmarku SVG (D8): docelowo ten sam x co w wordmarku.
+ */
+interface Props {
+  class?: string;
+  active?: boolean;
+}
+
+const { class: className, active = false } = Astro.props;
+---
+
+<svg
+  class:list={['xmark', { 'xmark--active': active }, className]}
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d="M6 6 18 18"></path>
+  <path d="M18 6 6 18"></path>
+</svg>

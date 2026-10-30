@@ -1,0 +1,52 @@
+/* ==========================================================================
+   04 Produkt — greybox (F3). Laptop na kolumnach 1–10, telefon na 9–12
+   zachodzi na laptopa i stoi niżej.
+   ========================================================================== */
+
+.product__lead {
+  grid-column: 1 / 7;
+  margin-top: calc(-1 * var(--s-8));
+  margin-bottom: var(--s-16);
+}
+
+.product__devices {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.product__laptop {
+  grid-column: 1 / 11;
+  grid-row: 1;
+  aspect-ratio: 16 / 10;
+}
+
+.product__phone {
+  grid-column: 10 / -1;
+  grid-row: 1;
+  align-self: end;
+  aspect-ratio: 9 / 19;
+  margin-bottom: calc(-1 * var(--s-24));
+  border: var(--s-2) solid var(--c-glebia);
+}
+
+@media (max-width: 991px) {
+  .product__lead {
+    grid-column: 1 / -1;
+  }
+
+  .product__laptop {
+    grid-column: 1 / -1;
+  }
+
+  .product__phone {
+    grid-column: 5 / -1;
+    margin-bottom: calc(-1 * var(--s-16));
+  }
+}
+
+@media (max-width: 767px) {
+  .product__phone {
+    grid-column: 3 / -1;
+  }
+}
