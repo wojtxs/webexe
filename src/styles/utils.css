@@ -54,11 +54,3 @@
     display: none !important;
   }
 }
-
-/* --- GL wrap: fixed canvas w tle --- */
-.gl-wrap {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}

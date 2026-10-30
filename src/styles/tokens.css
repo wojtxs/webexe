@@ -14,33 +14,6 @@
   /* --- Gradient Laguna --- */
   --g-laguna: linear-gradient(135deg, var(--c-laguna-start), var(--c-laguna-end));
 
-  /* --- Paleta marki v2 (plansza od użytkownika, 2026-10-28): Węgiel, Bursztyn, Kawa, Kość ---
-     Hex Bursztynu odczytany z planszy (gradient x), do potwierdzenia z plikiem źródłowym. */
-  --c-wegiel: #15110e;
-  --c-kawa: #2a221c;
-  --c-kosc: #f7f4f0;
-  --c-bursztyn-start: #f59e0b;
-  --c-bursztyn-end: #ea580c;
-  --g-bursztyn: linear-gradient(135deg, var(--c-bursztyn-start), var(--c-bursztyn-end));
-  /* pochodne v2: propozycje do DESIGN.md */
-  --c-kawa-line: #201a15;
-  --c-kawa-raise: #3a2f27;
-  --c-kosc-muted: #a99d91;
-  --c-kosc-line: #e9e2d9;
-  --c-ink-warm: #6e6157;
-
-  /* --- Język v3 (2026-10-29, lab): mrok + kod. Prawie czarne tło z siatką, płaski Bursztyn,
-     Unbounded w nagłówkach, JetBrains Mono w drobnym tekście. Do przeniesienia w DESIGN.md. */
-  --c-noc: #0a0908;
-  --c-noc-raise: #121110;
-  --c-noc-line: #1b1916;
-  --c-noc-edge: #34302b;
-  --c-szary: #8a847c;
-  --c-swiatlo: #ededea;
-  --c-akcent: #ffa31a;
-  --f-display: 'Unbounded', 'Plus Jakarta Sans Variable', sans-serif;
-  --f-code: 'JetBrains Mono', ui-monospace, Consolas, monospace;
-
   /* --- Kolory pochodne --- */
   --c-piana-line: #d5eae5;
   --c-piana-deep: #bcd9d2;
@@ -53,13 +26,8 @@
   /* --- Kroje: wordmark i akcenty (Comfortaa 700), tekst (Plus Jakarta Sans) --- */
   --f-accent: 'Comfortaa', 'Plus Jakarta Sans Variable', sans-serif;
 
-  /* --- Krój techniczny: etykiety blueprintu i terminal (systemowy, bez zależności) --- */
-  --f-mono: ui-monospace, 'Cascadia Code', Consolas, Menlo, monospace;
-
   /* --- Typografia — skala rem (1 rem = 16 px @1440) --- */
   --t-impact: 8rem;
-  /* wordmark w hero „Przez x”: ~83% szerokości makiety 1440 */
-  --t-wordmark-hero: 21rem;
   --t-h1: 4.5rem;
   --t-h2: 3.5rem;
   --t-h3: 2rem;
@@ -77,8 +45,6 @@
   --w-body: 400;
   --w-small: 500;
   --w-label: 600;
-  /* lekki krój nagłówków: spike /lab/hero-arcs (wzór cerebrium), do decyzji w DESIGN.md */
-  --w-display-light: 400;
 
   /* --- Line-height --- */
   --lh-impact: 0.88;
@@ -140,7 +106,6 @@
 @media (max-width: 767px) {
   :root {
     --t-impact: 3.5rem;
-    --t-wordmark-hero: 5.6rem;
     --t-h1: 2.5rem;
     --t-h2: 2rem;
     --t-h3: 1.5rem;

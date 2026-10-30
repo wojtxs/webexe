@@ -1,18 +1,17 @@
 /**
  * motion.ts — gsap.matchMedia z kontekstami "full" i "reduced".
  * Animacje rejestruj przez addMotion(), nie przez gsap.matchMedia() bezpośrednio,
- * żeby zachować jeden spójny kontekst w całej aplikacji.
+ * żeby warunki reduced motion były w jednym miejscu.
  *
- * Użycie:
- *   addMotion((ctx) => {
+ * Każde wywołanie ma własny matchMedia, więc moduł sprząta tylko swoje animacje:
+ *   const revert = addMotion((ctx) => {
  *     ctx.full(() => { gsap.to(...) });
  *     ctx.reduced(() => { element.style.opacity = '1'; });
- *   });
+ *   }, root);
+ *   // w destroy(): revert();
  */
 
 import gsap from 'gsap';
-
-const mm = gsap.matchMedia();
 
 export interface MotionContext {
   /** Animacje dla użytkowników bez prefers-reduced-motion */
@@ -21,7 +20,9 @@ export interface MotionContext {
   reduced: (fn: () => void) => void;
 }
 
-export function addMotion(register: (ctx: MotionContext) => void): void {
+export function addMotion(register: (ctx: MotionContext) => void, scope?: Element): () => void {
+  const mm = gsap.matchMedia(scope);
+
   mm.add(
     {
       full: '(prefers-reduced-motion: no-preference)',
@@ -40,9 +41,6 @@ export function addMotion(register: (ctx: MotionContext) => void): void {
       });
     }
   );
-}
 
-/** Usuwa wszystkie zarejestrowane animacje matchMedia (np. przy destroy modułu). */
-export function revertMotion(): void {
-  mm.revert();
+  return () => mm.revert();
 }

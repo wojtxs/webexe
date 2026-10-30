@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Fluid scaling — technika z landonorris.com (docs/DESIGN.md § Fluid scaling).
+   Fluid scaling (docs/DESIGN.md § Fluid scaling).
    html { font-size } oblicza się z szerokości viewportu, co sprawia,
    że wszystkie wartości w rem skalują się proporcjonalnie.
 

@@ -7,7 +7,7 @@
  * 3. Zainicjuj moduły (data-module)
  * 4. Wyślij app:ready
  *
- * GL (Experience) dojdzie w F4.
+ * Loader (00) dojdzie w F6. GL tylko wtedy, gdy spec sekcji go wymaga.
  */
 
 import { initScroll } from './scroll';
