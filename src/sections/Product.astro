@@ -3,7 +3,9 @@
  * 04 Produkt — greybox (F3). Jeden produkt naraz na laptopie i telefonie, na telefonie
  * nagranie ekranu, paralaksa scrollem w F5 (docs/INSPIRACJE.md). Cała treść zależy od D3.
  */
+import { Image } from 'astro:assets';
 import Grid from '../components/Grid.astro';
+import { demoProduct } from '../data/demo';
 import '../styles/sections/product.css';
 ---
 
@@ -16,14 +18,29 @@ import '../styles/sections/product.css';
   <Grid />
 
   <div class="container">
+    <!-- TODO(treść): DEMO, fikcyjny produkt z src/data/demo.ts; docelowo D3 (nagrania PRODUCT-*) -->
     <h2 id="product-title" class="section__title t-h2" data-split="words">
-      TODO(treść): nazwa produktu (D3)
+      {demoProduct.name}
     </h2>
-    <p class="product__lead t-lead muted">TODO(treść): jedno, dwa zdania o produkcie (D3)</p>
+    <p class="product__lead t-lead muted">{demoProduct.lead}</p>
 
     <div class="product__devices">
-      <div class="product__laptop ph">TODO(treść): laptop z nagraniem ekranu (D3, PRODUCT-*)</div>
-      <div class="product__phone ph">TODO(treść): telefon z nagraniem (D3, PRODUCT-*)</div>
+      <div class="product__laptop">
+        <Image
+          src={demoProduct.desktop.image}
+          alt={demoProduct.desktop.alt}
+          widths={[960, 1440, 2048, 2880]}
+          sizes="(min-width: 992px) 80vw, 100vw"
+        />
+      </div>
+      <div class="product__phone">
+        <Image
+          src={demoProduct.mobile.image}
+          alt={demoProduct.mobile.alt}
+          widths={[390, 780]}
+          sizes="(min-width: 992px) 25vw, 50vw"
+        />
+      </div>
     </div>
   </div>
 </section>

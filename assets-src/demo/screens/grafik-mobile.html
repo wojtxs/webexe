@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<title>DEMO · Grafik mobile</title>
+<link rel="stylesheet" href="ui.css" />
+<style>
+  body { display: flex; flex-direction: column; font-size: 14px; }
+  .status { display: flex; justify-content: space-between; align-items: center; height: 48px; padding: 0 28px; font-weight: 600; font-size: 15px; }
+  .status .r { display: flex; gap: 6px; align-items: center; }
+  .status .r i { width: 22px; height: 11px; border: 1.5px solid var(--ink); border-radius: 3px; position: relative; }
+  .status .r i::after { content: ''; position: absolute; inset: 1.5px 5px 1.5px 1.5px; border-radius: 1px; background: var(--ink); }
+  .status .r b { width: 16px; height: 10px; background: linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 4.5px, var(--ink) 4.5px 7.5px, transparent 7.5px 9px, var(--ink) 9px 12px, transparent 12px 13.5px, var(--ink) 13.5px); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+  .scroll { flex: 1; overflow: hidden; padding: 6px 20px 0; display: grid; align-content: start; gap: 18px; }
+  .hello { display: flex; align-items: center; justify-content: space-between; }
+  .hello h1 { font-size: 24px; letter-spacing: -0.02em; }
+  .hello p { color: var(--muted); font-size: 13px; }
+  .hello .bell { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; background: var(--panel); }
+  .hello .bell::after { content: ''; position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border: 2px solid var(--panel); border-radius: 50%; background: var(--acc); }
+  .next { display: grid; gap: 14px; padding: 18px; border-radius: 18px; background: var(--ink); color: var(--panel); }
+  .next .l { color: color-mix(in srgb, var(--panel) 60%, transparent); font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  .next .h { font-size: 30px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.1; }
+  .next .h small { display: block; margin-top: 4px; font-size: 15px; font-weight: 500; color: color-mix(in srgb, var(--panel) 75%, transparent); }
+  .next .where { display: flex; align-items: center; gap: 8px; color: color-mix(in srgb, var(--panel) 80%, transparent); font-size: 13px; }
+  .next .b { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .next .b span { display: flex; justify-content: center; align-items: center; gap: 6px; height: 40px; border-radius: 10px; font-weight: 600; font-size: 13px; }
+  .next .b .p { background: var(--acc); color: #fff; }
+  .next .b .s { background: color-mix(in srgb, var(--panel) 12%, transparent); }
+  .sec { display: flex; justify-content: space-between; align-items: baseline; }
+  .sec h2 { font-size: 16px; }
+  .sec span { color: var(--acc2); font-size: 13px; font-weight: 600; }
+  .days { display: grid; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+  .day { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+  .day:last-child { border-bottom: 0; }
+  .day .d { display: grid; justify-items: center; color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; }
+  .day .d b { color: var(--ink); font-size: 17px; }
+  .day .t { font-weight: 600; }
+  .day .t small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+  .day .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .day.off .t { color: var(--faint); }
+  .req { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+  .req .t { flex: 1; font-weight: 600; }
+  .req .t small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 8px 26px; border-top: 1px solid var(--line); background: var(--panel); }
+  .tabs span { display: grid; justify-items: center; gap: 3px; color: var(--faint); font-size: 11px; font-weight: 600; }
+  .tabs span.on { color: var(--acc2); }
+  .tabs svg.i { width: 22px; height: 22px; }
+</style>
+</head>
+<body class="light">
+  <div class="status"><span>9:41</span><span class="r"><b></b><i></i></span></div>
+  <div class="scroll">
+    <div class="hello"><div><p>Czwartek, 30 października</p><h1>Cześć, Anna</h1></div><span class="bell" data-icon="bell"></span></div>
+    <div class="next">
+      <span class="l">Następna zmiana</span>
+      <div class="h">Jutro · Zmiana I<small>6:00 – 14:00</small></div>
+      <span class="where" data-icon="pin">Hala B · Linia 3</span>
+      <div class="b"><span class="s" data-icon="swap">Zamień zmianę</span><span class="p">Szczegóły</span></div>
+    </div>
+    <div class="sec"><h2>Ten tydzień</h2><span>Cały grafik</span></div>
+    <div class="days">
+      <div class="day"><span class="d">Pon<b>27</b></span><span class="t">Zmiana I<small>6:00 – 14:00</small></span><span class="dot" style="background:var(--acc2)"></span></div>
+      <div class="day"><span class="d">Wt<b>28</b></span><span class="t">Zmiana I<small>6:00 – 14:00</small></span><span class="dot" style="background:var(--acc2)"></span></div>
+      <div class="day off"><span class="d">Śr<b>29</b></span><span class="t">Wolne<small>&nbsp;</small></span><span></span></div>
+      <div class="day"><span class="d">Czw<b>30</b></span><span class="t">Zmiana II<small>14:00 – 22:00</small></span><span class="dot" style="background:var(--acc)"></span></div>
+      <div class="day"><span class="d">Pt<b>31</b></span><span class="t">Zmiana I<small>6:00 – 14:00</small></span><span class="dot" style="background:var(--acc2)"></span></div>
+    </div>
+    <div class="req"><span class="av a">UW</span><span class="t">Wniosek urlopowy<small>10 – 14.11 · 5 dni</small></span><span class="badge">Zaakceptowany</span></div>
+  </div>
+  <nav class="tabs"><span class="on" data-icon="cal">Grafik</span><span data-icon="file">Wnioski</span><span data-icon="bell">Powiadomienia</span><span data-icon="user">Profil</span></nav>
+<script src="ui.js"></script>
+</body>
+</html>

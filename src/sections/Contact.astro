@@ -7,6 +7,7 @@
 import Button from '../components/Button.astro';
 import Grid from '../components/Grid.astro';
 import Wordmark from '../components/Wordmark.astro';
+import { demoContact } from '../data/demo';
 import '../styles/sections/contact.css';
 ---
 
@@ -24,27 +25,35 @@ import '../styles/sections/contact.css';
       Porozmawiajmy o projekcie
     </h2>
 
+    <!-- TODO(treść): DEMO, przykładowy kontakt z src/data/demo.ts; docelowo D7 -->
     <div class="contact__direct">
-      <p class="t-label muted">TODO(treść): bezpośredni kontakt do founderów (D7)</p>
-      <p class="t-lead">TODO(treść): e-mail</p>
-      <p class="t-lead">TODO(treść): telefon</p>
+      <p class="t-label muted">{demoContact.label}</p>
+      <a class="contact__link t-lead" href={`mailto:${demoContact.email}`}>
+        {demoContact.email}
+      </a>
+      <a class="contact__link t-lead" href={`tel:${demoContact.phone.replaceAll(' ', '')}`}>
+        {demoContact.phone}
+      </a>
     </div>
 
     <!-- TODO(treść): D7, obsługa wysyłki (nasz serwer pocztowy albo mailto) -->
     <form class="contact__form" novalidate>
       <label class="contact__field">
-        <span class="t-label">TODO(treść): etykieta pola kontaktu (D7)</span>
+        <span class="t-label">{demoContact.fieldLabel}</span>
         <input class="contact__input" type="text" name="kontakt" autocomplete="email" />
+      </label>
+      <label class="contact__field">
+        <span class="t-label">{demoContact.messageLabel}</span>
+        <textarea class="contact__input contact__textarea" name="wiadomosc" rows="4"></textarea>
       </label>
       <label class="contact__consent t-small">
         <input type="checkbox" name="zgoda" />
         <span>
-          TODO(treść): zgoda na kontakt, z linkiem do{' '}
-          <a href="/polityka-prywatnosci">polityki prywatności</a>
+          {demoContact.consent} <a href="/polityka-prywatnosci">polityce prywatności</a>.
         </span>
       </label>
       <Button type="button" class="contact__submit">
-        TODO(treść): przycisk wysyłki (D7, D9)
+        {demoContact.submit}
       </Button>
     </form>
   </div>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<title>DEMO · Kokpit floty</title>
+<link rel="stylesheet" href="ui.css" />
+<style>
+  .content { display: grid; grid-template-columns: 1fr 384px; grid-template-rows: auto 1fr; gap: 14px; }
+  .kpis { grid-column: 1 / -1; }
+  .map { position: relative; overflow: hidden; }
+  .map svg.m { position: absolute; inset: 52px 0 0 0; width: 100%; height: calc(100% - 52px); }
+  .map .legend { position: absolute; left: 16px; bottom: 14px; display: flex; gap: 14px; color: var(--muted); font-size: 12px; }
+  .map .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .map .legend i { width: 14px; height: 3px; border-radius: 2px; background: var(--acc); }
+  .map .legend i.b { background: var(--acc2); }
+  .map .legend i.w { background: var(--warn); }
+  .zoom { position: absolute; right: 14px; bottom: 14px; display: grid; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+  .zoom span { display: grid; place-items: center; width: 30px; height: 30px; color: var(--muted); font-size: 16px; }
+  .zoom span + span { border-top: 1px solid var(--line); }
+  .right { display: grid; grid-template-rows: 1fr auto; gap: 14px; min-height: 0; }
+  .veh { padding: 12px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+  .veh:last-child { border-bottom: 0; }
+  .veh .row { display: flex; align-items: center; gap: 10px; }
+  .veh .plate { padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; font: 600 11px var(--mono); }
+  .veh .eta { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .veh.sel { background: color-mix(in srgb, var(--acc) 6%, transparent); }
+  .chart { padding: 14px 16px 12px; }
+  .bars { display: flex; align-items: flex-end; gap: 10px; height: 92px; margin-top: 10px; }
+  .bars div { flex: 1; display: grid; gap: 6px; justify-items: center; color: var(--faint); font-size: 11px; }
+  .bars i { width: 100%; border-radius: 4px 4px 2px 2px; background: var(--panel2); }
+  .bars i.on { background: linear-gradient(180deg, var(--acc), var(--acc2)); }
+</style>
+</head>
+<body class="dark">
+<div class="app">
+  <aside class="side">
+    <div class="logo"><i></i>Kokpit floty</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot"><span class="av a">AK</span><div>Anna K.<small>Dyspozytor</small></div></div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <h1>Pulpit</h1><span class="crumb">czw., 30.10.2026 · zmiana dzienna</span>
+      <div class="search" data-icon="search"><span>Szukaj pojazdu, kierowcy, zlecenia</span><kbd>Ctrl K</kbd></div>
+      <span class="btn" data-icon="plus">Nowe zlecenie</span>
+    </header>
+    <section class="content">
+      <div class="kpis">
+        <div class="card kpi"><p class="l">Zlecenia dziś</p><p class="v num">148</p><p class="d"><b>+12</b> względem wczoraj</p></div>
+        <div class="card kpi"><p class="l">W trasie</p><p class="v num">37</p><p class="d">z 42 pojazdów</p></div>
+        <div class="card kpi"><p class="l">Opóźnienia</p><p class="v num">3</p><p class="d"><b class="warn">2</b> wymagają decyzji</p></div>
+        <div class="card kpi"><p class="l">Śr. czas dostawy</p><p class="v num">6 h 40 min</p><p class="d"><b>−18 min</b> w tym tygodniu</p></div>
+      </div>
+
+      <div class="card map">
+        <div class="card-h"><h3>Mapa tras</h3><span class="sub">na żywo · odświeżono 14:02</span>
+          <div class="r"><span class="seg"><span class="on">Wszystkie</span><span>Opóźnione</span><span>Postoje</span></span></div>
+        </div>
+        <svg class="m" id="map" viewBox="-40 -30 700 640" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="legend"><span><i></i>W terminie</span><span><i class="b"></i>Powrót</span><span><i class="w"></i>Opóźnienie</span></div>
+        <div class="zoom"><span>+</span><span>−</span></div>
+      </div>
+
+      <div class="right">
+        <div class="card">
+          <div class="card-h"><h3>Pojazdy w trasie</h3><span class="sub">37</span><div class="r faint" data-icon="filter"></div></div>
+          <div class="veh sel"><div class="row"><span class="plate">WZ 4821K</span><span>Poznań → Gdańsk</span><span class="eta">ETA 16:20</span></div><div class="bar"><i style="width:62%"></i></div><div class="row muted"><span class="av sm b">PL</span>P. Lewandowski · 186 km do celu</div></div>
+          <div class="veh"><div class="row"><span class="plate">PO 1190M</span><span>Wrocław → Łódź</span><span class="eta">ETA 17:05</span></div><div class="bar"><i style="width:31%"></i></div><div class="row muted"><span class="av sm">MK</span>M. Kowal · 151 km do celu</div></div>
+          <div class="veh"><div class="row"><span class="plate">KR 7734A</span><span>Kraków → Warszawa</span><span class="badge warn">+25 min</span></div><div class="bar"><i style="width:88%"></i></div><div class="row muted"><span class="av sm c">TZ</span>T. Zając · 34 km do celu</div></div>
+          <div class="veh"><div class="row"><span class="plate">SK 2051C</span><span>Katowice → Lublin</span><span class="eta">ETA 19:40</span></div><div class="bar"><i style="width:12%"></i></div><div class="row muted"><span class="av sm a">JW</span>J. Wróbel · 288 km do celu</div></div>
+          <div class="veh"><div class="row"><span class="plate">WA 5530P</span><span>Warszawa → Białystok</span><span class="eta">ETA 15:10</span></div><div class="bar"><i style="width:50%"></i></div><div class="row muted"><span class="av sm">RN</span>R. Nowicki · 96 km do celu</div></div>
+          <div class="veh"><div class="row"><span class="plate">ZS 8812E</span><span>Szczecin → Poznań</span><span class="badge blue plain">Powrót</span></div><div class="bar"><i style="width:74%"></i></div><div class="row muted"><span class="av sm b">EG</span>E. Górska · 62 km do celu</div></div>
+        </div>
+        <div class="card chart">
+          <div class="row" style="display:flex;align-items:baseline;gap:8px"><h3 style="font-size:13px;font-weight:600">Dostawy w tym tygodniu</h3><span class="faint" style="margin-left:auto;font-size:12px">694 zrealizowane</span></div>
+          <div class="bars"><div><i style="height:58px"></i>Pon</div><div><i style="height:72px"></i>Wt</div><div><i style="height:64px"></i>Śr</div><div><i class="on" style="height:80px"></i>Czw</div><div><i style="height:20px"></i>Pt</div><div><i style="height:8px"></i>Sob</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="ui.js"></script>
+<script>
+  document.getElementById('nav').innerHTML = nav(
+    [['grid', 'Pulpit'], ['route', 'Trasy', '37'], ['truck', 'Pojazdy', '42'], ['users', 'Kierowcy'], ['list', 'Zlecenia', '148'], ['chart', 'Raporty'], ['-', 'System'], ['cog', 'Ustawienia']],
+    0,
+  );
+
+  // Uproszczony kontur Polski (lon, lat) i rzut z korektą szerokości geograficznej
+  const border = [[14.2,53.9],[14.9,54.05],[15.5,54.2],[16.4,54.5],[16.9,54.6],[17.7,54.8],[18.3,54.83],[18.6,54.43],[19.4,54.38],[19.65,54.45],[20.5,54.4],[21.5,54.33],[22.8,54.36],[23.5,54.1],[23.9,53.5],[23.9,53.15],[23.6,52.6],[23.2,52.25],[23.65,51.6],[23.9,51.1],[24.1,50.85],[23.5,50.4],[23.0,50.1],[22.7,49.6],[22.55,49.1],[21.6,49.4],[20.9,49.3],[20.1,49.2],[19.4,49.6],[18.85,49.5],[18.0,50.0],[17.6,50.25],[16.9,50.45],[16.3,50.7],[15.0,51.0],[14.8,51.6],[14.6,52.6],[14.15,52.9],[14.4,53.3]];
+  const P = ([lon, lat]) => [((lon - 14) * 60).toFixed(1), ((55 - lat) * 96).toFixed(1)];
+  const cities = { Gdańsk: [18.65,54.35], Szczecin: [14.55,53.43], Poznań: [16.93,52.41], Warszawa: [21.01,52.23], Białystok: [23.16,53.13], Łódź: [19.46,51.76], Wrocław: [17.04,51.11], Lublin: [22.57,51.25], Katowice: [19.02,50.26], Kraków: [19.94,50.06] };
+  const routes = [['Poznań','Gdańsk',0.62,'acc',true],['Wrocław','Łódź',0.31,'acc'],['Kraków','Warszawa',0.88,'warn'],['Katowice','Lublin',0.12,'acc'],['Warszawa','Białystok',0.5,'acc2'],['Szczecin','Poznań',0.74,'acc2']];
+  const svg = document.getElementById('map');
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent = svg) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
+
+  // Siatka kropek
+  for (let x = -20; x < 660; x += 22) for (let y = -10; y < 600; y += 22) el('circle', { cx: x, cy: y, r: 0.9, fill: 'var(--line)' });
+  el('path', { d: 'M' + border.map(P).join('L') + 'Z', fill: 'color-mix(in srgb, var(--panel2) 70%, transparent)', stroke: 'var(--faint)', 'stroke-width': 1.2, 'stroke-linejoin': 'round' });
+
+  const defs = el('defs', {});
+  const glow = el('filter', { id: 'g', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
+  el('feGaussianBlur', { stdDeviation: 4 }, glow);
+
+  routes.forEach(([a, b, t, c, sel]) => {
+    const [x1, y1] = P(cities[a]).map(Number); const [x2, y2] = P(cities[b]).map(Number);
+    const mx = (x1 + x2) / 2 + (y2 - y1) * 0.18; const my = (y1 + y2) / 2 - (x2 - x1) * 0.18;
+    const d = `M${x1} ${y1}Q${mx} ${my} ${x2} ${y2}`;
+    el('path', { d, fill: 'none', stroke: `var(--${c})`, 'stroke-width': 1.4, 'stroke-dasharray': '3 5', opacity: 0.6 });
+    const done = el('path', { d, fill: 'none', stroke: `var(--${c})`, 'stroke-width': 2.4, 'stroke-linecap': 'round' });
+    const len = done.getTotalLength(); done.setAttribute('stroke-dasharray', `${len * t} ${len}`);
+    const p = done.getPointAtLength(len * t);
+    el('circle', { cx: p.x, cy: p.y, r: 9, fill: `var(--${c})`, opacity: 0.45, filter: 'url(#g)' });
+    el('circle', { cx: p.x, cy: p.y, r: sel ? 6 : 4.5, fill: 'var(--bg)', stroke: `var(--${c})`, 'stroke-width': 2.4 });
+    if (sel) {
+      const g = el('g', {});
+      el('rect', { x: p.x + 12, y: p.y - 30, width: 118, height: 40, rx: 7, fill: 'var(--panel)', stroke: 'var(--line)' }, g);
+      el('text', { x: p.x + 22, y: p.y - 14, fill: 'var(--ink)', 'font-size': 12, 'font-weight': 600 }, g).textContent = 'WZ 4821K';
+      el('text', { x: p.x + 22, y: p.y + 1, fill: 'var(--muted)', 'font-size': 11 }, g).textContent = '78 km/h · ETA 16:20';
+    }
+  });
+
+  Object.entries(cities).forEach(([name, ll]) => {
+    const [x, y] = P(ll).map(Number);
+    el('circle', { cx: x, cy: y, r: 3, fill: 'var(--muted)' });
+    el('text', { x: x + 7, y: y + 4, fill: 'var(--muted)', 'font-size': 12 }).textContent = name;
+  });
+</script>
+</body>
+</html>

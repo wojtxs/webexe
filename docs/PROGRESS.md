@@ -371,3 +371,13 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Zostało / do oceny: dwa CTA w hero (róg i hero), mapa rozdziałów zachodzi na treść przy lewej krawędzi (akordeon, wordmark w stopce), etykiety mapy to `TODO(treść)`. Przed przeniesieniem do `master`: wpisy w `ARCHITECTURE.md` (`data-split="words"`, moduły, slot `chrome`) i specy 05 oraz warstwy globalnej.
 - Lekcje: `hyphens: auto` nie dzieli polskich słów w Edge, więc w tytule akordeonu jest miękki dział (`­`). Hit-testing (`elementsFromPoint`) trafia w pełną geometrię kreski SVG mimo niedorysowania przez DrawSVG, dlatego sondy motywu stoją przy lewej krawędzi, a opakowanie x ma `pointer-events: none`.
 
+
+### 2026-10-30 — eksperyment: treść demo (gałąź `eksperyment/ruch-chipsy`)
+
+- Kontekst: użytkownik chce ocenić stronę bez placeholderów i poprosił o przykładowe rzeczy. **To nie jest treść z `BRIEF.md`**: projekty, liczby, klienci i kontakt są zmyślone, wyłącznie do oceny wyglądu.
+- Zrobione:
+  - `src/data/demo.ts`: jedno źródło treści demo (4 projekty, produkt „Grafik”, 4 liczby, 8 zmyślonych nazw klientów, kontakt i etykiety formularza). Sekcje 01, 03, 04 i 07 czytają stamtąd, a każde miejsce ma komentarz `TODO(treść): DEMO`.
+  - Ekrany: 6 fikcyjnych aplikacji (kokpit floty, obieg faktur z AI, monitor integracji, portal serwisowy, grafik zmian na desktop i mobile) zbudowanych w HTML w `assets-src/demo/screens/`. Zrzuty @2x robi `assets-src/demo/render.mjs` (Edge przez playwright-core spoza projektu, ścieżka w `PLAYWRIGHT_CORE`), sharp zapisuje je jako webp do `src/assets/demo/`. Na stronie wchodzą przez `astro:assets` (`widths` i `sizes`, wymiary w HTML).
+  - Generowanie obrazów przez fal.ai nie wyszło, bo konto nie ma środków. Zdjęcia founderów (06, D4) zostały placeholderami, bo zdjęć ludzi nie zmyślamy.
+- Sprawdzone: 1440 i 390 na zrzutach, check, lint i build czyste.
+- Przed merge do `master`: usunąć `src/data/demo.ts`, `src/assets/demo/` i `assets-src/demo/`, a w sekcjach wrócić do `TODO(treść)`, chyba że użytkownik zdecyduje inaczej. Formularz dostał pole „Krótko o projekcie”: do decyzji w D7.

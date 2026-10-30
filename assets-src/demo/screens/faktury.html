@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<title>DEMO · Obieg faktur</title>
+<link rel="stylesheet" href="ui.css" />
+<style>
+  .content { display: grid; grid-template-columns: 272px 1fr 340px; gap: 14px; }
+  .inv { display: grid; gap: 4px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .inv .row { display: flex; align-items: center; gap: 8px; }
+  .inv .amt { margin-left: auto; font-weight: 600; }
+  .inv.sel { background: color-mix(in srgb, var(--acc) 7%, transparent); box-shadow: inset 2px 0 0 var(--acc); }
+  .viewer { display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
+  .stage { display: grid; place-items: start center; overflow: hidden; padding: 20px; background: var(--side); }
+  .paper { position: relative; width: 100%; padding: 30px 28px; border-radius: 4px; background: #fbfcfb; color: #1d2b2f; font-size: 10.5px; line-height: 1.5; box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+  .paper h2 { font-size: 17px; letter-spacing: -0.01em; }
+  .paper .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 18px 0; }
+  .paper b { display: block; margin-bottom: 2px; color: #6b7a7d; font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .paper table { margin-top: 6px; font-size: 10px; }
+  .paper th { padding: 6px 6px; border-bottom: 1px solid #d9e0e0; color: #6b7a7d; font-size: 9px; }
+  .paper td { padding: 6px 6px; border-bottom: 1px solid #eef2f2; }
+  .paper td:last-child, .paper th:last-child { text-align: right; }
+  .paper .sum { display: grid; justify-content: end; gap: 12px; margin-top: 14px; text-align: right; }
+  .paper .sum strong { font-size: 15px; margin-left: 6px; }
+  .paper .sum [data-hit] { display: inline-block; justify-self: end; }
+  .hit { position: absolute; border: 1.5px solid var(--acc2); border-radius: 4px; background: color-mix(in srgb, var(--acc2) 9%, transparent); }
+  .hit::after { content: attr(data-l); position: absolute; top: -9px; right: 6px; padding: 0 5px; border-radius: 3px; background: var(--acc2); color: #fff; font: 600 8.5px/16px var(--font); }
+  .fields { display: grid; gap: 2px; padding: 8px 0; }
+  .f { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 9px 16px; }
+  .f label { grid-column: 1 / -1; color: var(--faint); font-size: 11px; }
+  .f span { font-weight: 600; font-size: 13.5px; }
+  .ai { display: flex; gap: 10px; margin: 6px 16px 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); color: var(--muted); font-size: 12px; }
+  .ai svg { color: var(--acc); }
+  .assign { display: flex; align-items: center; justify-content: space-between; margin: 12px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; }
+  .actions { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 16px; border-top: 1px solid var(--line); }
+  .pane { display: grid; grid-template-rows: auto 1fr auto; }
+</style>
+</head>
+<body class="dark">
+<div class="app">
+  <aside class="side">
+    <div class="logo"><i></i>Obieg faktur</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot"><span class="av b">MS</span><div>Marta S.<small>Księgowość</small></div></div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <h1>Faktury do akceptacji</h1><span class="badge plain">12</span>
+      <div class="search" data-icon="search"><span>Szukaj po dostawcy, numerze, kwocie</span><kbd>Ctrl K</kbd></div>
+      <span class="btn" data-icon="refresh">Pobierz z poczty</span>
+    </header>
+    <section class="content">
+      <div class="card">
+        <div class="card-h"><h3>Kolejka</h3><span class="sub">najstarsze pierwsze</span></div>
+        <div class="inv sel"><div class="row"><span>Hurtownia Volt sp. z o.o.</span></div><div class="row muted"><span class="mono">FV/2026/10/0412</span><span class="amt" style="color:var(--ink)">18 452,30 zł</span></div><div class="row"><span class="badge">Odczytana</span><span class="faint" style="margin-left:auto;font-size:12px">dziś, 08:14</span></div></div>
+        <div class="inv"><div class="row"><span>Stal-Trans S.C.</span></div><div class="row muted"><span class="mono">12/10/2026</span><span class="amt">7 120,00 zł</span></div><div class="row"><span class="badge">Odczytana</span><span class="faint" style="margin-left:auto;font-size:12px">dziś, 07:52</span></div></div>
+        <div class="inv"><div class="row"><span>Biuro Rachunkowe Lena</span></div><div class="row muted"><span class="mono">F 88/2026</span><span class="amt">1 845,00 zł</span></div><div class="row"><span class="badge warn">Brak projektu</span><span class="faint" style="margin-left:auto;font-size:12px">wczoraj</span></div></div>
+        <div class="inv"><div class="row"><span>Energa-Serwis Północ</span></div><div class="row muted"><span class="mono">FS/3391/10</span><span class="amt">3 402,18 zł</span></div><div class="row"><span class="badge">Odczytana</span><span class="faint" style="margin-left:auto;font-size:12px">wczoraj</span></div></div>
+        <div class="inv"><div class="row"><span>Drukarnia Kadr</span></div><div class="row muted"><span class="mono">2026/10/117</span><span class="amt">640,50 zł</span></div><div class="row"><span class="badge bad">Duplikat?</span><span class="faint" style="margin-left:auto;font-size:12px">28.10</span></div></div>
+        <div class="inv"><div class="row"><span>Leasing Nord</span></div><div class="row muted"><span class="mono">LN/10/2026/55</span><span class="amt">5 980,00 zł</span></div><div class="row"><span class="badge">Odczytana</span><span class="faint" style="margin-left:auto;font-size:12px">28.10</span></div></div>
+        <div class="inv"><div class="row"><span>Transbet Logistyka</span></div><div class="row muted"><span class="mono">TL/2026/1044</span><span class="amt">2 214,00 zł</span></div><div class="row"><span class="badge">Odczytana</span><span class="faint" style="margin-left:auto;font-size:12px">27.10</span></div></div>
+        <div class="inv"><div class="row"><span>Kancelaria Wierzba</span></div><div class="row muted"><span class="mono">7/10/2026</span><span class="amt">3 690,00 zł</span></div><div class="row"><span class="badge warn">Brak projektu</span><span class="faint" style="margin-left:auto;font-size:12px">27.10</span></div></div>
+      </div>
+
+      <div class="card viewer">
+        <div class="card-h"><span data-icon="file" class="muted"></span><h3>FV_2026_10_0412.pdf</h3><span class="sub">strona 1 z 1</span><div class="r"><span class="seg"><span class="on">Podgląd</span><span>Tekst</span></span></div></div>
+        <div class="stage">
+          <div class="paper">
+            <div style="display:flex;justify-content:space-between;align-items:start"><h2>Faktura VAT</h2><div style="text-align:right"><span data-hit="numer">nr FV/2026/10/0412</span><br />Data wystawienia: 14.10.2026</div></div>
+            <div class="cols">
+              <div data-hit="sprzedawca"><b>Sprzedawca</b>Hurtownia Volt sp. z o.o.<br />ul. Przemysłowa 14<br />60-001 Poznań<br />NIP 123-456-78-90</div>
+              <div><b>Nabywca</b>Instal-Bud sp. j.<br />ul. Spokojna 3<br />62-300 Września<br />NIP 987-654-32-10</div>
+            </div>
+            <table>
+              <thead><tr><th>Lp.</th><th>Nazwa</th><th>Ilość</th><th>Cena netto</th><th>Wartość netto</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Przewód YDY 3×2,5 (100 m)</td><td>24</td><td>312,00</td><td>7 488,00</td></tr>
+                <tr><td>2</td><td>Rozdzielnica natynkowa 36 mod.</td><td>6</td><td>689,00</td><td>4 134,00</td></tr>
+                <tr><td>3</td><td>Wyłącznik nadprądowy B16</td><td>60</td><td>21,40</td><td>1 284,00</td></tr>
+                <tr><td>4</td><td>Oprawa LED hermetyczna 120 cm</td><td>18</td><td>121,50</td><td>2 187,00</td></tr>
+              </tbody>
+            </table>
+            <div class="sum"><span>Netto: 15 001,87 zł · VAT 23%: 3 450,43 zł</span><span data-hit="kwota">Do zapłaty <strong>18 452,30 zł</strong></span><span data-hit="termin">Termin płatności: 28.10.2026 · przelew</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card pane">
+        <div class="card-h"><h3>Odczytane dane</h3><span class="badge" style="margin-left:auto">Pewność 97%</span></div>
+        <div>
+          <div class="fields">
+            <div class="f"><label>Sprzedawca</label><span>Hurtownia Volt sp. z o.o.</span><span class="badge plain">99%</span></div>
+            <div class="f"><label>NIP</label><span class="mono" style="font-size:13px">123-456-78-90</span><span class="badge plain">99%</span></div>
+            <div class="f"><label>Data wystawienia</label><span>14.10.2026</span><span class="badge plain">98%</span></div>
+            <div class="f"><label>Kwota brutto</label><span>18 452,30 zł</span><span class="badge plain">98%</span></div>
+            <div class="f"><label>Termin płatności</label><span>28.10.2026</span><span class="badge warn plain">86%</span></div>
+          </div>
+          <div class="assign"><div><div class="faint" style="font-size:11px">Przypisz do projektu</div><div style="font-weight:600">Hala B · instalacja elektryczna</div></div><span class="faint" data-icon="chev"></span></div>
+          <div class="ai"><span data-icon="bolt"></span><span>Agent odczytał fakturę z maila i dopasował projekt po numerze zamówienia ZK/0931. Sprawdź termin płatności przed zatwierdzeniem.</span></div>
+        </div>
+        <div class="actions"><span class="btn ghost" data-icon="x">Odrzuć</span><span class="btn pri" data-icon="check">Zatwierdź</span></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="ui.js"></script>
+<script>
+  document.getElementById('nav').innerHTML = nav(
+    [['inbox', 'Skrzynka', '4'], ['clock', 'Do akceptacji', '12'], ['check', 'Zatwierdzone'], ['x', 'Odrzucone'], ['-', 'Dane'], ['users', 'Dostawcy'], ['box', 'Projekty'], ['chart', 'Raporty'], ['cog', 'Ustawienia']],
+    1,
+  );
+  // Ramki wykrytych pól liczone z położenia elementów na dokumencie
+  const paper = document.querySelector('.paper');
+  const pb = paper.getBoundingClientRect();
+  paper.querySelectorAll('[data-hit]').forEach((t) => {
+    const r = t.getBoundingClientRect();
+    const h = document.createElement('div');
+    h.className = 'hit';
+    h.dataset.l = t.dataset.hit;
+    Object.assign(h.style, { left: `${r.left - pb.left - 5}px`, top: `${r.top - pb.top - 4}px`, width: `${r.width + 10}px`, height: `${r.height + 8}px` });
+    paper.appendChild(h);
+  });
+</script>
+</body>
+</html>

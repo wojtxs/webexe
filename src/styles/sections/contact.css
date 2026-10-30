@@ -30,6 +30,17 @@
   justify-items: start;
 }
 
+.contact__link {
+  justify-self: start;
+  color: inherit;
+  text-decoration: none;
+}
+
+.contact__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .contact__field {
   display: grid;
   gap: var(--s-2);
@@ -44,6 +55,10 @@
   background-color: var(--c-glebia-line);
   color: var(--c-piana);
   font: inherit;
+}
+
+.contact__textarea {
+  resize: vertical;
 }
 
 .contact__consent {

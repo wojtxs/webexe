@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<title>DEMO · Grafik</title>
+<link rel="stylesheet" href="ui.css" />
+<style>
+  .content { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
+  .sched { display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
+  .grid { display: grid; grid-template-columns: 190px repeat(7, 1fr); }
+  .grid > div { min-height: 76px; padding: 8px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .grid > div:nth-child(8n) { border-right: 0; }
+  .grid .hd { min-height: 0; padding: 10px 10px; color: var(--muted); font-size: 12px; font-weight: 600; }
+  .grid .hd b { display: block; color: var(--ink); font-size: 15px; }
+  .grid .hd.today b { color: var(--acc2); }
+  .grid .wk { background: color-mix(in srgb, var(--panel2) 55%, transparent); }
+  .emp { display: flex; align-items: center; gap: 10px; }
+  .emp small { display: block; color: var(--faint); font-size: 11px; }
+  .sh { display: grid; height: 100%; align-content: center; gap: 2px; padding: 8px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+  .sh small { font-weight: 500; opacity: .8; }
+  .s1 { background: color-mix(in srgb, var(--acc2) 14%, var(--panel)); color: var(--acc2); box-shadow: inset 3px 0 0 var(--acc2); }
+  .s2 { background: color-mix(in srgb, var(--acc) 14%, var(--panel)); color: color-mix(in srgb, var(--acc) 75%, var(--ink)); box-shadow: inset 3px 0 0 var(--acc); }
+  .s3 { background: var(--ink); color: var(--panel); }
+  .ul { background: var(--panel2); color: var(--muted); }
+  .l4 { background: repeating-linear-gradient(135deg, var(--panel2) 0 6px, var(--panel) 6px 12px); color: var(--muted); border: 1px dashed var(--line); }
+  .gap { display: grid; place-items: center; height: 100%; border: 1.5px dashed color-mix(in srgb, var(--warn) 60%, transparent); border-radius: 8px; color: var(--warn); font-size: 12px; font-weight: 600; }
+  .right { display: grid; align-content: start; gap: 14px; }
+  .warn-item { display: grid; gap: 4px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .warn-item:last-child { border-bottom: 0; }
+  .warn-item b { display: flex; align-items: center; gap: 8px; }
+  .legend { display: grid; gap: 10px; padding: 14px 16px; }
+  .legend span { display: flex; align-items: center; gap: 10px; color: var(--muted); }
+  .legend i { width: 22px; height: 14px; border-radius: 4px; }
+</style>
+</head>
+<body class="light">
+<div class="app">
+  <aside class="side">
+    <div class="logo"><i></i>Grafik</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot"><span class="av b">BK</span><div>Beata K.<small>Kierownik zmiany</small></div></div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <span class="btn ghost" data-icon="chevl" style="padding:0 8px"></span>
+      <h1>Tydzień 44</h1><span class="crumb">27.10 – 02.11.2026 · Hala B</span>
+      <span class="btn ghost" data-icon="chev" style="padding:0 8px"></span>
+      <span class="seg" style="margin-left:auto"><span>Dzień</span><span class="on">Tydzień</span><span>Miesiąc</span></span>
+      <span class="btn" data-icon="swap">Zamiany · 2</span>
+      <span class="btn pri" data-icon="check">Opublikuj grafik</span>
+    </header>
+    <section class="content">
+      <div class="card sched">
+        <div class="grid" id="head"></div>
+        <div class="grid" id="body"></div>
+      </div>
+      <div class="right">
+        <div class="card">
+          <div class="card-h"><h3>Braki obsady</h3><span class="badge warn plain" style="margin-left:auto">2</span></div>
+          <div class="warn-item"><b><span class="badge warn">Sob 1</span>Zmiana II</b><span class="muted">Brakuje 1 osoby z uprawnieniami na wózek</span><span class="faint" style="font-size:12px">Sugestia: K. Zieliński (12 h nadgodzin w miesiącu)</span></div>
+          <div class="warn-item"><b><span class="badge warn">Ndz 2</span>Zmiana I</b><span class="muted">Brakuje 2 osób</span><span class="faint" style="font-size:12px">3 osoby zgłosiły dostępność</span></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Wnioski</h3><span class="sub">do decyzji</span></div>
+          <div class="warn-item"><b><span class="av sm a">MW</span>M. Wiśniewska · urlop</b><span class="muted">10–14.11 · 5 dni</span></div>
+          <div class="warn-item"><b><span class="av sm c">TK</span>T. Kamiński · zamiana</b><span class="muted">Czw 30, Zmiana II ↔ J. Wójcik</span></div>
+        </div>
+        <div class="card legend">
+          <span><i class="s1"></i>Zmiana I · 6:00–14:00</span>
+          <span><i class="s2"></i>Zmiana II · 14:00–22:00</span>
+          <span><i class="s3"></i>Zmiana III · 22:00–6:00</span>
+          <span><i class="ul"></i>Urlop</span>
+          <span><i class="l4"></i>Zwolnienie</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="ui.js"></script>
+<script>
+  document.getElementById('nav').innerHTML = nav(
+    [['cal', 'Grafik'], ['users', 'Pracownicy', '46'], ['swap', 'Zamiany', '2'], ['file', 'Wnioski', '3'], ['clock', 'Czas pracy'], ['-', 'Firma'], ['box', 'Działy i hale'], ['cog', 'Ustawienia']],
+    0,
+  );
+  const days = [['Pon', 27], ['Wt', 28], ['Śr', 29], ['Czw', 30], ['Pt', 31], ['Sob', 1], ['Ndz', 2]];
+  document.getElementById('head').innerHTML =
+    '<div class="hd">Pracownik</div>' +
+    days.map(([d, n], i) => `<div class="hd ${i === 3 ? 'today' : ''} ${i > 4 ? 'wk' : ''}">${d}<b>${n}</b></div>`).join('');
+  const S = { 1: ['s1', 'Zmiana I', '6–14'], 2: ['s2', 'Zmiana II', '14–22'], 3: ['s3', 'Zmiana III', '22–6'], u: ['ul', 'Urlop', ''], l: ['l4', 'L4', ''] };
+  const people = [
+    ['AN', 'a', 'A. Nowak', 'Operator CNC', [1, 1, 1, 1, 1, 0, 0]],
+    ['MW', 'b', 'M. Wiśniewska', 'Kontrola jakości', [2, 2, 2, 'u', 'u', 0, 0]],
+    ['KZ', 'c', 'K. Zieliński', 'Magazynier', [1, 1, 0, 2, 2, 'g', 0]],
+    ['PL', 'a', 'P. Lewandowska', 'Operator linii', [3, 3, 3, 0, 0, 1, 'g']],
+    ['TK', 'b', 'T. Kamiński', 'Operator wózka', [2, 2, 2, 2, 0, 2, 0]],
+    ['JW', 'c', 'J. Wójcik', 'Ślusarz', ['l', 'l', 'l', 1, 1, 0, 1]],
+  ];
+  document.getElementById('body').innerHTML = people
+    .map(([ini, c, name, role, row]) =>
+      `<div><div class="emp"><span class="av sm ${c}">${ini}</span><div>${name}<small>${role}</small></div></div></div>` +
+      row.map((v, i) => {
+        const wk = i > 4 ? 'wk' : '';
+        if (v === 0) return `<div class="${wk}"></div>`;
+        if (v === 'g') return `<div class="${wk}"><div class="gap">+ brak obsady</div></div>`;
+        const [cls, t, h] = S[v];
+        return `<div class="${wk}"><div class="sh ${cls}">${t}${h ? `<small>${h}</small>` : ''}</div></div>`;
+      }).join(''),
+    )
+    .join('');
+</script>
+</body>
+</html>

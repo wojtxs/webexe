@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<title>DEMO · Portal serwisowy</title>
+<link rel="stylesheet" href="ui.css" />
+<style>
+  .content { display: grid; grid-template-rows: auto 1fr; gap: 16px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-row .r { margin-left: auto; display: flex; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); font-size: 12px; font-weight: 600; }
+  .chip.on { border-color: var(--ink); color: var(--ink); }
+  .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; min-height: 0; }
+  .col { display: flex; flex-direction: column; gap: 10px; min-height: 0; padding: 12px; border-radius: 12px; background: var(--panel2); }
+  .col-h { display: flex; align-items: center; gap: 8px; padding: 2px 4px 4px; font-weight: 600; }
+  .col-h .n { color: var(--faint); font-weight: 500; }
+  .col-h .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+  .tk { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); box-shadow: 0 1px 2px rgba(15,31,36,.05); }
+  .tk .id { color: var(--faint); font: 600 11px var(--mono); }
+  .tk .t { font-weight: 600; font-size: 13.5px; line-height: 1.35; }
+  .tk .meta { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+  .tk .meta .avs { margin-left: auto; }
+  .tk .prog { display: grid; gap: 6px; color: var(--muted); font-size: 12px; }
+  .done { opacity: .72; }
+</style>
+</head>
+<body class="light">
+<div class="app">
+  <aside class="side">
+    <div class="logo"><i></i>Serwis 24</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot"><span class="av a">KD</span><div>Karol D.<small>Kierownik serwisu</small></div></div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <h1>Zgłoszenia serwisowe</h1><span class="crumb">wszystkie zakłady</span>
+      <div class="search" data-icon="search"><span>Szukaj zgłoszenia, urządzenia, klienta</span><kbd>Ctrl K</kbd></div>
+      <span class="btn pri" data-icon="plus">Nowe zgłoszenie</span>
+    </header>
+    <section class="content">
+      <div class="bar-row">
+        <span class="chip on">Wszystkie · 23</span><span class="chip">Pilne · 4</span><span class="chip">Moje · 7</span><span class="chip">Po terminie · 1</span>
+        <div class="r"><span class="seg"><span class="on">Tablica</span><span>Lista</span><span>Kalendarz</span></span></div>
+      </div>
+      <div class="board">
+        <div class="col">
+          <div class="col-h"><span class="dot" style="background:var(--acc2)"></span>Nowe<span class="n">5</span></div>
+          <div class="tk"><span class="id">#2041</span><span class="t">Wózek widłowy, wyciek hydrauliki</span><div class="meta"><span class="badge bad">Pilne</span><span data-icon="pin"></span>Hala 2<span class="avs"><span class="av sm c">MK</span></span></div></div>
+          <div class="tk"><span class="id">#2040</span><span class="t">Suwnica 5 t, hałas przy jeździe</span><div class="meta"><span class="badge mute">Normalny</span><span data-icon="pin"></span>Zakład Śrem</div></div>
+          <div class="tk"><span class="id">#2039</span><span class="t">Przegląd UDT, podnośnik nożycowy</span><div class="meta"><span class="badge mute">Planowy</span><span data-icon="pin"></span>Magazyn A</div></div>
+        </div>
+        <div class="col">
+          <div class="col-h"><span class="dot" style="background:var(--acc)"></span>W realizacji<span class="n">8</span></div>
+          <div class="tk"><span class="id">#2038</span><span class="t">Kompresor śrubowy, przegląd okresowy</span><div class="prog"><span>Lista kontrolna 7 z 12</span><div class="bar"><i style="width:58%"></i></div></div><div class="meta"><span class="badge mute">Normalny</span><span data-icon="pin"></span>Zakład Września<span class="avs"><span class="av sm a">PL</span><span class="av sm b">JN</span></span></div></div>
+          <div class="tk"><span class="id">#2035</span><span class="t">Linia pakująca, błąd czujnika krańcowego</span><div class="prog"><span>Diagnoza zakończona</span><div class="bar"><i style="width:80%"></i></div></div><div class="meta"><span class="badge bad">Pilne</span><span data-icon="pin"></span>Hala 1<span class="avs"><span class="av sm c">MK</span></span></div></div>
+          <div class="tk"><span class="id">#2033</span><span class="t">Wymiana łożysk, przenośnik taśmowy</span><div class="meta"><span class="badge mute">Normalny</span><span data-icon="pin"></span>Hala 3<span class="avs"><span class="av sm b">JN</span></span></div></div>
+        </div>
+        <div class="col">
+          <div class="col-h"><span class="dot" style="background:var(--warn)"></span>Czeka na części<span class="n">3</span></div>
+          <div class="tk"><span class="id">#2029</span><span class="t">Brama segmentowa, sterownik napędu</span><div class="meta"><span class="badge warn">Dostawa 04.11</span><span data-icon="pin"></span>Magazyn C</div><div class="meta"><span data-icon="box"></span>Sterownik CB-19 · zamówione u dostawcy</div></div>
+          <div class="tk"><span class="id">#2024</span><span class="t">Prasa krawędziowa, zawór proporcjonalny</span><div class="meta"><span class="badge warn">Dostawa 07.11</span><span data-icon="pin"></span>Hala 2<span class="avs"><span class="av sm a">PL</span></span></div></div>
+        </div>
+        <div class="col">
+          <div class="col-h"><span class="dot"></span>Zamknięte<span class="n">7</span></div>
+          <div class="tk done"><span class="id">#2031</span><span class="t">Agregat prądotwórczy, test obciążenia</span><div class="meta"><span class="badge">Zamknięte</span>29.10 · 2 h 15 min</div></div>
+          <div class="tk done"><span class="id">#2027</span><span class="t">Wózek paletowy, wymiana kół</span><div class="meta"><span class="badge">Zamknięte</span>28.10 · 50 min</div></div>
+          <div class="tk done"><span class="id">#2022</span><span class="t">Klimatyzacja serwerowni, czyszczenie</span><div class="meta"><span class="badge">Zamknięte</span>27.10 · 1 h 30 min</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="ui.js"></script>
+<script>
+  document.getElementById('nav').innerHTML = nav(
+    [['list', 'Zgłoszenia', '23'], ['tool', 'Urządzenia', '312'], ['users', 'Technicy', '9'], ['box', 'Części'], ['users', 'Klienci'], ['-', 'Raporty'], ['chart', 'Czas reakcji'], ['cal', 'Przeglądy planowe']],
+    0,
+  );
+</script>
+</body>
+</html>

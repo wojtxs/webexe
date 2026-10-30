@@ -19,6 +19,18 @@
   grid-column: 1 / 11;
   grid-row: 1;
   aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: var(--s-2) solid var(--c-glebia-raise);
+  border-radius: var(--r-card);
+  background-color: var(--c-glebia-line);
+}
+
+.product__laptop img,
+.product__phone img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .product__phone {
@@ -26,8 +38,11 @@
   grid-row: 1;
   align-self: end;
   aspect-ratio: 9 / 19;
+  overflow: hidden;
   margin-bottom: calc(-1 * var(--s-24));
   border: var(--s-2) solid var(--c-glebia);
+  border-radius: var(--r-panel);
+  background-color: var(--c-glebia-line);
 }
 
 @media (max-width: 991px) {

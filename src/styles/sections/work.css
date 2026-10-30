@@ -27,8 +27,18 @@
 
 .work-card__media {
   aspect-ratio: 16 / 10;
+  overflow: hidden;
   margin-bottom: var(--s-2);
+  border-radius: var(--r-card);
+  background-color: var(--surface);
   transform: scale(calc(1 - var(--squeeze, 0)));
+}
+
+.work-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .work-card__desc {
@@ -51,6 +61,20 @@
   padding: var(--s-6);
   border-top: 1px solid var(--grid-line);
   text-align: center;
+}
+
+.proof__cell--number {
+  place-items: start;
+  align-content: end;
+  gap: var(--s-2);
+  text-align: left;
+}
+
+.proof__client {
+  color: var(--ink-muted);
+  font-size: var(--t-lead);
+  font-weight: var(--w-h3);
+  letter-spacing: var(--ls-h3);
 }
 
 @media (max-width: 991px) {

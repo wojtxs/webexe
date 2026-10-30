@@ -4,11 +4,10 @@
  * Duże karty na kolumnach siatki ze staggerem; dowody w komórkach siatki
  * (docs/INSPIRACJE.md, wiersze Realizacje i Dowody). Hover obraz → wideo i ściskanie w F5.
  */
+import { Image } from 'astro:assets';
 import Grid from '../components/Grid.astro';
+import { demoClients, demoNumbers, demoProjects } from '../data/demo';
 import '../styles/sections/work.css';
-
-const projects = [1, 2, 3, 4];
-const proofCells = [1, 2, 3, 4, 5, 6, 7, 8];
 ---
 
 <section
@@ -26,23 +25,37 @@ const proofCells = [1, 2, 3, 4, 5, 6, 7, 8];
     </h2>
 
     <ol class="work__list" data-module="squeeze">
-      {projects.map((n) => (
+      <!-- TODO(treść): DEMO, fikcyjne projekty z src/data/demo.ts; docelowo D3 (obraz + pętla wideo) -->
+      {demoProjects.map((project) => (
         <li class="work__item">
           <article class="work-card">
-            <div class="work-card__media ph">
-              TODO(treść): obraz i pętla wideo projektu {n} (D3, WORK-{n})
+            <div class="work-card__media">
+              <Image
+                src={project.image}
+                alt={project.alt}
+                widths={[640, 1024, 1440, 2048]}
+                sizes="(min-width: 992px) 75vw, 100vw"
+              />
             </div>
-            <h3 class="work-card__title t-h3">TODO(treść): tytuł projektu {n} (D3)</h3>
-            <p class="work-card__desc muted">TODO(treść): krótki opis projektu {n} (D3)</p>
+            <p class="work-card__tags t-label muted">{project.tags}</p>
+            <h3 class="work-card__title t-h3">{project.title}</h3>
+            <p class="work-card__desc muted">{project.desc}</p>
           </article>
         </li>
       ))}
     </ol>
 
+    <!-- TODO(treść): DEMO, zmyślone liczby i klienci z src/data/demo.ts; docelowo D3 -->
     <ul class="proof" aria-label="Dowody">
-      {proofCells.map((n) => (
-        <li class="proof__cell t-small muted">
-          {n <= 4 ? 'TODO(treść): liczba (D3)' : 'TODO(treść): logo klienta za zgodą (D3)'}
+      {demoNumbers.map((item) => (
+        <li class="proof__cell proof__cell--number">
+          <span class="proof__value t-h2">{item.value}</span>
+          <span class="t-small muted">{item.label}</span>
+        </li>
+      ))}
+      {demoClients.map((client) => (
+        <li class="proof__cell">
+          <span class="proof__client">{client}</span>
         </li>
       ))}
     </ul>
