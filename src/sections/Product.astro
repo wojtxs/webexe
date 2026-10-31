@@ -5,6 +5,8 @@
  */
 import { Image } from 'astro:assets';
 import Grid from '../components/Grid.astro';
+import GrafikLive from '../components/live/GrafikLive.astro';
+import GrafikMobileLive from '../components/live/GrafikMobileLive.astro';
 import { demoProduct } from '../data/demo';
 import '../styles/sections/product.css';
 ---
@@ -24,22 +26,29 @@ import '../styles/sections/product.css';
     </h2>
     <p class="product__lead t-lead muted">{demoProduct.lead}</p>
 
-    <div class="product__devices">
-      <div class="product__laptop">
-        <Image
-          src={demoProduct.desktop.image}
-          alt={demoProduct.desktop.alt}
-          widths={[960, 1440, 2048, 2880]}
-          sizes="(min-width: 992px) 80vw, 100vw"
-        />
+    <!-- Na zrzutach gra żywa warstwa grafiku (components/live/Grafik*Live, modules/product-live.ts) -->
+    <div class="product__devices" data-module="product-live">
+      <div class="product__laptop" data-reveal>
+        <div class="product__screen" data-reveal-zoom>
+          <Image
+            src={demoProduct.desktop.image}
+            alt={demoProduct.desktop.alt}
+            widths={[960, 1440, 2048, 2880]}
+            sizes="(min-width: 992px) 80vw, 100vw"
+          />
+          <GrafikLive uid="product" />
+        </div>
       </div>
-      <div class="product__phone">
-        <Image
-          src={demoProduct.mobile.image}
-          alt={demoProduct.mobile.alt}
-          widths={[390, 780]}
-          sizes="(min-width: 992px) 25vw, 50vw"
-        />
+      <div class="product__phone" data-reveal>
+        <div class="product__screen" data-reveal-zoom>
+          <Image
+            src={demoProduct.mobile.image}
+            alt={demoProduct.mobile.alt}
+            widths={[390, 780]}
+            sizes="(min-width: 992px) 25vw, 50vw"
+          />
+          <GrafikMobileLive />
+        </div>
       </div>
     </div>
   </div>

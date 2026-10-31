@@ -16,6 +16,7 @@
 }
 
 .product__laptop {
+  position: relative;
   grid-column: 1 / 11;
   grid-row: 1;
   aspect-ratio: 16 / 10;
@@ -23,6 +24,12 @@
   border: var(--s-2) solid var(--c-glebia-raise);
   border-radius: var(--r-card);
   background-color: var(--c-glebia-line);
+}
+
+/* Zrzut z żywą warstwą (powiększany przy odsłonięciu przez media-reveal) */
+.product__screen {
+  position: absolute;
+  inset: 0;
 }
 
 .product__laptop img,
@@ -34,6 +41,8 @@
 }
 
 .product__phone {
+  position: relative;
+  z-index: 1;
   grid-column: 10 / -1;
   grid-row: 1;
   align-self: end;

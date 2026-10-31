@@ -1,0 +1,31 @@
+---
+/**
+ * GrafikMobileLive — żywa warstwa nad zrzutem aplikacji mobilnej grafiku (eksperyment, DEMO):
+ * z góry wpada powiadomienie o nowej zmianie, którą chwilę wcześniej wstawił kierownik (GrafikLive).
+ * W spoczynku powiadomienia nie ma, więc bez JS i przy reduced motion widać zrzut bazowy.
+ * Geometria: assets-src/demo/render.mjs → src/data/live/grafik-mobile.json. Ruch: modules/live/grafik.ts.
+ */
+import notif from '../../assets/demo/grafik-notif.webp';
+import geom from '../../data/live/grafik-mobile.json';
+import '../../styles/live.css';
+
+const s = geom.sprites['grafik-notif'];
+---
+
+<svg
+  class="live"
+  viewBox={`0 0 ${geom.width} ${geom.height}`}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  data-live="grafik-mobile"
+>
+  <image
+    class="live-grafik__sprite"
+    data-live-sprite="notif"
+    href={notif.src}
+    x={s.x}
+    y={s.y}
+    width={s.w}
+    height={s.h}
+  />
+</svg>

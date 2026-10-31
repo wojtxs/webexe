@@ -9,8 +9,8 @@
 import type { ImageMetadata } from 'astro';
 import fakturyBase from '../assets/demo/faktury-base.webp';
 import flotaBase from '../assets/demo/flota-base.webp';
-import grafikMobile from '../assets/demo/grafik-mobile.webp';
-import grafik from '../assets/demo/grafik.webp';
+import grafikBase from '../assets/demo/grafik-base.webp';
+import grafikMobileBase from '../assets/demo/grafik-mobile-base.webp';
 import przeplywyBase from '../assets/demo/przeplywy-base.webp';
 import serwisBase from '../assets/demo/serwis-base.webp';
 
@@ -69,11 +69,11 @@ export const demoProduct = {
   name: 'Grafik',
   lead: 'Planowanie zmian i urlopów dla firm produkcyjnych. Kierownik układa tydzień w kilka minut, a pracownicy widzą swoje zmiany w telefonie.',
   desktop: {
-    image: grafik,
+    image: grafikBase,
     alt: 'Tygodniowy grafik zmian: pracownicy w wierszach, dni w kolumnach, panel braków obsady',
   },
   mobile: {
-    image: grafikMobile,
+    image: grafikMobileBase,
     alt: 'Aplikacja mobilna: najbliższa zmiana pracownika i plan na bieżący tydzień',
   },
 } satisfies { name: string; lead: string; desktop: DemoShot; mobile: DemoShot };

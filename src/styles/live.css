@@ -108,3 +108,29 @@
   stroke-width: 2;
   opacity: 0;
 }
+
+/* Grafik: zmiany ze stanu „po” (sprite'y), kursor, fala kliknięcia i ramka, w spoczynku ukryte */
+.live-grafik__sprite,
+.live-grafik__cursor,
+.live-grafik__ripple,
+.live-grafik__ring {
+  opacity: 0;
+}
+
+.live-grafik__cursor path {
+  fill: var(--c-biel);
+  stroke: var(--c-glebia);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.live-grafik__ripple {
+  fill: none;
+  stroke: var(--c-laguna-end);
+  stroke-width: 2;
+}
+
+.live-grafik__ring {
+  fill: none;
+  stroke-width: 2.5;
+}

@@ -45,15 +45,22 @@
   .tabs span { display: grid; justify-items: center; gap: 3px; color: var(--faint); font-size: 11px; font-weight: 600; }
   .tabs span.on { color: var(--acc2); }
   .tabs svg.i { width: 22px; height: 22px; }
+  /* Powiadomienie o nowej zmianie: wpada z góry na żywo, w ?base go nie ma */
+  .notif { position: absolute; top: 52px; left: 12px; right: 12px; display: grid; grid-template-columns: 36px 1fr; gap: 2px 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); box-shadow: 0 10px 28px rgb(0 0 0 / 0.16); }
+  .notif i { grid-row: span 3; width: 36px; height: 36px; border-radius: 9px; background: linear-gradient(135deg, var(--acc2), var(--acc)); }
+  .notif small { color: var(--faint); font-size: 11px; font-weight: 600; }
+  .notif b { font-size: 14px; }
+  .notif span { color: var(--muted); font-size: 13px; }
+  .base .notif { visibility: hidden; }
 </style>
 </head>
 <body class="light">
   <div class="status"><span>9:41</span><span class="r"><b></b><i></i></span></div>
   <div class="scroll">
-    <div class="hello"><div><p>Czwartek, 30 października</p><h1>Cześć, Anna</h1></div><span class="bell" data-icon="bell"></span></div>
+    <div class="hello"><div><p>Czwartek, 30 października</p><h1>Cześć, Krzysztof</h1></div><span class="bell" data-icon="bell"></span></div>
     <div class="next">
       <span class="l">Następna zmiana</span>
-      <div class="h">Jutro · Zmiana I<small>6:00 – 14:00</small></div>
+      <div class="h">Jutro · Zmiana II<small>14:00 – 22:00</small></div>
       <span class="where" data-icon="pin">Hala B · Linia 3</span>
       <div class="b"><span class="s" data-icon="swap">Zamień zmianę</span><span class="p">Szczegóły</span></div>
     </div>
@@ -63,11 +70,17 @@
       <div class="day"><span class="d">Wt<b>28</b></span><span class="t">Zmiana I<small>6:00 – 14:00</small></span><span class="dot" style="background:var(--acc2)"></span></div>
       <div class="day off"><span class="d">Śr<b>29</b></span><span class="t">Wolne<small>&nbsp;</small></span><span></span></div>
       <div class="day"><span class="d">Czw<b>30</b></span><span class="t">Zmiana II<small>14:00 – 22:00</small></span><span class="dot" style="background:var(--acc)"></span></div>
-      <div class="day"><span class="d">Pt<b>31</b></span><span class="t">Zmiana I<small>6:00 – 14:00</small></span><span class="dot" style="background:var(--acc2)"></span></div>
+      <div class="day"><span class="d">Pt<b>31</b></span><span class="t">Zmiana II<small>14:00 – 22:00</small></span><span class="dot" style="background:var(--acc)"></span></div>
     </div>
-    <div class="req"><span class="av a">UW</span><span class="t">Wniosek urlopowy<small>10 – 14.11 · 5 dni</small></span><span class="badge">Zaakceptowany</span></div>
+    <div class="req"><span class="av c">KZ</span><span class="t">Nadgodziny w październiku<small>12 h · rozliczone z wypłatą</small></span><span class="badge">Zatwierdzone</span></div>
   </div>
+  <div class="notif" id="notif"><i></i><small>Grafik · teraz</small><b>Nowa zmiana: sobota 1.11</b><span>Zmiana II · 14:00–22:00 · Hala B</span></div>
   <nav class="tabs"><span class="on" data-icon="cal">Grafik</span><span data-icon="file">Wnioski</span><span data-icon="bell">Powiadomienia</span><span data-icon="user">Profil</span></nav>
 <script src="ui.js"></script>
+<script>
+  // ?base: zrzut pod żywą warstwę produktu (src/data/live/grafik-mobile.json); powiadomienie wpada z animacji
+  if (location.search.includes('base')) document.body.classList.add('base');
+  window.__geom = { width: innerWidth, height: innerHeight };
+</script>
 </body>
 </html>

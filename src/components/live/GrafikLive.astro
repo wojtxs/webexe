@@ -1,0 +1,72 @@
+---
+/**
+ * GrafikLive — żywa warstwa nad zrzutem grafiku zmian (eksperyment, DEMO): kursor klika lukę
+ * w sobotę, wskakuje Zmiana II, licznik braków spada z 2 na 1, a wiersz braku zmienia się
+ * w „Uzupełnione”. Zmiany to sprite'y ze stanu „po” (render wycina je z pełnego wariantu),
+ * w spoczynku ukryte, więc bez JS i przy reduced motion widać stan „przed” ze zrzutu bazowego.
+ * Geometria: assets-src/demo/render.mjs → src/data/live/grafik.json. Ruch: modules/live/grafik.ts.
+ */
+import badge from '../../assets/demo/grafik-badge.webp';
+import fill from '../../assets/demo/grafik-fill.webp';
+import row from '../../assets/demo/grafik-row.webp';
+import geom from '../../data/live/grafik.json';
+import '../../styles/live.css';
+
+interface Props {
+  /** Prefiks identyfikatora gradientu, unikalny na stronie */
+  uid: string;
+}
+
+const { uid } = Astro.props;
+const { sprites } = geom;
+const cell = geom.fill;
+const sprite = [
+  { key: 'fill', src: fill.src, ...sprites['grafik-fill'] },
+  { key: 'badge', src: badge.src, ...sprites['grafik-badge'] },
+  { key: 'row', src: row.src, ...sprites['grafik-row'] },
+];
+---
+
+<svg
+  class="live"
+  viewBox={`0 0 ${geom.width} ${geom.height}`}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  data-live="grafik"
+>
+  <defs>
+    <linearGradient id={`${uid}-ring`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" class="live__stop-start"></stop>
+      <stop offset="1" class="live__stop-end"></stop>
+    </linearGradient>
+  </defs>
+
+  {sprite.map((s) => (
+    <image
+      class="live-grafik__sprite"
+      data-live-sprite={s.key}
+      href={s.src}
+      x={s.x}
+      y={s.y}
+      width={s.w}
+      height={s.h}
+    />
+  ))}
+
+  <rect
+    class="live-grafik__ring"
+    data-live-ring
+    x={cell.x - 4}
+    y={cell.y - 4}
+    width={cell.w + 8}
+    height={cell.h + 8}
+    rx="11"
+    stroke={`url(#${uid}-ring)`}
+  />
+  <circle class="live-grafik__ripple" data-live-ripple cx="0" cy="0" r="4" />
+
+  <!-- Kursor: czubek strzałki w (0, 0), moduł przesuwa całą grupę -->
+  <g class="live-grafik__cursor" data-live-cursor>
+    <path d="M0 0 0 19 4.8 14.6 8.2 22.4 11.6 20.9 8.3 13.3 14.6 13.3Z"></path>
+  </g>
+</svg>

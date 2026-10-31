@@ -31,6 +31,10 @@
   .legend { display: grid; gap: 10px; padding: 14px 16px; }
   .legend span { display: flex; align-items: center; gap: 10px; color: var(--muted); }
   .legend i { width: 22px; height: 14px; border-radius: 4px; }
+  /* Luka uzupełniana na żywo: zmiana leży nad przerywaną ramką, w ?base jej nie ma */
+  .fill-cell { position: relative; }
+  #fill { position: absolute; inset: 8px; height: auto; }
+  .base #fill { visibility: hidden; }
 </style>
 </head>
 <body class="light">
@@ -56,8 +60,8 @@
       </div>
       <div class="right">
         <div class="card">
-          <div class="card-h"><h3>Braki obsady</h3><span class="badge warn plain" style="margin-left:auto">2</span></div>
-          <div class="warn-item"><b><span class="badge warn">Sob 1</span>Zmiana II</b><span class="muted">Brakuje 1 osoby z uprawnieniami na wózek</span><span class="faint" style="font-size:12px">Sugestia: K. Zieliński (12 h nadgodzin w miesiącu)</span></div>
+          <div class="card-h"><h3>Braki obsady</h3><span class="badge warn plain" id="badge" style="margin-left:auto">1</span></div>
+          <div class="warn-item" id="row"><b><span class="badge">Sob 1</span>Zmiana II</b><span class="muted">Uzupełnione: K. Zieliński</span><span class="faint" style="font-size:12px">Powiadomienie wysłane na telefon</span></div>
           <div class="warn-item"><b><span class="badge warn">Ndz 2</span>Zmiana I</b><span class="muted">Brakuje 2 osób</span><span class="faint" style="font-size:12px">3 osoby zgłosiły dostępność</span></div>
         </div>
         <div class="card">
@@ -90,7 +94,7 @@
   const people = [
     ['AN', 'a', 'A. Nowak', 'Operator CNC', [1, 1, 1, 1, 1, 0, 0]],
     ['MW', 'b', 'M. Wiśniewska', 'Kontrola jakości', [2, 2, 2, 'u', 'u', 0, 0]],
-    ['KZ', 'c', 'K. Zieliński', 'Magazynier', [1, 1, 0, 2, 2, 'g', 0]],
+    ['KZ', 'c', 'K. Zieliński', 'Magazynier', [1, 1, 0, 2, 2, 'f', 0]],
     ['PL', 'a', 'P. Lewandowska', 'Operator linii', [3, 3, 3, 0, 0, 1, 'g']],
     ['TK', 'b', 'T. Kamiński', 'Operator wózka', [2, 2, 2, 2, 0, 2, 0]],
     ['JW', 'c', 'J. Wójcik', 'Ślusarz', ['l', 'l', 'l', 1, 1, 0, 1]],
@@ -102,11 +106,24 @@
         const wk = i > 4 ? 'wk' : '';
         if (v === 0) return `<div class="${wk}"></div>`;
         if (v === 'g') return `<div class="${wk}"><div class="gap">+ brak obsady</div></div>`;
+        if (v === 'f')
+          return `<div class="${wk} fill-cell"><div class="gap">+ brak obsady</div><div class="sh s2" id="fill">Zmiana II<small>14–22</small></div></div>`;
         const [cls, t, h] = S[v];
         return `<div class="${wk}"><div class="sh ${cls}">${t}${h ? `<small>${h}</small>` : ''}</div></div>`;
       }).join(''),
     )
     .join('');
+
+  // ?base: stan „przed” pod żywą warstwę produktu (src/data/live/grafik.json): luka w sobotę,
+  // dwa braki obsady. Pełny wariant to stan „po”, z którego render wycina sprite'y.
+  if (location.search.includes('base')) {
+    document.body.classList.add('base');
+    document.getElementById('badge').textContent = '2';
+    document.getElementById('row').innerHTML =
+      '<b><span class="badge warn">Sob 1</span>Zmiana II</b><span class="muted">Brakuje 1 osoby z uprawnieniami na wózek</span><span class="faint" style="font-size:12px">Sugestia: K. Zieliński (12 h nadgodzin w miesiącu)</span>';
+  }
+  const r = document.getElementById('fill').getBoundingClientRect();
+  window.__geom = { width: innerWidth, height: innerHeight, fill: { x: r.x, y: r.y, w: r.width, h: r.height } };
 </script>
 </body>
 </html>
