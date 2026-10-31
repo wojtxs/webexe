@@ -29,8 +29,10 @@ const MediaReveal: Module = {
 
         targets.forEach((el) => {
           const zoom = el.querySelector('[data-reveal-zoom]');
+          // Bez once: trigger z once, który startuje już za sekcją (odtworzony scroll), usuwa się
+          // w trakcie refreshu innych triggerów i GSAP rzuca błędem. Domyślne toggleActions grają raz.
           const tl = gsap.timeline({
-            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+            scrollTrigger: { trigger: el, start: 'top 85%' },
           });
           tl.fromTo(
             el,

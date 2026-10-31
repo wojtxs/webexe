@@ -25,6 +25,8 @@ const GridDraw: Module = {
       ctx.full(() => {
         grids.forEach((grid) => {
           grid.classList.add('is-armed');
+          // Strona startująca za sekcją (odtworzony scroll) też dostaje onEnter: sekcje nad ekranem
+          // rysują się poza widokiem
           ScrollTrigger.create({
             trigger: grid.parentElement ?? grid,
             start: 'top 80%',

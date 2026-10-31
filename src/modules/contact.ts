@@ -38,7 +38,9 @@ const Contact: Module = {
             duration: durationToken('--d-enter'),
             ease: easeToken('--ease-enter'),
             stagger: LETTER_STAGGER,
-            scrollTrigger: { trigger: svg, start: 'top 90%', once: true },
+            // Bez once: trigger z once, który startuje już za sekcją (odtworzony scroll), usuwa się
+            // w trakcie refreshu innych triggerów i GSAP rzuca błędem. Domyślne toggleActions grają raz.
+            scrollTrigger: { trigger: svg, start: 'top 90%' },
           });
         }
         return () => {

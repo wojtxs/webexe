@@ -43,9 +43,9 @@ const SplitReveal: Module = {
             ease,
             stagger: WORD_STAGGER,
             delay: parseFloat(el.dataset.splitDelay ?? '0'),
-            ...(intro
-              ? { paused: true }
-              : { scrollTrigger: { trigger: el, start: 'top 85%', once: true } }),
+            // Bez once: trigger z once, który startuje już za sekcją (odtworzony scroll), usuwa się
+            // w trakcie refreshu innych triggerów i GSAP rzuca błędem. Domyślne toggleActions grają raz.
+            ...(intro ? { paused: true } : { scrollTrigger: { trigger: el, start: 'top 85%' } }),
           });
           if (intro) {
             void introDone.then(() => {

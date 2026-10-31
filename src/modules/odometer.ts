@@ -70,7 +70,9 @@ const Odometer: Module = {
                 yPercent: -(10 + digit) * 5,
                 duration: DURATION + i * STEP,
                 ease,
-                scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+                // Bez once: trigger z once, który startuje już za sekcją (odtworzony scroll), usuwa się
+                // w trakcie refreshu innych triggerów i GSAP rzuca błędem. Domyślne toggleActions grają raz.
+                scrollTrigger: { trigger: el, start: 'top 85%' },
               }
             );
           });
