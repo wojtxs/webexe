@@ -139,6 +139,16 @@
   color: var(--c-glebia);
 }
 
+.btn--ghost {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px currentColor;
+  color: var(--corner-ink, currentColor);
+}
+
+.btn[hidden] {
+  display: none;
+}
+
 /* Roll na znakach (Button.astro): każdy znak ma pod sobą kopię (text-shadow o wysokość linii)
    i na hoverze wyjeżdża w górę, znak po znaku. Słowo przycina swoje kopie, więc tekst może się łamać. */
 .btn__word {
@@ -273,10 +283,92 @@
   transition: color var(--d-ui) var(--ease-ui);
 }
 
-.corners__cta {
+/* CTA i przycisk menu nad panelem menu */
+.corners__actions {
   position: absolute;
   top: var(--s-4);
   right: var(--grid-padding);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.corners__cta {
+  transition:
+    opacity var(--d-ui) var(--ease-ui),
+    visibility var(--d-ui) var(--ease-ui);
+}
+
+.corners.is-menu-open .corners__cta {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.corners__menu {
+  transition: color var(--d-ui) var(--ease-ui);
+}
+
+.corners.is-top-dark .corners__menu,
+.corners.is-menu-open .corners__menu {
+  color: var(--c-piana);
+}
+
+/* --- Menu (modules/menu.ts): panel Głębi wyrasta z przycisku (clip-path), pozycje wchodzą po kolei --- */
+.menu {
+  position: absolute;
+  top: var(--s-4);
+  right: var(--grid-padding);
+  /* display, nie visibility: przejścia (też globalne 0.01ms przy reduced motion) nie opóźniają
+     pokazania, więc pierwsza pozycja dostaje fokus od razu po otwarciu */
+  display: none;
+  gap: var(--s-8);
+  width: min(26rem, calc(100vw - 2 * var(--grid-padding)));
+  padding: var(--s-24) var(--s-8) var(--s-8);
+  border-radius: var(--r-card);
+  background-color: var(--c-glebia);
+  color: var(--c-piana);
+}
+
+.menu.is-open {
+  display: grid;
+}
+
+.menu__list {
+  display: grid;
+  gap: var(--s-1);
+  list-style: none;
+}
+
+.menu__link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  color: inherit;
+  text-decoration: none;
+}
+
+.menu__x {
+  width: 0.45em;
+  height: 0.45em;
+  color: var(--c-ink-muted-dark);
+  transition: rotate var(--d-ui) var(--ease-ui);
+}
+
+.menu__link:is(:hover, :focus-visible) .menu__x {
+  stroke: url(#x-laguna);
+  rotate: 90deg;
+}
+
+.menu__contact {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-2);
+  color: var(--c-ink-muted-dark);
+}
+
+.menu__cta {
+  justify-self: start;
 }
 
 .corners.is-top-dark .corners__brand {
@@ -400,6 +492,28 @@
 @media (max-width: 991px) {
   .chapters {
     display: none;
+  }
+
+  /* Z menu stałe CTA jest w panelu: w rogu zostaje wordmark i przycisk menu */
+  .corners__actions:has(.corners__menu:not([hidden])) .corners__cta {
+    display: none;
+  }
+
+  .corners__menu {
+    padding: var(--s-3) var(--s-4);
+  }
+
+  /* Na mobile menu to pełny ekran z CTA na dole */
+  .menu {
+    inset: 0;
+    grid-template-rows: 1fr auto auto;
+    width: auto;
+    padding: var(--s-24) var(--grid-padding) var(--s-8);
+    border-radius: 0;
+  }
+
+  .menu__cta {
+    justify-self: stretch;
   }
 
   .corners__brand {

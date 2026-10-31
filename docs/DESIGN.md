@@ -95,8 +95,8 @@ Trzy tempa (z Chipsy), każde z jedną krzywą. Czas i krzywa idą zawsze w parz
 | Tempo | Czas | Krzywa | Użycie |
 |---|---|---|---|
 | UI | `--d-ui` 0.3 s | `--ease-ui` `cubic-bezier(0.33, 1, 0.68, 1)` (easeOutCubic) | hover, focus, kursor, etykiety, przełączenia stanów |
-| Wejście treści | `--d-enter` 1.2 s | `--ease-enter` `cubic-bezier(0.76, 0, 0.24, 1)` (easeInOutQuart) | reveale słów i mediów, wejście hero, front karty, akordeon |
-| Zmiana kontekstu | `--d-context` 2 s | `--ease-context` `cubic-bezier(0.65, 0, 0.35, 1)` (easeInOutCubic) | menu, kurtyna przejścia strony |
+| Wejście treści | `--d-enter` 1.2 s | `--ease-enter` `cubic-bezier(0.76, 0, 0.24, 1)` (easeInOutQuart) | reveale słów i mediów, wejście hero, front karty, akordeon, menu |
+| Zmiana kontekstu | `--d-context` 2 s | `--ease-context` `cubic-bezier(0.65, 0, 0.35, 1)` (easeInOutCubic) | kurtyna przejścia strony |
 
 | Inne | Wartość |
 |---|---|

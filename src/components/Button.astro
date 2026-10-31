@@ -1,6 +1,7 @@
 ---
 /**
  * Button — link albo przycisk. Wariant cta: gradient Laguna, tekst w Głębi (docs/DESIGN.md, Kolory).
+ * Wariant ghost: obrys i tekst w kolorze rogu (przycisk menu).
  * Hover „roll” na znakach (DESIGN.md, Ruch): tekst z treści rozbity na słowa i znaki, każdy znak
  * ze swoim --i do stopniowania w CSS. Czytniki dostają cały tekst z .sr-only, znaki są aria-hidden.
  * Treść z HTML-em (np. ikona) zostaje bez rozbicia.
@@ -8,10 +9,12 @@
 interface Props {
   href?: string;
   type?: 'button' | 'submit';
-  variant?: 'cta';
+  variant?: 'cta' | 'ghost';
   class?: string;
+  hidden?: boolean;
   /** Haki dla modułów (np. data-intro) */
   [key: `data-${string}`]: string | boolean | undefined;
+  [key: `aria-${string}`]: string | boolean | undefined;
 }
 
 const { href, type = 'button', variant = 'cta', class: className, ...rest } = Astro.props;
