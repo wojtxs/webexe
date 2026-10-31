@@ -29,6 +29,7 @@ const Loader: Module = {
   init(root: HTMLElement) {
     const html = document.documentElement;
     const mark = root.querySelector('.loader__x');
+    const lines = root.querySelectorAll('[data-loader-line]');
 
     const revert = addMotion((ctx) => {
       ctx.full(() => {
@@ -47,6 +48,8 @@ const Loader: Module = {
         const tl = gsap
           .timeline({ paused: true, onComplete: () => root.classList.add('is-done') })
           .to(mark, { y: -40, autoAlpha: 0, duration: exit * 0.6, ease }, 0)
+          // Wiersze wsuwają się w maskę w górę, w kierunku panelu
+          .to(lines, { yPercent: -110, duration: exit * 0.6, ease, stagger: 0.05 }, 0)
           .fromTo(
             root,
             { clipPath: 'inset(0% 0% 0% 0%)' },

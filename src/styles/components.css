@@ -686,6 +686,12 @@
   display: none;
 }
 
+.loader__stack {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-6);
+}
+
 .loader__x {
   width: clamp(4rem, 8vw, 6rem);
   fill: none;
@@ -709,5 +715,56 @@
 @keyframes loader-draw {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+/* Wiersze pod x: wjeżdżają spod maski (CSS), przy wyjściu loader.ts wsuwa je w maskę w górę */
+.loader__row {
+  display: block;
+  /* Zapas na ogonki liter (j, y), maska przycina na krawędzi paddingu */
+  padding-block: 0.1em;
+  overflow: hidden;
+}
+
+.loader__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1) var(--s-3);
+  max-width: calc(100vw - 2 * var(--grid-padding));
+  color: var(--c-ink-muted-dark);
+  translate: 0 110%;
+  animation: loader-rise var(--loader-d) var(--ease-enter) forwards;
+  animation-delay: calc(var(--loader-d) * 0.15);
+}
+
+/* Oba wiersze stoją przed wyjściem (x gotowy po 1.4 × --loader-d) */
+.loader__row + .loader__row .loader__line {
+  animation-delay: calc(var(--loader-d) * 0.3);
+}
+
+.loader__wordmark {
+  width: clamp(7rem, 12vw, 9rem);
+  color: var(--c-piana);
+}
+
+/* Separator x idzie z następnym słowem, więc wiersz łamie się przed x */
+.loader__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  white-space: nowrap;
+}
+
+.loader__sep {
+  width: 0.6em;
+  height: 0.6em;
+  color: var(--c-laguna-end);
+}
+
+@keyframes loader-rise {
+  to {
+    translate: 0 0;
   }
 }
