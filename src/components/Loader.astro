@@ -1,0 +1,17 @@
+---
+/**
+ * Loader (00) — znak x rysuje się dwiema kreskami na Głębi, potem panel zjeżdża w górę
+ * i wchodzi hero (docs/BRIEF.md, mapa strony; limit 2,5 s z docs/ARCHITECTURE.md, Ładowanie).
+ * Kreski rysuje CSS od pierwszej klatki, bez czekania na JS. Wyjście i wejście hero: modules/loader.ts.
+ * Widoczny tylko przy html.js-motion (Base.astro): reduced motion go nie pokazuje,
+ * a gdy JS zawiedzie, znika z klasą po 3 s.
+ * Placeholder x do czasu wordmarku SVG (D8): docelowo ten sam x co w wordmarku.
+ */
+---
+
+<div class="loader" aria-hidden="true" data-module="loader">
+  <svg class="loader__x" viewBox="0 0 24 24" focusable="false">
+    <path d="M6 6 18 18" pathLength="1"></path>
+    <path d="M18 6 6 18" pathLength="1"></path>
+  </svg>
+</div>

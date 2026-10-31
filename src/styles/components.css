@@ -311,3 +311,49 @@
   visibility: hidden;
   transform-origin: 0 0;
 }
+
+/* --- Loader (00, components/Loader.astro): x rysuje się dwiema kreskami na Głębi ---
+   Tylko przy html.js-motion (Base.astro); .is-leaving trzyma go przy wyjściu, gdy fallback zdejmie klasę. */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  place-items: center;
+  background-color: var(--c-glebia);
+}
+
+.js-motion .loader,
+.loader.is-leaving {
+  display: grid;
+}
+
+.loader.is-done {
+  display: none;
+}
+
+.loader__x {
+  width: clamp(4rem, 8vw, 6rem);
+  fill: none;
+  stroke: url(#x-laguna);
+  stroke-width: 3;
+  stroke-linecap: round;
+  overflow: visible;
+}
+
+.loader__x path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: loader-draw var(--d-default) var(--ease-default) forwards;
+}
+
+/* Druga kreska po 0.4 pierwszej: x gotowy po 1.4 × --d-default (to samo liczy modules/loader.ts) */
+.loader__x path + path {
+  animation-delay: calc(var(--d-default) * 0.4);
+}
+
+@keyframes loader-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

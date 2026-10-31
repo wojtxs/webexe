@@ -3,11 +3,13 @@
  *
  * Każdy [data-split="words"] w root dzieli się na słowa w maskach; słowo wjeżdża spod maski
  * raz, przy wejściu nagłówka na 85% wysokości ekranu. [data-split-delay] w sekundach.
+ * [data-split-intro] (H1 hero) gra bez ScrollTriggera, po wejściu strony (core/intro.ts, loader).
  * Czas i krzywa z tokenów: --d-slow, --ease-default.
  * Do czasu podziału nagłówek ukrywa klasa html.js-motion (Base.astro, fallback 3 s).
  * Reduced motion: moduł nic nie robi, tekst stoi od razu.
  */
 
+import { introDone } from '@core/intro';
 import type { Module } from '@core/lifecycle';
 import { addMotion, durationToken, easeToken } from '@core/motion';
 import { splitWords } from '@core/split';
@@ -28,23 +30,36 @@ const SplitReveal: Module = {
         const duration = durationToken('--d-slow');
         const ease = easeToken('--ease-default');
 
+        let alive = true;
+
         const splits = Array.from(targets).map((el) => {
           const split = splitWords(el, { wordsClass: 'split-word', mask: true });
+          const intro = el.hasAttribute('data-split-intro');
           gsap.set(el, { opacity: 1 });
 
-          gsap.from(split.words, {
+          const tween = gsap.from(split.words, {
             yPercent: 110,
             duration,
             ease,
             stagger: WORD_STAGGER,
             delay: parseFloat(el.dataset.splitDelay ?? '0'),
-            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+            ...(intro
+              ? { paused: true }
+              : { scrollTrigger: { trigger: el, start: 'top 85%', once: true } }),
           });
+          if (intro) {
+            void introDone.then(() => {
+              if (alive) tween.play();
+            });
+          }
 
           return split;
         });
 
-        return () => splits.forEach((split) => split.revert());
+        return () => {
+          alive = false;
+          splits.forEach((split) => split.revert());
+        };
       });
     }, root);
 

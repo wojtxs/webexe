@@ -26,25 +26,25 @@ const layers = ['Aplikacje', 'Integracje', 'Automatyzacje', 'Utrzymanie'];
   <div class="sticky-item hero__stage">
     <div class="container hero__inner">
       <div class="hero__copy" data-card-expand="fade">
-        <h1 id="hero-title" class="hero__title t-h1" data-split="words" data-split-delay="0.15">
+        <h1 id="hero-title" class="hero__title t-h1" data-split="words" data-split-intro>
           Budujemy <br class="br-d" />
           oprogramowanie <br class="br-d" />
           dla firm i zostajemy <br class="br-d" />
           przy nim na lata.
         </h1>
-        <p class="hero__lead t-lead">
+        <p class="hero__lead t-lead" data-intro>
           Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy je
           razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
         </p>
         <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
-        <Button href="#kontakt" class="hero__cta">
+        <Button href="#kontakt" class="hero__cta" data-intro>
           Porozmawiajmy o projekcie
         </Button>
       </div>
 
       <div class="hero__window" data-card-expand="window" aria-hidden="true"></div>
 
-      <figure class="hero__card" data-card-expand="card" data-module="hero-live">
+      <figure class="hero__card" data-card-expand="card" data-module="hero-live" data-intro="fade">
         <!-- TODO(treść): DEMO, zrzut fikcyjnego projektu z src/data/demo.ts; docelowo nagranie (D3, HERO-MEDIA) -->
         <Image
           class="hero__media"
@@ -54,6 +54,7 @@ const layers = ['Aplikacje', 'Integracje', 'Automatyzacje', 'Utrzymanie'];
           sizes="100vw"
           loading="eager"
           fetchpriority="high"
+          data-loader-wait
         />
         <FlotaLive uid="hero" />
         <figcaption class="sr-only">{demoHero.alt}</figcaption>

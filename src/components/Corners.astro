@@ -22,16 +22,16 @@ const chapters = [
 ---
 
 <header class="corners" data-module="nav-theme">
-  <a class="corners__brand" href="#hero" aria-label="webexe, początek strony">
+  <a class="corners__brand" href="#hero" aria-label="webexe, początek strony" data-intro>
     <Wordmark />
   </a>
 
   <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
-  <Button href="#kontakt" class="corners__cta">
+  <Button href="#kontakt" class="corners__cta" data-intro>
     Porozmawiajmy o projekcie
   </Button>
 
-  <nav class="chapters" aria-label="Rozdziały strony" data-module="chapter-map">
+  <nav class="chapters" aria-label="Rozdziały strony" data-module="chapter-map" data-intro>
     <ol class="chapters__list">
       {chapters.map((chapter) => (
         <li>
