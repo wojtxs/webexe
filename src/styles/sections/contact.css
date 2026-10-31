@@ -23,8 +23,13 @@
   gap: var(--s-2);
 }
 
-.contact__form {
+.contact__form,
+.contact__success {
   grid-column: 7 / -1;
+  grid-row: 2;
+}
+
+.contact__form {
   display: grid;
   gap: var(--s-6);
   justify-items: start;
@@ -40,6 +45,16 @@
   width: 100%;
 }
 
+/* Etykieta przygaszona, jaśnieje przy fokusie pola */
+.contact__field > .t-label {
+  color: var(--ink-muted);
+  transition: color var(--d-ui) var(--ease-ui);
+}
+
+.contact__field:focus-within > .t-label {
+  color: var(--c-piana);
+}
+
 .contact__input {
   width: 100%;
   padding: var(--s-4);
@@ -48,6 +63,46 @@
   background-color: var(--c-glebia-line);
   color: var(--c-piana);
   font: inherit;
+  transition:
+    border-color var(--d-ui) var(--ease-ui),
+    box-shadow var(--d-ui) var(--ease-ui);
+}
+
+/* Fokus pola: obrys i poświata Laguny zamiast domyślnego outline (przezroczysty zostaje dla trybu
+   wysokiego kontrastu) */
+.contact__input:focus-visible {
+  border-color: var(--c-laguna-end);
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-laguna-end) 22%, transparent);
+}
+
+.contact__input[aria-invalid='true'] {
+  border-color: var(--c-laguna-start);
+}
+
+/* Stan po wysłaniu (DEMO, modules/contact.ts) */
+.contact__success {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--s-4);
+}
+
+.contact__success[hidden] {
+  display: none;
+}
+
+.contact__success-x {
+  width: var(--s-12);
+  height: var(--s-12);
+}
+
+.contact__success-x path {
+  stroke-dasharray: 1;
+}
+
+.contact__success :focus {
+  outline: none;
 }
 
 .contact__textarea {
@@ -79,7 +134,13 @@
 @media (max-width: 991px) {
   .contact__title,
   .contact__direct,
-  .contact__form {
+  .contact__form,
+  .contact__success {
     grid-column: 1 / -1;
+  }
+
+  .contact__form,
+  .contact__success {
+    grid-row: 3;
   }
 }

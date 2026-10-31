@@ -105,4 +105,7 @@ export const demoContact = {
   messageLabel: 'Krótko o projekcie',
   consent: 'Zgadzam się na kontakt w sprawie zapytania. Szczegóły w',
   submit: 'Wyślij',
+  // Stan po wysłaniu: formularz jeszcze nic nie wysyła (D7), więc tekst mówi to wprost
+  successTitle: 'Dziękujemy',
+  successText: 'DEMO: formularz jeszcze nic nie wysyła (D7). Tu stanie potwierdzenie wysyłki.',
 };

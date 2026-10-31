@@ -3,10 +3,12 @@
  * 07 Kontakt / stopka — greybox (F3). Krótki formularz (D7) + bezpośredni kontakt,
  * ostatni węzeł x w gradiencie stoi nad CTA, wielki wordmark (D8) na dole
  * (docs/INSPIRACJE.md, wiersz Kontakt).
+ * Ruch (modules/contact.ts): litery wordmarku spod maski, drgnięcie pustego pola, stan sukcesu (DEMO).
  */
 import Button from '../components/Button.astro';
 import Grid from '../components/Grid.astro';
 import Wordmark from '../components/Wordmark.astro';
+import XMark from '../components/XMark.astro';
 import { demoContact } from '../data/demo';
 import '../styles/sections/contact.css';
 ---
@@ -16,6 +18,7 @@ import '../styles/sections/contact.css';
   class="section contact theme-dark"
   data-nav-theme="dark"
   aria-labelledby="contact-title"
+  data-module="contact"
 >
   <Grid activeNode={0} />
 
@@ -37,7 +40,7 @@ import '../styles/sections/contact.css';
     </div>
 
     <!-- TODO(treść): D7, obsługa wysyłki (nasz serwer pocztowy albo mailto) -->
-    <form class="contact__form" novalidate>
+    <form class="contact__form" novalidate data-contact="form">
       <label class="contact__field">
         <span class="t-label">{demoContact.fieldLabel}</span>
         <input class="contact__input" type="text" name="kontakt" autocomplete="email" />
@@ -56,14 +59,25 @@ import '../styles/sections/contact.css';
           .
         </span>
       </label>
-      <Button type="button" class="contact__submit">
+      <Button type="submit" class="contact__submit">
         {demoContact.submit}
       </Button>
     </form>
+
+    <!-- TODO(treść): DEMO, stan po wysłaniu; docelowo potwierdzenie z obsługi wysyłki (D7) -->
+    <div class="contact__success" role="status" data-contact="success" hidden>
+      <XMark class="contact__success-x" active draw />
+      <p class="t-h3" tabindex="-1" data-contact-rise>
+        {demoContact.successTitle}
+      </p>
+      <p class="muted" data-contact-rise>
+        {demoContact.successText}
+      </p>
+    </div>
   </div>
 
   <footer class="container contact__footer">
-    <Wordmark class="contact__wordmark" />
+    <Wordmark class="contact__wordmark" split />
     <a class="contact__legal link t-small" href="/polityka-prywatnosci">
       Polityka prywatności
     </a>

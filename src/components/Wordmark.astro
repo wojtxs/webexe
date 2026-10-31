@@ -2,16 +2,35 @@
 /**
  * Wordmark webexe. TODO(D8): docelowo plik SVG od projektanta albo ścieżki z Comfortaa 700,
  * z x jako osobną ścieżką. Do tego czasu tekst SVG w Comfortaa, rozciągnięty do szerokości viewBox.
+ * Wariant split: każda litera w osobnym tspan z własnym y, żeby mogła wyjechać spod krawędzi SVG
+ * (wielki wordmark w stopce, modules/contact.ts). Układ liter ten sam, bo textLength jest na <text>.
  */
 interface Props {
   class?: string;
+  split?: boolean;
 }
 
-const { class: className } = Astro.props;
+const { class: className, split = false } = Astro.props;
+const BASELINE = 212;
+const letters = Array.from('webexe');
 ---
 
 <svg class:list={['wordmark', className]} viewBox="0 0 1000 232" role="img" aria-label="webexe">
-  <text x="0" y="212" textLength="1000" lengthAdjust="spacingAndGlyphs">
-    webe<tspan class="wordmark__x">x</tspan>e
+  <text x="0" y={BASELINE} textLength="1000" lengthAdjust="spacingAndGlyphs">
+    {split ? (
+      letters.map((letter, i) => (
+        <tspan
+          class:list={['wordmark__letter', { wordmark__x: i === 4 }]}
+          y={BASELINE}
+          data-wordmark-letter
+        >
+          {letter}
+        </tspan>
+      ))
+    ) : (
+      <>
+        webe<tspan class="wordmark__x">x</tspan>e
+      </>
+    )}
   </text>
 </svg>
