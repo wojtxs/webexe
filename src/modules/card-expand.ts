@@ -4,6 +4,8 @@
  * Części: [data-card-expand="card"] karta, [data-card-expand="window"] okno startowe
  * (prostokąt z siatki CSS), [data-card-expand="fade"] treść, która gaśnie pod kartą.
  * Progres liczy ScrollTrigger ze scrub na torze sticky (root), bez pin.
+ * Karta dostaje --expand (0–1) i transform-origin w środku widocznej części, więc przechył
+ * za kursorem (tilt) obraca okno wokół jego środka i gaśnie przy rozszerzaniu (hero.css).
  * Reduced motion: moduł nic nie robi, karta stoi w oknie (CSS).
  */
 
@@ -24,10 +26,12 @@ const CardExpand: Module = {
     if (!card || !win) return;
 
     // Wstawki clip-path w px przy p = 0 (karta wygląda jak okno)
-    const start = { t: 0, r: 0, b: 0, l: 0, radius: 0 };
+    const start = { t: 0, r: 0, b: 0, l: 0, radius: 0, w: 0, h: 0 };
     const state = { p: 0 };
 
     const measure = () => {
+      // Pomiar bez przechyłu, który zmienia prostokąt karty
+      card.style.transform = 'none';
       const c = card.getBoundingClientRect();
       const w = win.getBoundingClientRect();
       start.t = w.top - c.top;
@@ -35,11 +39,18 @@ const CardExpand: Module = {
       start.b = c.bottom - w.bottom;
       start.l = w.left - c.left;
       start.radius = parseFloat(getComputedStyle(win).borderTopLeftRadius) || 0;
+      start.w = c.width;
+      start.h = c.height;
+      card.style.transform = '';
     };
 
     const apply = () => {
       const k = 1 - state.p;
       card.style.clipPath = `inset(${start.t * k}px ${start.r * k}px ${start.b * k}px ${start.l * k}px round ${start.radius}px)`;
+      const ox = (start.l * k + start.w - start.r * k) / 2;
+      const oy = (start.t * k + start.h - start.b * k) / 2;
+      card.style.transformOrigin = `${ox}px ${oy}px`;
+      card.style.setProperty('--expand', state.p.toFixed(4));
     };
 
     const revert = addMotion((ctx) => {
@@ -70,6 +81,8 @@ const CardExpand: Module = {
         return () => {
           root.classList.remove(EXPANDABLE);
           card.style.clipPath = '';
+          card.style.transformOrigin = '';
+          card.style.removeProperty('--expand');
         };
       });
     }, root);

@@ -120,6 +120,11 @@
   opacity: 0;
 }
 
+/* --- Odsłanianie mediów (media-reveal): ukryte do startu modułu, fallback jak wyżej --- */
+.js-motion [data-reveal] {
+  clip-path: inset(0 0 100% 0);
+}
+
 .split-word-mask {
   padding-block: 0.12em 0.18em;
   margin-block: -0.12em -0.18em;

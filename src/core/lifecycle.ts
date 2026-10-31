@@ -25,18 +25,28 @@ const registry: ModuleEntry[] = [];
 export async function initLifecycle(): Promise<void> {
   const elements = document.querySelectorAll<HTMLElement>('[data-module]');
 
-  await Promise.all(
-    Array.from(elements).map(async (el) => {
-      const name = el.dataset.module;
-      if (!name) return;
+  // Element może mieć kilka modułów rozdzielonych spacją: data-module="split-reveal tilt"
+  const entries = Array.from(elements).flatMap((el) =>
+    (el.dataset.module ?? '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((name) => ({ el, name }))
+  );
 
+  await Promise.all(
+    entries.map(async ({ el, name }) => {
+      let instance: Module;
       try {
-        const mod = (await import(`../modules/${name}.ts`)) as { default: Module };
-        const instance = mod.default;
-        await instance.init(el);
-        registry.push({ name, root: el, instance });
+        instance = ((await import(`../modules/${name}.ts`)) as { default: Module }).default;
       } catch {
         // Moduł jeszcze nie istnieje — cicho pomijamy (F1 to fundament, nie finalna strona)
+        return;
+      }
+      try {
+        await instance.init(el);
+        registry.push({ name, root: el, instance });
+      } catch (error) {
+        console.error(`[lifecycle] ${name}:`, error);
       }
     })
   );

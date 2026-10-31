@@ -1,0 +1,53 @@
+/**
+ * media-reveal.ts — media odsłaniają się przy wejściu w widok jak kurtyna zjeżdżająca w dół
+ * (docs/INSPIRACJE.md: kurtyny na zdjęciach z Alpanetu), a obraz w środku dojeżdża zoomem.
+ *
+ * [data-reveal] dostaje clip-path od góry do dołu, a jego [data-reveal-zoom] skalę 1.2 → 1.
+ * Do czasu startu modułu media ukrywa html.js-motion (utils.css, fallback 3 s w Base.astro).
+ * Reduced motion: moduł nic nie robi, media stoją od razu.
+ */
+
+import type { Module } from '@core/lifecycle';
+import { addMotion, durationToken, easeToken } from '@core/motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Skala obrazu w chwili odsłonięcia
+const ZOOM = 1.2;
+
+const MediaReveal: Module = {
+  init(root: HTMLElement) {
+    const targets = Array.from(root.querySelectorAll<HTMLElement>('[data-reveal]'));
+    if (!targets.length) return;
+
+    const revert = addMotion((ctx) => {
+      ctx.full(() => {
+        const duration = durationToken('--d-slow');
+        const ease = easeToken('--ease-default');
+
+        targets.forEach((el) => {
+          const zoom = el.querySelector('[data-reveal-zoom]');
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+          });
+          tl.fromTo(
+            el,
+            { clipPath: 'inset(0% 0% 100% 0%)' },
+            { clipPath: 'inset(0% 0% 0% 0%)', duration, ease, clearProps: 'clipPath' }
+          );
+          if (zoom) tl.fromTo(zoom, { scale: ZOOM }, { scale: 1, duration, ease }, 0);
+        });
+      });
+    }, root);
+
+    this.destroy = () => {
+      revert();
+    };
+  },
+
+  destroy() {},
+};
+
+export default MediaReveal;

@@ -35,17 +35,28 @@ import '../styles/sections/work.css';
       {demoProjects.map((project) => (
         <li class="work__item">
           <article class="work-card">
-            <div class="work-card__media" data-live-card data-cursor="Podgląd na żywo">
-              <Image
-                src={project.image}
-                alt={project.alt}
-                widths={[640, 1024, 1440, 2048]}
-                sizes="(min-width: 992px) 75vw, 100vw"
-              />
-              {project.live === 'flota' && <FlotaLive uid="work-flota" />}
-              {project.live === 'faktury' && <FakturyLive uid="work-faktury" />}
-              {project.live === 'przeplywy' && <PrzeplywyLive />}
-              {project.live === 'serwis' && <SerwisLive uid="work-serwis" />}
+            <div
+              class="work-card__media"
+              data-live-card
+              data-cursor="Podgląd na żywo"
+              data-tilt="3"
+              data-reveal
+            >
+              <div class="work-card__shot" data-reveal-zoom>
+                <div class="work-card__frame">
+                  <Image
+                    src={project.image}
+                    alt={project.alt}
+                    widths={[640, 1024, 1440, 2048]}
+                    sizes="(min-width: 992px) 75vw, 100vw"
+                  />
+                  {project.live === 'flota' && <FlotaLive uid="work-flota" />}
+                  {project.live === 'faktury' && <FakturyLive uid="work-faktury" />}
+                  {project.live === 'przeplywy' && <PrzeplywyLive />}
+                  {project.live === 'serwis' && <SerwisLive uid="work-serwis" />}
+                </div>
+                <div class="work-card__toner"></div>
+              </div>
             </div>
             <p class="work-card__tags t-label muted">{project.tags}</p>
             <h3 class="work-card__title t-h3">{project.title}</h3>

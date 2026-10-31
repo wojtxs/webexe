@@ -44,7 +44,14 @@ const layers = ['Aplikacje', 'Integracje', 'Automatyzacje', 'Utrzymanie'];
 
       <div class="hero__window" data-card-expand="window" aria-hidden="true"></div>
 
-      <figure class="hero__card" data-card-expand="card" data-module="hero-live" data-intro="fade">
+      <figure
+        class="hero__card"
+        data-card-expand="card"
+        data-module="hero-live"
+        data-intro="fade"
+        data-tilt="6"
+        data-tilt-area="[data-card-expand=window]"
+      >
         <!-- TODO(treść): DEMO, zrzut fikcyjnego projektu z src/data/demo.ts; docelowo nagranie (D3, HERO-MEDIA) -->
         <Image
           class="hero__media"

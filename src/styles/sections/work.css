@@ -32,14 +32,47 @@
   margin-bottom: var(--s-2);
   border-radius: var(--r-card);
   background-color: var(--surface);
-  transform: scale(calc(1 - var(--squeeze, 0)));
+  /* Przechył za kursorem (tilt) i ściskanie przy szybkim scrollu (squeeze) w jednym transformie */
+  transform: perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+    scale(calc(1 - var(--squeeze, 0)));
 }
 
-.work-card__media img {
+/* Zrzut (powiększany przy odsłonięciu przez media-reveal) i ramka dojeżdżająca przy hoverze */
+.work-card__shot,
+.work-card__frame {
+  position: absolute;
+  inset: 0;
+}
+
+.work-card__frame {
+  transform: scale(calc(1.04 - var(--front, 1) * 0.04));
+}
+
+.work-card__frame img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Toner Głębi zdejmowany skośnym frontem (work-live: --front 0 → 1, --front-angle losowany).
+   Bez JS i przy reduced motion go nie ma (klasa is-front). */
+.work-card__toner {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background-color: var(--c-glebia);
+  opacity: 0.5;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    var(--front-angle, 100deg),
+    transparent calc(var(--front, 1) * 140% - 30%),
+    var(--c-glebia) calc(var(--front, 1) * 140% - 10%)
+  );
+}
+
+.work-card__media.is-front .work-card__toner {
+  display: block;
 }
 
 .work-card__desc {

@@ -59,6 +59,9 @@
   height: auto;
   overflow: visible;
   border-radius: 0;
+  /* Przechył za kursorem (tilt) gaśnie razem z rozszerzaniem karty (card-expand: --expand) */
+  transform: perspective(1600px) rotateX(calc(var(--tilt-x, 0deg) * (1 - var(--expand, 0))))
+    rotateY(calc(var(--tilt-y, 0deg) * (1 - var(--expand, 0))));
 }
 
 .hero__media {
