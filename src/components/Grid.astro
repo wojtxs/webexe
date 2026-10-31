@@ -4,6 +4,7 @@
  * Linie co 3 kolumny siatki 12-kolumnowej (4 kolumny wizualne), poniżej 992 px co połowę (2).
  * Węzeł x stoi tam, gdzie linia przecina górną granicę sekcji. activeNode = indeks linii
  * z węzłem w gradiencie (tylko CTA i bieżąca sekcja w mapie rozdziałów).
+ * Węzły rysują się przy wejściu sekcji (modules/grid-draw.ts), stąd wariant draw.
  */
 import XMark from './XMark.astro';
 
@@ -18,7 +19,7 @@ const { nodes = true, activeNode = -1 } = Astro.props;
 <div class="grid-sys" aria-hidden="true">
   {Array.from({ length: 5 }, (_, k) => (
     <span class="grid-sys__line">
-      {nodes && <XMark class="grid-sys__node" active={k === activeNode} />}
+      {nodes && <XMark class="grid-sys__node" active={k === activeNode} draw />}
     </span>
   ))}
 </div>

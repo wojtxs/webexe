@@ -85,6 +85,70 @@
   transform: translate(-50%, -50%);
 }
 
+/* Węzeł aktywny (CTA) większy: ostatni węzeł strony */
+.grid-sys__node.xmark--active {
+  width: var(--s-6);
+  height: var(--s-6);
+}
+
+/* Rysowanie przy wejściu sekcji (modules/grid-draw.ts): kreski od lewej linii do prawej,
+   druga kreska po pierwszej, węzeł aktywny na końcu; po liniach jednorazowy akcent Laguny. */
+.grid-sys.is-armed .grid-sys__node path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--d-enter) var(--ease-enter);
+  transition-delay: calc(var(--k) * 90ms);
+}
+
+.grid-sys.is-armed .grid-sys__node path + path {
+  transition-delay: calc(var(--k) * 90ms + 250ms);
+}
+
+.grid-sys.is-armed .grid-sys__node.xmark--active path {
+  transition-delay: 700ms;
+}
+
+.grid-sys.is-armed .grid-sys__node.xmark--active path + path {
+  transition-delay: 950ms;
+}
+
+.grid-sys.is-drawn .grid-sys__node path {
+  stroke-dashoffset: 0;
+}
+
+.grid-sys__line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: var(--s-32);
+  background-image: linear-gradient(to bottom, transparent, var(--c-laguna-end));
+  opacity: 0;
+  transform-origin: 50% 0;
+}
+
+.grid-sys.is-drawn .grid-sys__line::after {
+  animation: grid-accent var(--d-context) var(--ease-context) calc(var(--k) * 90ms) both;
+}
+
+@keyframes grid-accent {
+  0% {
+    opacity: 1;
+    transform: scaleY(0);
+  }
+
+  35% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(var(--s-32));
+  }
+}
+
 @media (max-width: 991px) {
   .grid-sys {
     --grid-visual: 2;
