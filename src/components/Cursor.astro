@@ -1,0 +1,13 @@
+---
+/**
+ * Cursor — pierścień za kursorem na całej stronie (docs/INSPIRACJE.md, warstwa globalna Chipsy).
+ * Nad linkiem i przyciskiem rośnie, nad [data-cursor] zamienia się w pigułkę z tekstem atrybutu,
+ * nad polami formularza znika. Systemowy kursor zostaje (poza [data-cursor]). Ruch: modules/cursor.ts.
+ * Dotyk, reduced motion i bez JS: element ukryty.
+ */
+---
+
+<div class="cursor" aria-hidden="true" data-module="cursor">
+  <span class="cursor__ring"></span>
+  <span class="cursor__label t-label"></span>
+</div>

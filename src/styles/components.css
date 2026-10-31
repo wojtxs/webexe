@@ -295,21 +295,78 @@
   }
 }
 
-/* --- Kursor z etykietą (modules/cursor-label.ts): pigułka Laguna przy kursorze nad [data-cursor] --- */
-.cursor-label {
+/* --- Kursor (components/Cursor.astro, modules/cursor.ts) ---
+   Moduł prowadzi pozycję (x, y) i przełącza stany; zmiany wyglądu idą w tempie UI. */
+.cursor {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 50;
+  z-index: 60;
+  display: none;
+  pointer-events: none;
+}
+
+.cursor.is-active {
+  display: block;
+}
+
+.cursor__ring,
+.cursor__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  translate: -50% -50%;
+  transition:
+    scale var(--d-ui) var(--ease-ui),
+    opacity var(--d-ui) var(--ease-ui),
+    background-color var(--d-ui) var(--ease-ui);
+}
+
+.cursor__ring {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1.5px solid var(--c-laguna-end);
+  border-radius: 50%;
+}
+
+.cursor__label {
   padding: var(--s-2) var(--s-4);
   border-radius: var(--r-pill);
   background-image: var(--g-laguna);
   color: var(--c-biel);
   white-space: nowrap;
-  pointer-events: none;
   opacity: 0;
-  visibility: hidden;
-  transform-origin: 0 0;
+  scale: 0.6;
+}
+
+.cursor.is-link .cursor__ring {
+  background-color: color-mix(in srgb, var(--c-laguna-end) 12%, transparent);
+  scale: 1.5;
+}
+
+.cursor.is-down .cursor__ring {
+  scale: 0.8;
+}
+
+.cursor.is-label .cursor__ring {
+  opacity: 0;
+  scale: 0.4;
+}
+
+.cursor.is-label .cursor__label {
+  opacity: 1;
+  scale: 1;
+}
+
+.cursor.is-field .cursor__ring,
+.cursor.is-out .cursor__ring,
+.cursor.is-out .cursor__label {
+  opacity: 0;
+}
+
+/* Nad [data-cursor] pigułka zastępuje systemowy kursor */
+.has-cursor [data-cursor] {
+  cursor: none;
 }
 
 /* --- Loader (00, components/Loader.astro): x rysuje się dwiema kreskami na Głębi ---

@@ -12,6 +12,7 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/utils.css';
 import '../styles/components.css';
+import Cursor from '../components/Cursor.astro';
 
 interface Props extends HTMLAttributes<'html'> {
   title?: string;
@@ -87,6 +88,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
     <!-- Stałe elementy w rogach ekranu (strona główna) -->
     <slot name="chrome" />
+
+    <!-- Pierścień za kursorem (tylko precyzyjny kursor i pełny ruch) -->
+    <Cursor />
 
     <!-- Treść strony -->
     <main id="main-content" data-module="split-reveal media-reveal tilt">
