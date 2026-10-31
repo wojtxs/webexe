@@ -30,6 +30,10 @@ const screens = [
 
 // Zrzuty pojedynczych elementów z pełnego wariantu: [ekran, selektor, plik, alone]
 const SPRITES = [
+  ['flota', '#toast-app', 'flota-toast-app', true],
+  ['flota', '#toast-int', 'flota-toast-int', true],
+  ['flota', '#toast-auto', 'flota-toast-auto', true],
+  ['flota', '#toast-ops', 'flota-toast-ops', true],
   ['serwis', '#new-ticket', 'serwis-ticket', false],
   ['grafik', '#badge', 'grafik-badge', false],
   ['grafik', '#row', 'grafik-row', false],
@@ -66,7 +70,11 @@ for (const [screen, width, height, hasBase] of screens) {
       // Najpierw zwykłe, potem „alone”, bo te ukrywają resztę strony
       const own = SPRITES.filter(([s]) => s === screen).sort((a, b) => Number(a[3]) - Number(b[3]));
       for (const [, selector, file, alone] of own) {
-        const box = await page.locator(selector).boundingBox();
+        // Prostokąt z DOM, bo sprite bywa ukryty (visibility) w zwykłym zrzucie
+        const box = await page.$eval(selector, (el) => {
+          const r = el.getBoundingClientRect();
+          return { x: r.x, y: r.y, width: r.width, height: r.height };
+        });
         const pad = alone ? PAD : 0;
         // Margines przycięty do widoku, bo zrzut i tak nie wyjdzie poza stronę
         const x0 = Math.max(box.x - pad, 0);
@@ -77,12 +85,14 @@ for (const [screen, width, height, hasBase] of screens) {
           width: Math.min(box.x + box.width + pad, width) - x0,
           height: Math.min(box.y + box.height + pad, height) - y0,
         };
+        let isolate = null;
         if (alone) {
-          await page.addStyleTag({
+          isolate = await page.addStyleTag({
             content: `html, body { background: transparent !important; } body * { visibility: hidden; } ${selector}, ${selector} * { visibility: visible; }`,
           });
         }
         await toWebp(await page.screenshot({ clip, omitBackground: alone }), file);
+        await isolate?.evaluate((el) => el.remove());
         sprites[file] = { x: clip.x, y: clip.y, w: clip.width, h: clip.height };
         console.log(`${file}.webp`);
       }

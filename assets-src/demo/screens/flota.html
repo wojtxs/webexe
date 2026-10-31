@@ -30,6 +30,13 @@
   .bars i { width: 100%; border-radius: 4px 4px 2px 2px; background: var(--panel2); }
   .base .veh[data-route] .bar > i { visibility: hidden; }
   .bars i.on { background: linear-gradient(180deg, var(--acc), var(--acc2)); }
+  /* Powiadomienia do kanału w hero (sprite'y „alone”): wszystkie w jednym miejscu nad mapą, na zrzutach niewidoczne */
+  .toast { position: fixed; left: 747px; bottom: 112px; width: 262px; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); box-shadow: 0 12px 30px rgb(0 0 0 / 0.35); visibility: hidden; }
+  .toast .ti { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: color-mix(in srgb, var(--acc) 18%, transparent); color: var(--acc); }
+  .toast .ti.b { background: color-mix(in srgb, var(--acc2) 22%, transparent); color: var(--acc2); }
+  .toast .ti svg.i { width: 16px; height: 16px; }
+  .toast b { display: block; font-size: 12.5px; }
+  .toast small { display: block; color: var(--muted); font-size: 11.5px; }
 </style>
 </head>
 <body class="dark">
@@ -80,6 +87,10 @@
     </section>
   </main>
 </div>
+<div class="toast" id="toast-app"><span class="ti b" data-icon="plus"></span><div><b>Nowe zlecenie #4822</b><small>Gdańsk → Łódź · z portalu klienta</small></div></div>
+<div class="toast" id="toast-int"><span class="ti b" data-icon="refresh"></span><div><b>Synchronizacja z ERP</b><small>12 zleceń i 3 faktury · 14:03</small></div></div>
+<div class="toast" id="toast-auto"><span class="ti" data-icon="bolt"></span><div><b>Agent powiadomił klienta</b><small>KR 7734A: +25 min · SMS i e-mail</small></div></div>
+<div class="toast" id="toast-ops"><span class="ti" data-icon="check"></span><div><b>Wszystkie systemy działają</b><small>Kopia zapasowa 14:00 · 99,98%</small></div></div>
 <script src="ui.js"></script>
 <script>
   document.getElementById('nav').innerHTML = nav(
@@ -151,6 +162,9 @@
     const r = row.querySelector('.bar').getBoundingClientRect();
     geom.bars.push({ id: row.dataset.route, x: r.x, y: r.y, w: r.width, h: r.height });
   });
+  // Powiadomienia kanału hero: jeden prostokąt, bo wszystkie leżą w tym samym miejscu
+  const t = document.getElementById('toast-app').getBoundingClientRect();
+  geom.toast = { x: t.x, y: t.y, w: t.width, h: t.height };
   window.__geom = geom;
 </script>
 </body>

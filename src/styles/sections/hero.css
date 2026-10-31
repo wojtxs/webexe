@@ -81,7 +81,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--s-2);
+  /* Warstwy rozchodzą się, gdy karta rośnie do pełnej sceny (card-expand: --expand) */
+  gap: calc(var(--s-2) + var(--expand, 0) * var(--s-4));
   list-style: none;
 }
 
@@ -138,6 +139,11 @@
   .hero__layers {
     right: var(--s-4);
     bottom: var(--s-4);
+  }
+
+  /* Na mniejszej karcie kanał powiadomień wchodziłby pod etykiety warstw */
+  .hero__card .live-flota__toast {
+    display: none;
   }
 }
 

@@ -4,8 +4,14 @@
  * SVG ma viewBox zrzutu (1440 × 900) i preserveAspectRatio slice, czyli ten sam kadr co
  * object-fit: cover obrazu, więc trasy leżą dokładnie na mapie przy każdym kadrze.
  * Stan początkowy (postęp t0) jest w HTML: bez JS i przy reduced motion wygląda jak pełny zrzut.
- * Geometria: assets-src/demo/render.mjs → src/data/live/flota.json. Ruch: modules/live/flota.ts.
+ * Z feed dochodzi kanał powiadomień nad mapą (tylko hero): sprite'y po jednym na etykietę warstwy,
+ * w spoczynku ukryte. Geometria: assets-src/demo/render.mjs → src/data/live/flota.json.
+ * Ruch: modules/live/flota.ts, kanał: modules/hero-live.ts.
  */
+import toastApp from '../../assets/demo/flota-toast-app.webp';
+import toastAuto from '../../assets/demo/flota-toast-auto.webp';
+import toastInt from '../../assets/demo/flota-toast-int.webp';
+import toastOps from '../../assets/demo/flota-toast-ops.webp';
 import geom from '../../data/live/flota.json';
 import { pathD, pointAt, polyline, type Point } from '../../core/polyline';
 import '../../styles/live.css';
@@ -13,14 +19,22 @@ import '../../styles/live.css';
 interface Props {
   /** Prefiks identyfikatorów gradientów, unikalny na stronie */
   uid: string;
+  /** Kanał powiadomień (w kolejności etykiet warstw hero) */
+  feed?: boolean;
 }
 
-const { uid } = Astro.props;
+const { uid, feed = false } = Astro.props;
 const s = geom.scale;
 const routes = geom.routes.map((route) => {
   const [x, y] = pointAt(polyline(route.points as Point[]), route.t0);
   return { ...route, d: pathD(route.points as Point[]), x, y };
 });
+const toasts = [
+  { src: toastApp.src, ...geom.sprites['flota-toast-app'] },
+  { src: toastInt.src, ...geom.sprites['flota-toast-int'] },
+  { src: toastAuto.src, ...geom.sprites['flota-toast-auto'] },
+  { src: toastOps.src, ...geom.sprites['flota-toast-ops'] },
+];
 const bars = geom.bars.map((bar) => ({
   ...bar,
   t0: routes.find((route) => route.id === bar.id)?.t0 ?? 0,
@@ -92,4 +106,17 @@ const bars = geom.bars.map((bar) => ({
       )}
     </g>
   ))}
+
+  {feed &&
+    toasts.map((toast) => (
+      <image
+        class="live-flota__toast"
+        data-live-toast
+        href={toast.src}
+        x={toast.x}
+        y={toast.y}
+        width={toast.w}
+        height={toast.h}
+      />
+    ))}
 </svg>
