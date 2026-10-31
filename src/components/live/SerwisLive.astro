@@ -1,0 +1,45 @@
+---
+/**
+ * SerwisLive — żywa warstwa nad zrzutem portalu serwisowego (eksperyment, DEMO): nowe zgłoszenie
+ * wpada na górę kolumny „Nowe” i na chwilę podświetla się ramką. Zgłoszenie to zrzut samego
+ * elementu (serwis-ticket.webp), a w spoczynku stoi na swoim miejscu, więc całość wygląda jak pełny zrzut.
+ * Geometria: assets-src/demo/render.mjs → src/data/live/serwis.json. Ruch: modules/live/serwis.ts.
+ */
+import ticket from '../../assets/demo/serwis-ticket.webp';
+import geom from '../../data/live/serwis.json';
+import '../../styles/live.css';
+
+interface Props {
+  /** Prefiks identyfikatora gradientu, unikalny na stronie */
+  uid: string;
+}
+
+const { uid } = Astro.props;
+const t = geom.ticket;
+---
+
+<svg
+  class="live"
+  viewBox={`0 0 ${geom.width} ${geom.height}`}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  data-live="serwis"
+>
+  <defs>
+    <linearGradient id={`${uid}-ring`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" class="live__stop-start"></stop>
+      <stop offset="1" class="live__stop-end"></stop>
+    </linearGradient>
+  </defs>
+  <image data-live-ticket href={ticket.src} x={t.x} y={t.y} width={t.w} height={t.h} />
+  <rect
+    class="live-serwis__ring"
+    data-live-ring
+    x={t.x - 4}
+    y={t.y - 4}
+    width={t.w + 8}
+    height={t.h + 8}
+    rx="13"
+    stroke={`url(#${uid}-ring)`}
+  />
+</svg>

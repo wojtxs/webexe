@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Żywe warstwy nad zrzutami ekranów (components/live/*, eksperyment, DEMO).
+   SVG z viewBoxem zrzutu i preserveAspectRatio slice kadruje się jak object-fit: cover,
+   więc leży dokładnie na obrazie w karcie hero i w kartach realizacji.
+   ========================================================================== */
+
+.live {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.live--acc {
+  --live: var(--c-laguna-end);
+}
+
+.live--acc2 {
+  --live: var(--c-laguna-start);
+}
+
+.live__stop-start {
+  stop-color: var(--c-laguna-start);
+}
+
+.live__stop-end {
+  stop-color: var(--c-laguna-end);
+}
+
+.live__glow-from {
+  stop-color: var(--c-laguna-end);
+  stop-opacity: 0;
+}
+
+.live__glow-to {
+  stop-color: var(--c-laguna-end);
+  stop-opacity: 0.22;
+}
+
+/* Flota */
+.live-flota__trail {
+  fill: none;
+  stroke: var(--live);
+  stroke-linecap: round;
+}
+
+.live-flota__glow {
+  fill: var(--live);
+  opacity: 0.3;
+}
+
+.live-flota__car {
+  fill: var(--c-glebia);
+  stroke: var(--live);
+}
+
+.live-flota__pulse {
+  fill: none;
+  stroke: var(--live);
+  opacity: 0;
+}
+
+.live-flota__tip rect {
+  fill: var(--c-glebia-line);
+  stroke: var(--c-glebia-raise);
+}
+
+.live-flota__tip text {
+  fill: var(--c-ink-muted-dark);
+}
+
+.live-flota__tip .live-flota__tip-title {
+  fill: var(--c-piana);
+  font-weight: var(--w-h3);
+}
+
+/* Faktury */
+.live-faktury__box {
+  fill: var(--c-laguna-start);
+  fill-opacity: 0.09;
+  stroke: var(--c-laguna-start);
+  stroke-width: 1.5;
+}
+
+.live-faktury__tag {
+  fill: var(--c-laguna-start);
+}
+
+.live-faktury__hit text {
+  fill: var(--c-biel);
+  font-size: 8.5px;
+  font-weight: var(--w-label);
+}
+
+.live-faktury__scan {
+  opacity: 0;
+}
+
+/* Przepływy */
+.live-przeplywy__dot {
+  fill: var(--live);
+}
+
+/* Serwis */
+.live-serwis__ring {
+  fill: none;
+  stroke-width: 2;
+  opacity: 0;
+}

@@ -26,6 +26,7 @@
 }
 
 .work-card__media {
+  position: relative;
   aspect-ratio: 16 / 10;
   overflow: hidden;
   margin-bottom: var(--s-2);

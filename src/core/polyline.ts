@@ -1,6 +1,6 @@
 /**
  * polyline.ts — punkt na łamanej według ułamka długości (0…1).
- * Używane przez żywą warstwę hero: render w Astro (stan początkowy) i moduł hero-live (ruch).
+ * Używane przez żywe warstwy (components/live/*): render w Astro (stan początkowy) i modules/live/* (ruch).
  */
 
 export type Point = [number, number];

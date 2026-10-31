@@ -294,3 +294,20 @@
     padding: var(--s-3) var(--s-4);
   }
 }
+
+/* --- Kursor z etykietą (modules/cursor-label.ts): pigułka Laguna przy kursorze nad [data-cursor] --- */
+.cursor-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-pill);
+  background-image: var(--g-laguna);
+  color: var(--c-biel);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: 0 0;
+}

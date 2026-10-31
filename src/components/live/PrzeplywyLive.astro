@@ -1,0 +1,35 @@
+---
+/**
+ * PrzeplywyLive — żywa warstwa nad zrzutem monitora integracji (eksperyment, DEMO): pakiety danych
+ * płyną po połączeniach. Stan spoczynku (kropki w 22, 50 i 78% połączenia, jak w zrzucie) jest w HTML.
+ * Geometria: assets-src/demo/render.mjs → src/data/live/przeplywy.json. Ruch: modules/live/przeplywy.ts.
+ */
+import geom from '../../data/live/przeplywy.json';
+import { pointAt, polyline, type Point } from '../../core/polyline';
+import { PACKETS } from '../../modules/live/przeplywy-packets';
+import '../../styles/live.css';
+
+const wires = geom.wires.map((wire) => {
+  const line = polyline(wire.points as Point[]);
+  return {
+    id: wire.id,
+    dots: PACKETS.map((packet) => ({ ...packet, at: pointAt(line, packet.t0) })),
+  };
+});
+---
+
+<svg
+  class="live"
+  viewBox={`0 0 ${geom.width} ${geom.height}`}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  data-live="przeplywy"
+>
+  {wires.map((wire) => (
+    <g class="live--acc" data-live-wire={wire.id}>
+      {wire.dots.map((dot) => (
+        <circle class="live-przeplywy__dot" cx={dot.at[0]} cy={dot.at[1]} r={dot.r} />
+      ))}
+    </g>
+  ))}
+</svg>

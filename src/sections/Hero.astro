@@ -7,7 +7,7 @@
 import { Image } from 'astro:assets';
 import Button from '../components/Button.astro';
 import Grid from '../components/Grid.astro';
-import HeroLive from '../components/HeroLive.astro';
+import FlotaLive from '../components/live/FlotaLive.astro';
 import { demoHero } from '../data/demo';
 import '../styles/sections/hero.css';
 
@@ -55,7 +55,7 @@ const layers = ['Aplikacje', 'Integracje', 'Automatyzacje', 'Utrzymanie'];
           loading="eager"
           fetchpriority="high"
         />
-        <HeroLive />
+        <FlotaLive uid="hero" />
         <figcaption class="sr-only">{demoHero.alt}</figcaption>
         <ul class="hero__layers" aria-label="Warstwy systemu">
           {layers.map((layer) => (

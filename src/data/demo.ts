@@ -7,13 +7,12 @@
  * (D3 realizacje i produkt, D7 kontakt).
  */
 import type { ImageMetadata } from 'astro';
-import faktury from '../assets/demo/faktury.webp';
+import fakturyBase from '../assets/demo/faktury-base.webp';
 import flotaBase from '../assets/demo/flota-base.webp';
-import flota from '../assets/demo/flota.webp';
 import grafikMobile from '../assets/demo/grafik-mobile.webp';
 import grafik from '../assets/demo/grafik.webp';
-import przeplywy from '../assets/demo/przeplywy.webp';
-import serwis from '../assets/demo/serwis.webp';
+import przeplywyBase from '../assets/demo/przeplywy-base.webp';
+import serwisBase from '../assets/demo/serwis-base.webp';
 
 export interface DemoShot {
   image: ImageMetadata;
@@ -24,6 +23,8 @@ export interface DemoProject extends DemoShot {
   title: string;
   desc: string;
   tags: string;
+  /** Żywa warstwa nad zrzutem (components/live/*); obraz to zrzut bez elementów, które ona dorysowuje */
+  live: 'flota' | 'faktury' | 'przeplywy' | 'serwis';
 }
 
 export const demoProjects: DemoProject[] = [
@@ -31,34 +32,38 @@ export const demoProjects: DemoProject[] = [
     title: 'Kokpit floty',
     desc: 'System dyspozytorski dla firmy transportowej. Trasy, pojazdy i zlecenia w jednym miejscu zamiast arkuszy i telefonów.',
     tags: 'Aplikacja · Integracje',
-    image: flota,
+    image: flotaBase,
+    live: 'flota',
     alt: 'Pulpit dyspozytora: mapa Polski z trasami pojazdów, lista pojazdów w trasie i liczba zleceń dnia',
   },
   {
     title: 'Obieg faktur z agentem AI',
     desc: 'Agent odczytuje faktury z poczty i przypisuje je do projektów. Księgowość tylko sprawdza i zatwierdza.',
     tags: 'Automatyzacja · AI',
-    image: faktury,
+    image: fakturyBase,
+    live: 'faktury',
     alt: 'Kolejka faktur do akceptacji, podgląd dokumentu z zaznaczonymi polami i dane odczytane przez agenta',
   },
   {
     title: 'Sklep, ERP i kurierzy w jednym przepływie',
     desc: 'Zamówienia, stany magazynowe i etykiety synchronizują się same. Błędy wracają do kolejki, zanim zauważy je klient.',
     tags: 'Integracje · Utrzymanie',
-    image: przeplywy,
+    image: przeplywyBase,
+    live: 'przeplywy',
     alt: 'Monitor integracji: mapa połączeń między sklepem, ERP, magazynem, kurierami i księgowością oraz dziennik zdarzeń',
   },
   {
     title: 'Portal serwisowy',
     desc: 'Zgłoszenia od klientów, przydział techników i historia każdego urządzenia dla firmy serwisującej maszyny.',
     tags: 'Aplikacja',
-    image: serwis,
+    image: serwisBase,
+    live: 'serwis',
     alt: 'Tablica zgłoszeń serwisowych w kolumnach: nowe, w realizacji, czeka na części, zamknięte',
   },
 ];
 
-// Hero pokazuje pierwszy projekt: zrzut bez pojazdów, które dorysowuje żywa warstwa (HeroLive)
-export const demoHero: DemoShot = { ...demoProjects[0], image: flotaBase };
+// Hero pokazuje pierwszy projekt z tą samą żywą warstwą (FlotaLive)
+export const demoHero: DemoShot = demoProjects[0];
 
 export const demoProduct = {
   name: 'Grafik',

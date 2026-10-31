@@ -6,6 +6,10 @@
  */
 import { Image } from 'astro:assets';
 import Grid from '../components/Grid.astro';
+import FakturyLive from '../components/live/FakturyLive.astro';
+import FlotaLive from '../components/live/FlotaLive.astro';
+import PrzeplywyLive from '../components/live/PrzeplywyLive.astro';
+import SerwisLive from '../components/live/SerwisLive.astro';
 import { demoClients, demoNumbers, demoProjects } from '../data/demo';
 import '../styles/sections/work.css';
 ---
@@ -14,28 +18,34 @@ import '../styles/sections/work.css';
   id="realizacje"
   class="section work theme-dark"
   data-nav-theme="dark"
+  data-module="cursor-label"
   aria-labelledby="work-title"
 >
   <Grid />
 
-  <div class="container">
+  <div class="container" data-module="work-live">
     <!-- TODO(treść): nagłówek sekcji, roboczo nazwa z mapy w BRIEF -->
     <h2 id="work-title" class="section__title t-h2" data-split="words">
       Realizacje
     </h2>
 
     <ol class="work__list" data-module="squeeze">
-      <!-- TODO(treść): DEMO, fikcyjne projekty z src/data/demo.ts; docelowo D3 (obraz + pętla wideo) -->
+      <!-- TODO(treść): DEMO, fikcyjne projekty z src/data/demo.ts; docelowo D3 (obraz + pętla wideo).
+           Zamiast wideo gra żywa warstwa nad zrzutem (components/live/*, modules/work-live.ts). -->
       {demoProjects.map((project) => (
         <li class="work__item">
           <article class="work-card">
-            <div class="work-card__media">
+            <div class="work-card__media" data-live-card data-cursor="Podgląd na żywo">
               <Image
                 src={project.image}
                 alt={project.alt}
                 widths={[640, 1024, 1440, 2048]}
                 sizes="(min-width: 992px) 75vw, 100vw"
               />
+              {project.live === 'flota' && <FlotaLive uid="work-flota" />}
+              {project.live === 'faktury' && <FakturyLive uid="work-faktury" />}
+              {project.live === 'przeplywy' && <PrzeplywyLive />}
+              {project.live === 'serwis' && <SerwisLive uid="work-serwis" />}
             </div>
             <p class="work-card__tags t-label muted">{project.tags}</p>
             <h3 class="work-card__title t-h3">{project.title}</h3>

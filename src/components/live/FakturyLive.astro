@@ -1,0 +1,69 @@
+---
+/**
+ * FakturyLive — żywa warstwa nad zrzutem obiegu faktur (eksperyment, DEMO): skaner przesuwa się
+ * po dokumencie i po kolei zaznacza odczytane pola. Stan spoczynku (wszystkie ramki, bez skanera)
+ * jest w HTML i wygląda jak pełny zrzut.
+ * Geometria: assets-src/demo/render.mjs → src/data/live/faktury.json. Ruch: modules/live/faktury.ts.
+ */
+import geom from '../../data/live/faktury.json';
+import '../../styles/live.css';
+
+interface Props {
+  /** Prefiks identyfikatorów gradientów i przycięcia, unikalny na stronie */
+  uid: string;
+}
+
+const { uid } = Astro.props;
+const { paper } = geom;
+// Etykieta ramki jak w zrzucie: pigułka 16 px nad prawym górnym rogiem, ok. 5 px na znak
+const hits = geom.hits.map((hit) => {
+  const tagWidth = hit.label.length * 5 + 10;
+  return { ...hit, tagWidth, tagX: hit.x + hit.w - 6 - tagWidth };
+});
+---
+
+<svg
+  class="live"
+  viewBox={`0 0 ${geom.width} ${geom.height}`}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  data-live="faktury"
+>
+  <defs>
+    <linearGradient id={`${uid}-scan`} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" class="live__stop-start"></stop>
+      <stop offset="1" class="live__stop-end"></stop>
+    </linearGradient>
+    <linearGradient id={`${uid}-glow`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" class="live__glow-from"></stop>
+      <stop offset="1" class="live__glow-to"></stop>
+    </linearGradient>
+    <clipPath id={`${uid}-paper`}>
+      <rect x={paper.x} y={paper.y} width={paper.w} height={paper.h}></rect>
+    </clipPath>
+  </defs>
+
+  {hits.map((hit) => (
+    <g class="live-faktury__hit" data-live-hit>
+      <rect class="live-faktury__box" x={hit.x} y={hit.y} width={hit.w} height={hit.h} rx="4" />
+      <rect
+        class="live-faktury__tag"
+        x={hit.tagX}
+        y={hit.y - 9}
+        width={hit.tagWidth}
+        height="16"
+        rx="3"
+      />
+      <text x={hit.tagX + 5} y={hit.y + 2.5}>
+        {hit.label}
+      </text>
+    </g>
+  ))}
+
+  <g clip-path={`url(#${uid}-paper)`}>
+    <g class="live-faktury__scan" data-live-scan>
+      <rect x={paper.x} y={paper.y - 56} width={paper.w} height="56" fill={`url(#${uid}-glow)`} />
+      <rect x={paper.x} y={paper.y - 2} width={paper.w} height="2" fill={`url(#${uid}-scan)`} />
+    </g>
+  </g>
+</svg>

@@ -109,11 +109,26 @@
     [['inbox', 'Skrzynka', '4'], ['clock', 'Do akceptacji', '12'], ['check', 'Zatwierdzone'], ['x', 'Odrzucone'], ['-', 'Dane'], ['users', 'Dostawcy'], ['box', 'Projekty'], ['chart', 'Raporty'], ['cog', 'Ustawienia']],
     1,
   );
-  // Ramki wykrytych pól liczone z położenia elementów na dokumencie
+  // Ramki wykrytych pól liczone z położenia elementów na dokumencie.
+  // ?base: zrzut pod żywą warstwę realizacji (src/data/live/faktury.json): ramek nie ma, ich geometria
+  // i kartka (widoczna część w oknie podglądu) trafiają do window.__geom.
+  const BASE = location.search.includes('base');
   const paper = document.querySelector('.paper');
   const pb = paper.getBoundingClientRect();
+  const sb = document.querySelector('.stage').getBoundingClientRect();
+  const geom = {
+    width: innerWidth,
+    height: innerHeight,
+    paper: { x: pb.left, y: pb.top, w: pb.width, h: Math.min(pb.bottom, sb.bottom) - pb.top },
+    hits: [],
+  };
+  window.__geom = geom;
   paper.querySelectorAll('[data-hit]').forEach((t) => {
     const r = t.getBoundingClientRect();
+    if (BASE) {
+      geom.hits.push({ label: t.dataset.hit, x: r.left - 5, y: r.top - 4, w: r.width + 10, h: r.height + 8 });
+      return;
+    }
     const h = document.createElement('div');
     h.className = 'hit';
     h.dataset.l = t.dataset.hit;

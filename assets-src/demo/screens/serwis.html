@@ -22,6 +22,7 @@
   .tk .meta .avs { margin-left: auto; }
   .tk .prog { display: grid; gap: 6px; color: var(--muted); font-size: 12px; }
   .done { opacity: .72; }
+  .base #new-ticket { visibility: hidden; }
 </style>
 </head>
 <body class="light">
@@ -45,6 +46,7 @@
       <div class="board">
         <div class="col">
           <div class="col-h"><span class="dot" style="background:var(--acc2)"></span>Nowe<span class="n">5</span></div>
+          <div class="tk" id="new-ticket"><span class="id">#2042</span><span class="t">Robot paletyzujący, zatrzymanie awaryjne</span><div class="meta"><span class="badge bad">Pilne</span><span data-icon="pin"></span>Hala 1<span class="avs"><span class="av sm a">PL</span></span></div></div>
           <div class="tk"><span class="id">#2041</span><span class="t">Wózek widłowy, wyciek hydrauliki</span><div class="meta"><span class="badge bad">Pilne</span><span data-icon="pin"></span>Hala 2<span class="avs"><span class="av sm c">MK</span></span></div></div>
           <div class="tk"><span class="id">#2040</span><span class="t">Suwnica 5 t, hałas przy jeździe</span><div class="meta"><span class="badge mute">Normalny</span><span data-icon="pin"></span>Zakład Śrem</div></div>
           <div class="tk"><span class="id">#2039</span><span class="t">Przegląd UDT, podnośnik nożycowy</span><div class="meta"><span class="badge mute">Planowy</span><span data-icon="pin"></span>Magazyn A</div></div>
@@ -76,6 +78,10 @@
     [['list', 'Zgłoszenia', '23'], ['tool', 'Urządzenia', '312'], ['users', 'Technicy', '9'], ['box', 'Części'], ['users', 'Klienci'], ['-', 'Raporty'], ['chart', 'Czas reakcji'], ['cal', 'Przeglądy planowe']],
     0,
   );
+  // ?base: zrzut pod żywą warstwę realizacji (src/data/live/serwis.json); nowe zgłoszenie wpada z animacji
+  if (location.search.includes('base')) document.body.classList.add('base');
+  const r = document.getElementById('new-ticket').getBoundingClientRect();
+  window.__geom = { width: innerWidth, height: innerHeight, ticket: { x: r.x, y: r.y, w: r.width, h: r.height } };
 </script>
 </body>
 </html>

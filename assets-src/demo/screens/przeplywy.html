@@ -93,6 +93,11 @@
   const box = g.getBoundingClientRect();
   const c = (id) => { const r = g.querySelector(`[data-id="${id}"]`).getBoundingClientRect(); return [r.left - box.left + r.width / 2, r.top - box.top + r.height / 2]; };
   const NS = 'http://www.w3.org/2000/svg';
+  // ?base: zrzut pod żywą warstwę realizacji (src/data/live/przeplywy.json). Zielone połączenia bez kropek
+  // (pakiety dorysowuje strona), bursztynowe zostają w zrzucie, bo kolorów spoza tokenów strona nie ma.
+  const BASE = location.search.includes('base');
+  const geom = { width: innerWidth, height: innerHeight, wires: [] };
+  window.__geom = geom;
   const wire = (a, b, warn) => {
     const [x1, y1] = c(a); const [x2, y2] = c(b);
     const p = document.createElementNS(NS, 'path');
@@ -101,6 +106,17 @@
     p.setAttribute('fill', 'none'); p.setAttribute('stroke', warn ? 'var(--warn)' : 'var(--acc)'); p.setAttribute('stroke-width', 1.5); p.setAttribute('opacity', 0.55);
     svg.appendChild(p);
     const len = p.getTotalLength();
+    if (BASE && !warn) {
+      const ctm = p.getScreenCTM();
+      const points = [];
+      for (let i = 0; i <= 40; i++) {
+        const q = p.getPointAtLength((len * i) / 40);
+        const s = new DOMPoint(q.x, q.y).matrixTransform(ctm);
+        points.push([+s.x.toFixed(1), +s.y.toFixed(1)]);
+      }
+      geom.wires.push({ id: `${a}-${b}`, points });
+      return;
+    }
     [0.22, 0.5, 0.78].forEach((t, i) => {
       const pt = p.getPointAtLength(len * t);
       const d = document.createElementNS(NS, 'circle');
