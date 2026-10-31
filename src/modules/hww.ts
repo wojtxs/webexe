@@ -23,7 +23,7 @@ const HOLD = 3.5;
 const CHAR = 0.018;
 
 const build = (viz: HTMLElement): gsap.core.Timeline => {
-  const ease = easeToken('--ease-out');
+  const ease = easeToken('--ease-ui');
   const tl = gsap.timeline({ paused: true, repeat: -1 });
 
   viz.querySelectorAll<HTMLElement | SVGElement>('[data-viz]').forEach((el) => {

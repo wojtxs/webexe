@@ -11,7 +11,7 @@
  */
 
 import type { Module } from '@core/lifecycle';
-import { addMotion, easeToken } from '@core/motion';
+import { addMotion, durationToken, easeToken } from '@core/motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { fakturyLive } from './live/faktury';
@@ -31,8 +31,6 @@ const BUILDERS: Record<string, LiveBuilder> = {
 
 // Flota w hero jedzie w tempie dyspozytorni; w karcie podgląd ma pokazać ruch od razu
 const TIME_SCALE: Record<string, number> = { flota: 4 };
-// Przejście frontu (s), jak hover kart u Chipsy
-const FRONT = 1.3;
 // Kąty gradientu frontu: od lewej albo od prawej, z lekkim skosem
 const ANGLES = ['100deg', '260deg'];
 
@@ -44,7 +42,9 @@ const WorkLive: Module = {
 
     const revert = addMotion((ctx) => {
       ctx.full(() => {
-        const ease = easeToken('--ease-out');
+        // Front w tempie wejścia treści (jak hover kart u Chipsy)
+        const ease = easeToken('--ease-enter');
+        const duration = durationToken('--d-enter');
         const lives: Live[] = [];
         const cleanups: Array<() => void> = [];
 
@@ -68,13 +68,13 @@ const WorkLive: Module = {
               card.style.setProperty('--front-angle', gsap.utils.random(ANGLES));
             }
             live.animations.forEach((a) => a.resume());
-            gsap.to(front, { p: 1, duration: FRONT, ease, overwrite: true, onUpdate: setFront });
+            gsap.to(front, { p: 1, duration, ease, overwrite: true, onUpdate: setFront });
           };
           // Ruch staje dopiero pod pełnym tonerem, żeby nie zamarzał na odsłoniętej części
           const pause = () => {
             gsap.to(front, {
               p: 0,
-              duration: FRONT,
+              duration,
               ease,
               overwrite: true,
               onUpdate: setFront,

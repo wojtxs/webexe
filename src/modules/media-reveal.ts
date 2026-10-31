@@ -24,8 +24,8 @@ const MediaReveal: Module = {
 
     const revert = addMotion((ctx) => {
       ctx.full(() => {
-        const duration = durationToken('--d-slow');
-        const ease = easeToken('--ease-default');
+        const duration = durationToken('--d-enter');
+        const ease = easeToken('--ease-enter');
 
         targets.forEach((el) => {
           const zoom = el.querySelector('[data-reveal-zoom]');

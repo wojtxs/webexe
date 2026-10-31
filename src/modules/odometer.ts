@@ -24,7 +24,7 @@ const Odometer: Module = {
 
     const revert = addMotion((ctx) => {
       ctx.full(() => {
-        const ease = easeToken('--ease-out');
+        const ease = easeToken('--ease-ui');
 
         const built = targets.map((el) => {
           const text = el.textContent?.trim() ?? '';

@@ -17,7 +17,7 @@
 .hww__step {
   flex: 1 1 0;
   min-width: 0;
-  transition: flex-grow var(--d-default) var(--ease-default);
+  transition: flex-grow var(--d-enter) var(--ease-enter);
 }
 
 .hww__step + .hww__step {
@@ -45,8 +45,8 @@
   border-radius: var(--r-card);
   background-color: var(--surface);
   transition:
-    background-color var(--d-default) var(--ease-default),
-    color var(--d-default) var(--ease-default);
+    background-color var(--d-enter) var(--ease-enter),
+    color var(--d-enter) var(--ease-enter);
 }
 
 .hww__head {
@@ -59,7 +59,7 @@
   align-self: center;
   width: 30rem;
   opacity: 0;
-  transition: opacity var(--d-fast) var(--ease-out);
+  transition: opacity var(--d-ui) var(--ease-ui);
 }
 
 .hww__foot {
@@ -77,7 +77,7 @@
   font-weight: var(--w-h1);
   line-height: 0.8;
   letter-spacing: var(--ls-h1);
-  transition: opacity var(--d-fast) var(--ease-out);
+  transition: opacity var(--d-ui) var(--ease-ui);
 }
 
 .hww__body {
@@ -85,7 +85,7 @@
   gap: var(--s-8);
   width: 30rem;
   opacity: 0;
-  transition: opacity var(--d-fast) var(--ease-out);
+  transition: opacity var(--d-ui) var(--ease-ui);
 }
 
 /* Otwarta kolumna */

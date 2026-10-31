@@ -7,7 +7,7 @@
  */
 
 import type { Module } from '@core/lifecycle';
-import { addMotion, easeToken } from '@core/motion';
+import { addMotion, durationToken, easeToken } from '@core/motion';
 import gsap from 'gsap';
 
 // Odsunięcie etykiety od czubka kursora (px), żeby nie zasłaniała wskazanego miejsca
@@ -19,7 +19,8 @@ const CursorLabel: Module = {
 
     const revert = addMotion((ctx) => {
       ctx.full(() => {
-        const ease = easeToken('--ease-out');
+        const ease = easeToken('--ease-ui');
+        const duration = durationToken('--d-ui');
         const label = document.createElement('div');
         label.className = 'cursor-label t-label';
         label.setAttribute('aria-hidden', 'true');
@@ -49,7 +50,7 @@ const CursorLabel: Module = {
           gsap.to(label, {
             autoAlpha: target ? 1 : 0,
             scale: target ? 1 : 0.6,
-            duration: 0.3,
+            duration,
             ease,
             overwrite: 'auto',
           });
@@ -57,7 +58,7 @@ const CursorLabel: Module = {
 
         const leave = () => {
           current = null;
-          gsap.to(label, { autoAlpha: 0, scale: 0.6, duration: 0.3, ease, overwrite: 'auto' });
+          gsap.to(label, { autoAlpha: 0, scale: 0.6, duration, ease, overwrite: 'auto' });
         };
 
         root.addEventListener('pointermove', move);

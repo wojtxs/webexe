@@ -43,7 +43,7 @@ Ten plik ustala, jaką **mechanikę** bierzemy z referencji i w którym miejscu 
 
 ### Z naszymi dokumentami
 
-- **Otwarte:** `DESIGN.md` (Ruch) zakłada Lenisa z `syncTouch` testowanym na iOS, a obie referencje wyłączają Lenisa na dotyku. Rekomendacja: natywny scroll na dotyku. Do tego trzy tempa z Chipsy jako tokeny ruchu. Obie zmiany do decyzji przy specu hero, bo zmieniają wartości tokenów.
+- **Zamknięte 2026-10-31 (gałąź eksperymentu):** natywny scroll na dotyku i trzy tempa z Chipsy jako tokeny ruchu (`--d-ui`, `--d-enter`, `--d-context` z krzywymi) są w `DESIGN.md` (Ruch). Do wycofania, jeśli się nie sprawdzą.
 - **Zamknięte 2026-10-30:** `BRIEF.md`, `CLAUDE.md`, `DESIGN.md` i `ARCHITECTURE.md` nie wskazują już landonorris.com. Obowiązuje wygląd z `DESIGN.md` (Laguna), a palety v2 i v3 w `tokens.css` są do usunięcia w sesji kodu.
 
 ## 4. Motyw przewodni: system na siatce, węzły to znak x

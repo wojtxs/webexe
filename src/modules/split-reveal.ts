@@ -4,7 +4,7 @@
  * Każdy [data-split="words"] w root dzieli się na słowa w maskach; słowo wjeżdża spod maski
  * raz, przy wejściu nagłówka na 85% wysokości ekranu. [data-split-delay] w sekundach.
  * [data-split-intro] (H1 hero) gra bez ScrollTriggera, po wejściu strony (core/intro.ts, loader).
- * Czas i krzywa z tokenów: --d-slow, --ease-default.
+ * Czas i krzywa z tokenów: --d-enter, --ease-enter (tempo wejścia treści).
  * Do czasu podziału nagłówek ukrywa klasa html.js-motion (Base.astro, fallback 3 s).
  * Reduced motion: moduł nic nie robi, tekst stoi od razu.
  */
@@ -27,8 +27,8 @@ const SplitReveal: Module = {
 
     const revert = addMotion((ctx) => {
       ctx.full(() => {
-        const duration = durationToken('--d-slow');
-        const ease = easeToken('--ease-default');
+        const duration = durationToken('--d-enter');
+        const ease = easeToken('--ease-enter');
 
         let alive = true;
 

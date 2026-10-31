@@ -93,7 +93,7 @@
   border-radius: var(--r-pill);
   background-color: var(--c-piana);
   color: var(--c-glebia);
-  transition: color var(--d-default) var(--ease-default);
+  transition: color var(--d-ui) var(--ease-ui);
 }
 
 /* Bieżąca warstwa (hero-live zapala je po kolei): gradient Laguna wjeżdża przez opacity */
@@ -105,7 +105,7 @@
   border-radius: inherit;
   background-image: var(--g-laguna);
   opacity: 0;
-  transition: opacity var(--d-default) var(--ease-default);
+  transition: opacity var(--d-ui) var(--ease-ui);
 }
 
 .hero__layer.is-on {

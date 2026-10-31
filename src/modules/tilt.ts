@@ -23,7 +23,7 @@ const Tilt: Module = {
 
     const revert = addMotion((ctx) => {
       ctx.full(() => {
-        const ease = easeToken('--ease-out');
+        const ease = easeToken('--ease-ui');
         const cleanups = targets.map((el) => {
           const max = parseFloat(el.dataset.tilt ?? '') || 6;
           const areaSelector = el.dataset.tiltArea;

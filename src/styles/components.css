@@ -207,7 +207,7 @@
   left: var(--grid-padding);
   width: 7rem;
   color: var(--corner-ink);
-  transition: color var(--d-fast) var(--ease-out);
+  transition: color var(--d-ui) var(--ease-ui);
 }
 
 .corners__cta {
@@ -225,7 +225,7 @@
   bottom: var(--s-6);
   left: var(--grid-padding);
   color: var(--corner-muted);
-  transition: color var(--d-fast) var(--ease-out);
+  transition: color var(--d-ui) var(--ease-ui);
 }
 
 .corners.is-bottom-dark .chapters {
@@ -251,15 +251,15 @@
 .chapters__x {
   width: var(--s-3);
   height: var(--s-3);
-  transition: transform var(--d-fast) var(--ease-out);
+  transition: transform var(--d-ui) var(--ease-ui);
 }
 
 .chapters__label {
   opacity: 0;
   transform: translateX(calc(-1 * var(--s-2)));
   transition:
-    opacity var(--d-fast) var(--ease-out),
-    transform var(--d-fast) var(--ease-out);
+    opacity var(--d-ui) var(--ease-ui),
+    transform var(--d-ui) var(--ease-ui);
 }
 
 .chapters__link:is(:hover, :focus-visible, [aria-current]) .chapters__label {
@@ -315,6 +315,9 @@
 /* --- Loader (00, components/Loader.astro): x rysuje się dwiema kreskami na Głębi ---
    Tylko przy html.js-motion (Base.astro); .is-leaving trzyma go przy wyjściu, gdy fallback zdejmie klasę. */
 .loader {
+  /* Skrócone tempo wejścia, żeby loader zmieścił się w 2,5 s (LOADER_SCALE w modules/loader.ts) */
+  --loader-d: calc(var(--d-enter) * 0.6);
+
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -344,12 +347,12 @@
 .loader__x path {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: loader-draw var(--d-default) var(--ease-default) forwards;
+  animation: loader-draw var(--loader-d) var(--ease-enter) forwards;
 }
 
-/* Druga kreska po 0.4 pierwszej: x gotowy po 1.4 × --d-default (to samo liczy modules/loader.ts) */
+/* Druga kreska po 0.4 pierwszej: x gotowy po 1.4 × --loader-d (to samo liczy modules/loader.ts) */
 .loader__x path + path {
-  animation-delay: calc(var(--d-default) * 0.4);
+  animation-delay: calc(var(--loader-d) * 0.4);
 }
 
 @keyframes loader-draw {

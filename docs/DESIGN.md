@@ -90,15 +90,21 @@ Makiety referencyjne mają 1440 (desktop), 834 (tablet) i 390 (mobile). Wymiar z
 
 ## Ruch
 
-| Token | Wartość | Użycie |
-|---|---|---|
-| `--ease-default` | `cubic-bezier(0.65, 0.05, 0, 1)` | reveale, przejścia: szybki start, długie wyhamowanie |
-| `--ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | hover, małe UI |
-| `--d-fast` | 0.35 s | hover, focus |
-| `--d-default` | 0.75 s | reveale |
-| `--d-slow` | 1.1 s | intro hero, loader |
-| stagger linii | 0.08 s | SplitText lines |
-| Lenis | `lerp 0.1`, `syncTouch` testowany na iOS | — |
+Trzy tempa (z Chipsy), każde z jedną krzywą. Czas i krzywa idą zawsze w parze.
+
+| Tempo | Czas | Krzywa | Użycie |
+|---|---|---|---|
+| UI | `--d-ui` 0.3 s | `--ease-ui` `cubic-bezier(0.33, 1, 0.68, 1)` (easeOutCubic) | hover, focus, kursor, etykiety, przełączenia stanów |
+| Wejście treści | `--d-enter` 1.2 s | `--ease-enter` `cubic-bezier(0.76, 0, 0.24, 1)` (easeInOutQuart) | reveale słów i mediów, wejście hero, front karty, akordeon |
+| Zmiana kontekstu | `--d-context` 2 s | `--ease-context` `cubic-bezier(0.65, 0, 0.35, 1)` (easeInOutCubic) | menu, kurtyna przejścia strony |
+
+| Inne | Wartość |
+|---|---|
+| stagger linii | 0.08 s (SplitText lines) |
+| loader | kreski x i wyjście panelu w 0.6 × `--d-enter` (`--loader-d`), żeby całość zmieściła się w 2,5 s |
+| Lenis | `lerp 0.2`, na dotyku natywny scroll (bez `syncTouch`) |
+
+Pętle wewnątrz zrzutów aplikacji (kursor, powiadomienia, pakiety) mają własne czasy, bo udają ruch w produkcie, a nie ruch strony.
 
 Zasady:
 - **Ruch odpowiada na scroll albo wskaźnik.** Sam z siebie nic się nie porusza (bez pętli, lewitacji i obracających się odznak). Jedyny wyjątek to wideo z naszą treścią, które gra tylko wtedy, gdy jest w widoku.

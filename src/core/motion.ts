@@ -58,7 +58,7 @@ export function addMotion(register: (ctx: MotionContext) => void, scope?: Elemen
 }
 
 /**
- * Easing z tokenu CSS (np. '--ease-default': cubic-bezier(...)) jako nazwa easingu GSAP.
+ * Easing z tokenu CSS (np. '--ease-enter': cubic-bezier(...)) jako nazwa easingu GSAP.
  * Jedno źródło krzywych dla CSS i JS (docs/DESIGN.md, Ruch).
  */
 export function easeToken(token: string): string {
@@ -70,7 +70,7 @@ export function easeToken(token: string): string {
   return name;
 }
 
-/** Czas z tokenu CSS (np. '--d-slow': 1.1s) w sekundach. */
+/** Czas z tokenu CSS (np. '--d-enter': 1.2s) w sekundach. */
 export function durationToken(token: string): number {
   const value = cssVar(token);
   const n = parseFloat(value);
