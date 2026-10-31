@@ -1,8 +1,9 @@
 ---
 /**
  * 03 Realizacje i dowody — greybox (F3). Cała treść zależy od D3 (min. 4 projekty).
- * Duże karty na kolumnach siatki ze staggerem; dowody w komórkach siatki
- * (docs/INSPIRACJE.md, wiersze Realizacje i Dowody). Hover obraz → wideo i ściskanie w F5.
+ * Duże karty na kolumnach siatki ze staggerem (docs/INSPIRACJE.md, wiersz Realizacje).
+ * Dowody jak „Achievements” u Chipsy: logotypy w komórkach siatki stoją (sticky), a karta z liczbami
+ * wjeżdża na nie od dołu i wtedy ruszają liczniki (modules/proof.ts, odometer.ts).
  */
 import { Image } from 'astro:assets';
 import Grid from '../components/Grid.astro';
@@ -66,20 +67,27 @@ import '../styles/sections/work.css';
     </ol>
 
     <!-- TODO(treść): DEMO, zmyślone liczby i klienci z src/data/demo.ts; docelowo D3 -->
-    <ul class="proof" aria-label="Dowody" data-module="odometer">
-      {demoNumbers.map((item) => (
-        <li class="proof__cell proof__cell--number">
-          <span class="proof__value t-h2" data-odometer>
-            {item.value}
-          </span>
-          <span class="t-small muted">{item.label}</span>
-        </li>
-      ))}
-      {demoClients.map((client) => (
-        <li class="proof__cell">
-          <span class="proof__client">{client}</span>
-        </li>
-      ))}
-    </ul>
+    <div class="proof" data-module="proof odometer">
+      <ul class="proof__clients" aria-label="Klienci">
+        {demoClients.map((client) => (
+          <li class="proof__cell">
+            <span class="proof__client">{client}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="proof__card">
+        <ul class="proof__numbers" aria-label="Liczby">
+          {demoNumbers.map((item) => (
+            <li class="proof__number">
+              <span class="proof__value t-h1" data-odometer>
+                {item.value}
+              </span>
+              <span class="t-small muted">{item.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   </div>
 </section>

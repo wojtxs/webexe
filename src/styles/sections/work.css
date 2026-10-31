@@ -79,12 +79,24 @@
   max-width: var(--prose-max-width);
 }
 
+/* Dowody: logotypy w komórkach siatki stoją (sticky), karta z liczbami wjeżdża na nie od dołu.
+   Odstęp przed kartą to droga wjazdu, odstęp pod nią to chwila, w której karta leży na logotypach. */
 .proof {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: subgrid;
   margin-top: var(--s-32);
+  padding-bottom: 30vh;
+}
+
+.proof__clients {
+  position: sticky;
+  top: var(--s-32);
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
   list-style: none;
+  transform-origin: 50% 0;
 }
 
 .proof__cell {
@@ -97,11 +109,33 @@
   text-align: center;
 }
 
-.proof__cell--number {
-  place-items: start;
+.proof__card {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  margin-top: 45vh;
+  padding: var(--s-16) var(--s-12);
+  border-radius: var(--r-panel);
+  background:
+    radial-gradient(
+      60% 90% at 85% 0%,
+      color-mix(in srgb, var(--c-laguna-end) 22%, transparent),
+      transparent 70%
+    ),
+    var(--c-glebia-raise);
+}
+
+.proof__numbers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-8);
+  list-style: none;
+}
+
+.proof__number {
+  display: grid;
   align-content: end;
   gap: var(--s-2);
-  text-align: left;
 }
 
 /* Licznik (odometer.ts): stała wysokość linii, żeby podział na cyfry nie przesuwał układu */
@@ -150,10 +184,29 @@
   .proof__cell {
     grid-column: span 4;
   }
+
+  .proof__card {
+    padding: var(--s-12) var(--s-8);
+  }
+
+  .proof__numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--s-12);
+  }
 }
 
 @media (max-width: 767px) {
   .proof__cell {
     grid-column: span 2;
+    min-height: 7rem;
+  }
+
+  .proof__clients {
+    top: var(--s-24);
+  }
+
+  .proof__card {
+    padding: var(--s-8) var(--s-6);
+    border-radius: var(--r-card);
   }
 }
