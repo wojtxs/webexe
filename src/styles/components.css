@@ -663,6 +663,27 @@
   cursor: none;
 }
 
+/* --- Kurtyna przejścia między stronami (components/Curtain.astro, modules/curtain.ts) ---
+   html.curtain-in (Base.astro) zakrywa stronę od pierwszej klatki, is-active trzyma ją w ruchu. */
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: none;
+  place-items: center;
+  background-color: var(--c-glebia);
+}
+
+.curtain-in .curtain,
+.curtain.is-active {
+  display: grid;
+}
+
+.curtain__x {
+  width: clamp(3rem, 6vw, 4.5rem);
+  height: auto;
+}
+
 /* --- Loader (00, components/Loader.astro): x rysuje się dwiema kreskami na Głębi ---
    Tylko przy html.js-motion (Base.astro); .is-leaving trzyma go przy wyjściu, gdy fallback zdejmie klasę. */
 .loader {

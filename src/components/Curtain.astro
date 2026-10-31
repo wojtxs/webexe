@@ -1,0 +1,14 @@
+---
+/**
+ * Curtain — kurtyna przejścia między stronami (docs/INSPIRACJE.md, warstwa globalna; DESIGN.md,
+ * tempo zmiany kontekstu). Panel Głębi z x wjeżdża od dołu z zaokrągloną górną krawędzią,
+ * strona się zmienia, a na nowej kurtyna odjeżdża w górę z zaokrągloną dolną krawędzią.
+ * Na stronie z loaderem (główna) kurtynę przejmuje loader. Ruch: modules/curtain.ts.
+ * Reduced motion i bez JS: zwykła nawigacja; html.curtain-in z Base.astro znika najpóźniej po 3 s.
+ */
+import XMark from './XMark.astro';
+---
+
+<div class="curtain" aria-hidden="true" data-module="curtain">
+  <XMark class="curtain__x" active />
+</div>

@@ -13,6 +13,7 @@ import '../styles/base.css';
 import '../styles/utils.css';
 import '../styles/components.css';
 import Cursor from '../components/Cursor.astro';
+import Curtain from '../components/Curtain.astro';
 
 interface Props extends HTMLAttributes<'html'> {
   title?: string;
@@ -64,6 +65,22 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
       }
     </script>
 
+    <!-- Kurtyna przejścia (modules/curtain.ts): po kliknięciu w link do innej strony zakrywa nową
+         od pierwszej klatki; fallback po 3 s, bez ruchu nic nie zakrywa -->
+    <script is:inline>
+      try {
+        if (
+          sessionStorage.getItem('wxe-curtain') &&
+          !matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          document.documentElement.classList.add('curtain-in');
+          setTimeout(() => document.documentElement.classList.remove('curtain-in'), 3000);
+        }
+      } catch {
+        // Bez sessionStorage strona po prostu nie ma kurtyny
+      }
+    </script>
+
     <slot name="head" />
   </head>
   <body>
@@ -91,6 +108,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
     <!-- Pierścień za kursorem (tylko precyzyjny kursor i pełny ruch) -->
     <Cursor />
+
+    <!-- Kurtyna przejścia między stronami -->
+    <Curtain />
 
     <!-- Treść strony -->
     <main id="main-content" data-module="split-reveal media-reveal tilt grid-draw">
