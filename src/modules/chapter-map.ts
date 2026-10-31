@@ -2,11 +2,13 @@
  * chapter-map.ts — mapa rozdziałów w lewym dolnym rogu.
  *
  * Bieżący rozdział (sekcja przecinająca środek ekranu) dostaje aria-current="location",
- * co w CSS zapala jego x gradientem i pokazuje etykietę.
+ * co w CSS zostawia go w zwiniętej mapie i pokazuje etykietę. Postęp przejścia przez sekcję
+ * trafia do --progress na linku, a CSS rysuje nim kreski x. Reduced motion: x pełny (bez --progress).
  * Klik przewija Lenisem (z zachowaniem sticky torów); bez Lenisa działa zwykła kotwica.
  */
 
 import type { Module } from '@core/lifecycle';
+import { addMotion } from '@core/motion';
 import { getLenis } from '@core/scroll';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -41,6 +43,26 @@ const ChapterMap: Module = {
       });
     });
 
+    const revertMotion = addMotion((motion) => {
+      motion.full(() => {
+        const triggers = links.map((link) => {
+          const section = document.getElementById(link.dataset.chapter ?? '');
+          if (!section) return null;
+          return ScrollTrigger.create({
+            trigger: section,
+            start: 'top center',
+            end: 'bottom center',
+            onUpdate: (self) => link.style.setProperty('--progress', self.progress.toFixed(3)),
+            onRefresh: (self) => link.style.setProperty('--progress', self.progress.toFixed(3)),
+          });
+        });
+        return () => {
+          triggers.forEach((trigger) => trigger?.kill());
+          links.forEach((link) => link.style.removeProperty('--progress'));
+        };
+      });
+    }, root);
+
     const onClick = (e: MouseEvent) => {
       const link = (e.target as Element).closest<HTMLAnchorElement>('[data-chapter]');
       const lenis = getLenis();
@@ -52,6 +74,7 @@ const ChapterMap: Module = {
 
     this.destroy = () => {
       ctx.revert();
+      revertMotion();
       root.removeEventListener('click', onClick);
       links.forEach((link) => link.removeAttribute('aria-current'));
     };

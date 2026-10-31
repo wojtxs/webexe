@@ -2,7 +2,8 @@
 /**
  * Corners — stałe elementy w rogach ekranu (docs/INSPIRACJE.md, wiersz Nawigacja):
  * wordmark w lewym górnym, stałe CTA w prawym górnym, mapa rozdziałów w lewym dolnym.
- * Punkty mapy to znaki x, bieżący rozdział ma x w gradiencie (motyw, DESIGN.md).
+ * Punkty mapy to znaki x. Mapa jest zwinięta do bieżącego rozdziału, którego x rysuje się
+ * gradientem razem z postępem sekcji (motyw, DESIGN.md); hover albo focus rozwija całą listę.
  * Kolory rogów zmienia nav-theme według [data-nav-theme] pod rogiem; mapę prowadzi chapter-map.
  */
 import Button from './Button.astro';
@@ -36,7 +37,10 @@ const chapters = [
       {chapters.map((chapter) => (
         <li>
           <a class="chapters__link" href={`#${chapter.id}`} data-chapter={chapter.id}>
-            <XMark class="chapters__x" />
+            <span class="chapters__mark">
+              <XMark class="chapters__x" />
+              <XMark class="chapters__x chapters__x--progress" draw />
+            </span>
             <span class="chapters__label t-label">{chapter.label}</span>
           </a>
         </li>

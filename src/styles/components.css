@@ -296,28 +296,73 @@
   color: var(--c-ink-muted-dark);
 }
 
+/* Zwinięta: widać tylko bieżący rozdział. Hover albo focus rozwija listę w górę (wiersze 0fr → 1fr).
+   Bez bieżącego (bez JS) lista jest rozwinięta. */
 .chapters__list {
   display: grid;
-  gap: var(--s-1);
   list-style: none;
+}
+
+.chapters__list > li {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--d-ui) var(--ease-ui),
+    opacity var(--d-ui) var(--ease-ui);
+}
+
+.chapters__list > li:has([aria-current]),
+.chapters:is(:hover, :focus-within) .chapters__list > li,
+.chapters:not(:has([aria-current])) .chapters__list > li {
+  grid-template-rows: 1fr;
+  opacity: 1;
 }
 
 .chapters__link {
   display: flex;
   align-items: center;
   gap: var(--s-3);
-  padding-block: var(--s-1);
+  /* Bez paddingu: zwinięty wiersz (0fr) musi zejść do zera, odstęp daje etykieta */
+  min-height: 0;
+  overflow: hidden;
   color: inherit;
   text-decoration: none;
 }
 
-.chapters__x {
+.chapters__mark {
+  position: relative;
+  flex: none;
   width: var(--s-3);
   height: var(--s-3);
-  transition: transform var(--d-ui) var(--ease-ui);
+  transition: scale var(--d-ui) var(--ease-ui);
+}
+
+.chapters__x {
+  width: 100%;
+  height: 100%;
+}
+
+/* Bieżący x: pod spodem przygaszony, na nim kreski rysowane postępem sekcji (--progress z chapter-map,
+   pierwsza kreska w pierwszej połowie, druga w drugiej; bez JS i przy reduced motion pełny) */
+.chapters__x--progress {
+  position: absolute;
+  inset: 0;
+  stroke: url(#x-laguna);
+  opacity: 0;
+}
+
+.chapters__x--progress path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - clamp(0, var(--progress, 1) * 2, 1));
+}
+
+.chapters__x--progress path + path {
+  stroke-dashoffset: calc(1 - clamp(0, var(--progress, 1) * 2 - 1, 1));
 }
 
 .chapters__label {
+  padding-block: var(--s-1);
   opacity: 0;
   transform: translateX(calc(-1 * var(--s-2)));
   transition:
@@ -325,7 +370,8 @@
     transform var(--d-ui) var(--ease-ui);
 }
 
-.chapters__link:is(:hover, :focus-visible, [aria-current]) .chapters__label {
+.chapters__link:is(:hover, :focus-visible, [aria-current]) .chapters__label,
+.chapters:is(:hover, :focus-within) .chapters__label {
   opacity: 1;
   transform: none;
 }
@@ -338,9 +384,16 @@
   color: var(--corner-ink);
 }
 
-.chapters__link[aria-current] .chapters__x {
-  stroke: url(#x-laguna);
-  transform: scale(1.5);
+.chapters__link[aria-current] .chapters__mark {
+  scale: 1.5;
+}
+
+.chapters__link[aria-current] .chapters__x:not(.chapters__x--progress) {
+  opacity: 0.3;
+}
+
+.chapters__link[aria-current] .chapters__x--progress {
+  opacity: 1;
 }
 
 /* Mapa tylko na desktopie; na mniejszych ekranach zostają wordmark i CTA */

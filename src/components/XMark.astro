@@ -3,13 +3,17 @@
  * XMark — znak x: dwie kreski o zaokrąglonych końcach (docs/DESIGN.md, Motywy).
  * Kolor z currentColor, wariant active ma gradient Laguna (#x-laguna z Base.astro).
  * Placeholder do czasu wordmarku SVG (D8): docelowo ten sam x co w wordmarku.
+ * Wariant draw: kreski z pathLength 1, do rysowania przez stroke-dashoffset w CSS
+ * (nie dla DrawSVG, który liczy długość sam).
  */
 interface Props {
   class?: string;
   active?: boolean;
+  draw?: boolean;
 }
 
-const { class: className, active = false } = Astro.props;
+const { class: className, active = false, draw = false } = Astro.props;
+const pathLength = draw ? 1 : undefined;
 ---
 
 <svg
@@ -18,6 +22,6 @@ const { class: className, active = false } = Astro.props;
   aria-hidden="true"
   focusable="false"
 >
-  <path d="M6 6 18 18"></path>
-  <path d="M18 6 6 18"></path>
+  <path d="M6 6 18 18" pathLength={pathLength}></path>
+  <path d="M18 6 6 18" pathLength={pathLength}></path>
 </svg>
