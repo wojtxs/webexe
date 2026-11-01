@@ -95,6 +95,7 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 | 2026-10-28 | Hero: „Build” zamiast wstęgi: terminal `npm run build` i blueprint strony (siatka, ramki z wymiarami z DOM, nagłówek w obrysie) rysują się na żywo, linia skanu renderuje gotowe hero, kursor to rentgen odsłaniający blueprint; nagłówek wersalikami; bez WebGL; nowy token `--f-mono` (krój systemowy); do potwierdzenia na żywo | wstęga odrzucona („do wyjebania, nie pasuje do firmy software”), dwie serie par A/B do maski (monolit, papierologia, szkic, bonsai, dłoń, zegarek) też. Build pokazuje, że jesteśmy software housem, samą stroną. DOM i typografia dają jakość pod kontrolą, czego nie dawały obiekty liczone w three.js |
 | 2026-10-28 | Hero: bohater po intro Build to obiekt `>_` (prompt terminala, chrom i szkło) jako zdjęcie z mapami w GL, rentgen w pasmach szumu jak twarz/kask u Lando; soczewka DOM usunięta; hero sticky 2 × vh, wejście w Manifest z blokiem kursora | użytkownikowi podobało się intro, ale hero „w ogóle nie odwzorowuje Lando”. Wybór z 4 obiektów (kursor, klawisz Enter, `>_`, procesor) po klatkach A/B z pasmami. Zdjęcie z mapami zamiast 3D liczonego na żywo, bo to daje jakość renderu (wniosek z 7 odrzuconych konceptów) |
 | 2026-10-30 | Kierunek z `docs/INSPIRACJE.md` (alpanet.pl: układ i narracja, chipsa.design: ruch i interakcje) zamiast landonorris.com. Strona showcase'owa z realizacjami w centrum, bez kosztorysu i konfiguratora. Motyw „siatka z węzłami x” zamiast pasm i poziomic. three.js tylko na żądanie speca sekcji. Obowiązuje wygląd z `DESIGN.md` (Laguna), palety v2 i v3 do usunięcia. D3: minimum 4 projekty. Deploy w Dockerze | żaden koncept hero z kierunku Lando nie przeszedł; referencje użytkownika dają sprawdzony układ i ruch, a showcase opiera stronę na prawdziwych realizacjach zamiast na efekcie GL |
+| 2026-11-01 | Realizacje na trzech poziomach: na głównej ok. 3 wybrane realizacje i odnośnik do `/realizacje`; `/realizacje` pokazuje wszystkie po kolei we własnym, dopracowanym układzie; `/realizacje/<projekt>` to pełny opis jednej realizacji | decyzja użytkownika: główna ma być krótka, a realizacji będzie przybywać i każda potrzebuje miejsca na pełny opis |
 
 ## Log sesji
 
@@ -527,3 +528,17 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - Pominięte jako nowe elementy: sekcja Czym się zajmujemy, FAQ, drugi przycisk w hero, „Dowiedz się więcej o Grafiku” (nie ma dokąd prowadzić), opis w stopce.
 - Sprawdzone (Edge, 1440, 834, 390): lead hero ma 5 linii na desktopie i 6 na mobile i mieści się nad kartą. Kroki akordeonu bez nadmiaru przy otwarciu. Poznaj nas: 6 zdań podświetlanych scrollem. Kontakt: lead nad bezpośrednim kontaktem. Tytuł strony nowy. Konsola bez błędów. Check, lint i build czyste.
 - Zostało: z przeglądu warto wziąć przy D3 pomysł na dwa techniczne zdania pod każdym projektem (kto korzysta, co połączono, co było trudne). Etykieta „Napiszcie albo zadzwońcie bezpośrednio” stoi teraz pod leadem, który też zaczyna się od „Napiszcie”, do poprawki przy D7.
+
+### 2026-11-01 — decyzja: realizacje z podstronami
+
+- Kontekst: po przeglądzie tekstów użytkownik ustalił, że sekcja realizacji na pewno się zmieni.
+- Decyzja (w logu decyzji, `BRIEF.md`: mapa strony, wiersz 03, D3; `INSPIRACJE.md`: wiersz Realizacje):
+  1. Strona główna: ok. 3 wybrane realizacje i odnośnik do podstrony z realizacjami.
+  2. `/realizacje`: wszystkie realizacje po kolei, w osobnym, dopracowanym układzie. Ma wyglądać świetnie, a nie jak lista.
+  3. `/realizacje/<projekt>`: pełny opis jednej realizacji. Kliknięcie karty na głównej albo na liście prowadzi tutaj.
+- Następne zadanie: spec z `docs/sections/_TEMPLATE.md` dla trzech widoków (sekcja 03 na głównej, lista, strona projektu). Spec trzeba zaakceptować przed kodem. Do rozstrzygnięcia w specu:
+  - Źródło danych: kolekcja treści Astro, jeden plik na realizację, zamiast `src/data/demo.ts`. Flaga albo kolejność wybiera 3 projekty na główną.
+  - Układ strony projektu: problem, co zbudowaliśmy, z czym połączone, technologie (te same ikony co w `.stack`), kto korzysta, co było trudne (pomysł z przeglądu tekstów: dwa techniczne zdania od programisty), zrzuty i nagrania. Liczby tylko prawdziwe.
+  - Nawigacja: następna realizacja na końcu strony projektu (bez odliczania), powrót do listy. Pasek systemu na podstronach: co pokazuje komórka rozdziału i co ma menu.
+  - Ruch: kurtyna przejścia między stronami już istnieje (`modules/curtain.ts`). Do ustalenia: czy karta na liście przechodzi w nagłówek strony projektu.
+  - Treść: D3 blokuje prawdziwe projekty. Greybox może stać na 4 projektach DEMO.
