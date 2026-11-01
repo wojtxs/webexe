@@ -10,6 +10,20 @@
   margin-bottom: var(--s-16);
 }
 
+/* Lead pod nagłówkiem (renderuje się, gdy BRIEF go poda) */
+.cases__lead {
+  grid-column: 1 / 8;
+  max-width: var(--prose-max-width);
+  margin-top: calc(var(--s-8) - var(--s-16));
+  margin-bottom: var(--s-16);
+}
+
+@media (max-width: 991px) {
+  .cases__lead {
+    grid-column: 1 / -1;
+  }
+}
+
 .cases__list {
   grid-column: 1 / -1;
   display: grid;

@@ -36,12 +36,13 @@ interface Props {
 const { entry, next } = Astro.props;
 const { data } = entry;
 
-// TODO(treść): etykiety faktów, bloków i rozdziałów (propozycja ze speca, do BRIEF po akceptacji)
+// Etykiety faktów z BRIEF (03 Realizacje: strona projektu); etykiety bloków są w ich frontmatterze
 const factLabels = { industry: 'Branża', scope: 'Zakres', year: 'Rok', status: 'Status' } as const;
 const facts = (Object.keys(factLabels) as (keyof typeof factLabels)[])
   .filter((key) => data.facts[key] !== undefined)
   .map((key) => ({ label: factLabels[key], value: data.facts[key] }));
 
+// TODO(treść): etykiety rozdziałów w pasku
 const chapters = [
   { id: 'projekt', label: 'Projekt' },
   { id: 'opis', label: 'Opis' },
@@ -65,7 +66,7 @@ const ogImage = new URL(og.src, Astro.site).href;
     <Grid />
 
     <div class="container" data-module="work-live">
-      <a class="case-hero__back t-label" href="/realizacje">
+      <a class="case-hero__back t-label" href="/realizacje/">
         <XMark class="case-hero__x" />
         Wszystkie realizacje
       </a>
@@ -234,7 +235,7 @@ const ogImage = new URL(og.src, Astro.site).href;
           alt={next.data.coverAlt}
           live={next.data.live}
           uid={`next-${next.id}`}
-          sizes="(min-width: 992px) 50vw, 100vw"
+          sizes="(min-width: 992px) 42vw, 100vw"
         />
       </a>
     </div>

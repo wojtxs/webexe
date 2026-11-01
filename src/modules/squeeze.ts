@@ -2,8 +2,10 @@
  * squeeze.ts — karty realizacji lekko się ściskają przy szybkim scrollu
  * (docs/INSPIRACJE.md, wiersz Realizacje; technika z chipsa-analiza.md, sekcja 11).
  *
- * Prędkość Lenisa w gsap.ticker → wygładzona wartość --squeeze na root (0…MAX).
- * CSS skaluje media kart: scale(1 - var(--squeeze)).
+ * Prędkość Lenisa w gsap.ticker → wygładzona wartość --squeeze (0…MAX) na kadrach [data-squeeze].
+ * CSS skaluje kadr: scale(1 - var(--squeeze)). Zmienna jest zarejestrowana bez dziedziczenia
+ * (@property w components.css), więc zmiana przelicza style samych kadrów, a nie całej listy
+ * z żywymi SVG w środku.
  * Bez Lenisa (reduced motion, dotyk bez Lenisa) moduł nic nie robi.
  */
 
@@ -20,7 +22,8 @@ const SMOOTHING = 0.08;
 const Squeeze: Module = {
   init(root: HTMLElement) {
     const lenis = getLenis();
-    if (!lenis) return;
+    const targets = Array.from(root.querySelectorAll<HTMLElement>('[data-squeeze]'));
+    if (!lenis || !targets.length) return;
 
     let squeeze = 0;
     let written = '';
@@ -33,14 +36,14 @@ const Squeeze: Module = {
       const value = squeeze.toFixed(4);
       if (value === written) return;
       written = value;
-      root.style.setProperty('--squeeze', value);
+      targets.forEach((el) => el.style.setProperty('--squeeze', value));
     };
 
     gsap.ticker.add(tick);
 
     this.destroy = () => {
       gsap.ticker.remove(tick);
-      root.style.removeProperty('--squeeze');
+      targets.forEach((el) => el.style.removeProperty('--squeeze'));
     };
   },
 

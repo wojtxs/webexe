@@ -97,6 +97,7 @@ const Curtain: Module = {
         const clearMorph = () => {
           morph?.style.removeProperty('view-transition-name');
           morph = null;
+          html.classList.remove('is-morphing');
         };
 
         const onClick = (event: MouseEvent) => {
@@ -117,6 +118,8 @@ const Curtain: Module = {
             clearMorph();
             source.style.setProperty('view-transition-name', name);
             morph = source;
+            // Kursor z etykietą nie trafia do zrzutu starej strony (components.css)
+            html.classList.add('is-morphing');
             return;
           }
 
@@ -141,7 +144,12 @@ const Curtain: Module = {
 
         // Przejście przeglądarki gra tylko morf; kurtyna, wstecz i reszta nawigacji idą bez niego
         const onSwap = (event: PageSwapEvent) => {
-          if (!morph) event.viewTransition?.skipTransition();
+          const transition = event.viewTransition;
+          if (morph || !transition) return;
+          // Pominięte przejście odrzuca swoje obietnice; bez catch konsola dostaje AbortError
+          transition.ready.catch(() => {});
+          transition.finished.catch(() => {});
+          transition.skipTransition();
         };
 
         const onShow = (event: PageTransitionEvent) => {

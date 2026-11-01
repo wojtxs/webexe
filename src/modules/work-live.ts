@@ -2,9 +2,10 @@
  * work-live.ts — karty realizacji „ożywają” (docs/INSPIRACJE.md, Realizacje: hover obraz → wideo).
  * Zamiast wideo gra żywa warstwa nad zrzutem (components/live/*, eksperyment, DEMO).
  *
- * Precyzyjny kursor: gra tylko karta pod kursorem, po zjechaniu wraca toner i ruch staje.
- * Fokus z klawiatury w [data-live-host] (karta z linkiem w tytule) gra jej kadr tak samo.
- * Dotyk: gra karta w środkowej części ekranu. Reduced motion i bez JS: zrzut w stanie z HTML.
+ * Precyzyjny kursor: gra tylko karta pod kursorem (cały [data-live-host], a bez hosta sam kadr),
+ * po zjechaniu wraca toner i ruch staje. Fokus z klawiatury w [data-live-host] (karta z linkiem
+ * w tytule) gra jej kadr tak samo. Dotyk: gra karta, która przecina środek ekranu.
+ * Reduced motion i bez JS: zrzut w stanie z HTML.
  * [data-live-card="view"] (okładka projektu): gra w widoku jak wideo, bez tonera i kursora.
  *
  * Wejście w kartę zdejmuje z niej toner Głębi skośnym frontem, a zrzut dojeżdża do skali 1
@@ -115,17 +116,20 @@ const WorkLive: Module = {
           }
 
           if (fine) {
-            card.addEventListener('pointerenter', play);
-            card.addEventListener('pointerleave', pause);
+            // Kursor nad całą kartą (tagi, tytuł, opis), nie tylko nad kadrem
+            const area = host ?? card;
+            area.addEventListener('pointerenter', play);
+            area.addEventListener('pointerleave', pause);
             cleanups.push(() => {
-              card.removeEventListener('pointerenter', play);
-              card.removeEventListener('pointerleave', pause);
+              area.removeEventListener('pointerenter', play);
+              area.removeEventListener('pointerleave', pause);
             });
           } else {
+            // Gra karta, która przecina środek ekranu: zawsze najwyżej jedna w kolumnie
             ScrollTrigger.create({
               trigger: card,
-              start: 'top 75%',
-              end: 'bottom 25%',
+              start: 'top center',
+              end: 'bottom center',
               onToggle: (self) => (self.isActive ? play() : pause()),
             });
           }

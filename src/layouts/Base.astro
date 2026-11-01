@@ -57,6 +57,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <link rel="preload" href={pjsNormalUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={pjsLatinExtUrl} as="font" type="font/woff2" crossorigin />
 
+    <!-- html.js: elementy, które działają tylko z JS (przycisk menu), stoją od pierwszej klatki -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
     <!-- Ukrycie nagłówków do czasu reveal'u słów (split-reveal); fallback po 3 s, bez ruchu nic nie ukrywa -->
     <script is:inline>
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {

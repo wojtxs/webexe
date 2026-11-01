@@ -6,7 +6,8 @@
  * zajmuje cały ekran (CSS), mechanika ta sama.
  * Otwarte menu: reszta strony inert, Lenis stoi, Esc albo klik poza panelem zamyka, fokus wraca
  * na przycisk. Klik w pozycję zamyka menu i przewija do rozdziału.
- * Reduced motion: panel pojawia się i znika bez ruchu. Bez JS przycisk zostaje ukryty.
+ * Reduced motion: panel pojawia się i znika bez ruchu. Bez JS przycisk ukrywa CSS (html bez klasy
+ * js), a destroy chowa go atrybutem hidden.
  */
 
 import type { Module } from '@core/lifecycle';
@@ -138,7 +139,7 @@ const Menu: Module = {
       lenis.scrollTo(hash);
     };
 
-    toggle.hidden = false;
+    toggle.hidden = false; // po destroy i ponownym init
     toggle.addEventListener('click', onToggle);
     panel.addEventListener('click', onLink);
     document.addEventListener('keydown', onKey);

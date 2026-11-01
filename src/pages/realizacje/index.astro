@@ -4,6 +4,7 @@
  * w dwóch kolumnach na siatce, prawa przesunięta w dół (stagger jak w Alpanecie). Karty grają
  * pod kursorem jak na głównej (work-live, tilt, squeeze). Strona kończy się kontaktem.
  */
+import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Grid from '../../components/Grid.astro';
 import Header from '../../components/Header.astro';
@@ -14,6 +15,14 @@ import '../../styles/sections/cases.css';
 
 const all = await getRealizacje();
 
+// TODO(treść): lead listy (kol 1–7 pod nagłówkiem); bez treści w BRIEF element się nie renderuje
+const lead: string | undefined = undefined;
+
+// TODO(treść): opis listy w SEO; do tego czasu domyślny opis strony z BRIEF (SEO).
+// Obraz udostępnień: okładka pierwszej realizacji, jak na stronach projektów
+const og = await getImage({ src: all[0].data.cover, width: 1200, format: 'jpg' });
+const ogImage = new URL(og.src, Astro.site).href;
+
 // TODO(treść): etykiety rozdziałów podstrony
 const chapters = [
   { id: 'realizacje', label: 'Realizacje' },
@@ -21,7 +30,7 @@ const chapters = [
 ];
 ---
 
-<Base title="Realizacje — webexe">
+<Base title="Realizacje — webexe" ogImage={ogImage}>
   <Header slot="chrome" chapters={chapters} home={false} top="dark" />
 
   <section
@@ -36,7 +45,7 @@ const chapters = [
       <h1 id="cases-title" class="cases__title t-impact" data-split="words">
         Realizacje
       </h1>
-      <!-- TODO(treść): lead listy realizacji -->
+      {lead && <p class="cases__lead t-lead muted">{lead}</p>}
 
       <ol class="cases__list" data-module="squeeze">
         {all.map((entry) => (

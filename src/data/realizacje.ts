@@ -29,7 +29,7 @@ export const featuredOf = (all: Realizacja[]) =>
 export const nextOf = (all: Realizacja[], id: string) =>
   all[(all.findIndex((entry) => entry.id === id) + 1) % all.length];
 
-export const caseHref = (entry: Realizacja) => `/realizacje/${entry.id}`;
+export const caseHref = (entry: Realizacja) => `/realizacje/${entry.id}/`;
 
 // Nazwa przejścia kadr karty → okładka projektu (view-transition-name, curtain.ts)
 export const morphName = (entry: Realizacja) => `case-${entry.id}`;

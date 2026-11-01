@@ -3,7 +3,7 @@
    Hero na Głębi: powrót, tytuł na kolumnach 1–9, okładka na całą szerokość,
    fakty w komórkach po 3 kolumny (jak technologie). Opis na Pianie: lead i tekst
    bloków na kolumnach 4–10, etykieta bloku na 1–3, media na całą szerokość,
-   para desktop 1–8 + telefon 9–12. Następna realizacja: tytuł 1–6, kadr 7–12.
+   para desktop 1–8 + telefon 9–12. Następna realizacja: tytuł 1–7, kadr 8–12.
    Kadr i komórki technologii: components.css.
    ========================================================================== */
 
@@ -136,7 +136,7 @@
 }
 
 .case-next__copy {
-  grid-column: 1 / 7;
+  grid-column: 1 / 8;
   display: grid;
   gap: var(--s-6);
 }
@@ -152,7 +152,7 @@
 }
 
 .case-next__shot {
-  grid-column: 7 / -1;
+  grid-column: 8 / -1;
 }
 
 @media (max-width: 991px) {
