@@ -83,7 +83,13 @@ const Contact: Module = {
         .fromTo(
           success.querySelectorAll('.contact__success-x path'),
           { strokeDashoffset: 1 },
-          { strokeDashoffset: 0, duration: duration * 0.6, ease, stagger: 0.2 }
+          // Kreski x w tempie loadera: druga po 0.4 pierwszej
+          {
+            strokeDashoffset: 0,
+            duration,
+            ease: easeToken('--ease-draw'),
+            stagger: duration * 0.4,
+          }
         )
         .from(
           success.querySelectorAll('[data-contact-rise]'),

@@ -17,8 +17,6 @@ import gsap from 'gsap';
 
 // Twardy limit od startu nawigacji do zniknięcia panelu (ms)
 const LIMIT = 2500;
-// Loader gra w skróconym tempie wejścia, żeby zmieścić się w limicie (to samo --loader-d w CSS)
-const LOADER_SCALE = 0.6;
 // Kiedy w wyjściu startuje wejście hero (s): panel jest już w większości w górze
 const INTRO_AT = 0.3;
 const INTRO_STAGGER = 0.06;
@@ -34,12 +32,13 @@ const Loader: Module = {
     const revert = addMotion((ctx) => {
       ctx.full(() => {
         let alive = true;
-        // Kreski i wyjście: LOADER_SCALE × --d-enter (--loader-d w components.css), druga kreska
-        // startuje po 0.4 pierwszej
-        const exit = durationToken('--d-enter') * LOADER_SCALE;
+        // Kreski i wyjście: --d-enter (--loader-d w components.css), druga kreska startuje po 0.4
+        // pierwszej. Panel i wiersze w krzywej rysowania x, hero wchodzi w krzywej wejścia treści.
+        const exit = durationToken('--d-enter');
         const drawn = exit * 1.4 * 1000;
 
-        const ease = easeToken('--ease-enter');
+        const ease = easeToken('--ease-draw');
+        const enter = easeToken('--ease-enter');
         const intro = Array.from(document.querySelectorAll<HTMLElement>('[data-intro]'))
           // Od dołu do góry, w kierunku, w którym odsłania je panel
           .sort((a, b) => b.getBoundingClientRect().top - a.getBoundingClientRect().top);
@@ -69,8 +68,8 @@ const Loader: Module = {
             {
               y: (_: number, el: HTMLElement) => (el.dataset.intro === 'fade' ? 0 : 32),
               autoAlpha: 0,
-              duration: durationToken('--d-enter'),
-              ease,
+              duration: exit,
+              ease: enter,
               stagger: INTRO_STAGGER,
               clearProps: 'transform,opacity,visibility',
             },

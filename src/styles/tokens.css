@@ -95,11 +95,14 @@
   /* UI: hover, focus, kursor, przełączenia stanów (easeOutCubic) */
   --d-ui: 0.3s;
   --ease-ui: cubic-bezier(0.33, 1, 0.68, 1);
-  /* Wejście treści: reveale, wejście hero, front karty, akordeon, menu (easeInOutQuart) */
-  --d-enter: 1.2s;
-  --ease-enter: cubic-bezier(0.76, 0, 0.24, 1);
+  /* Wejście treści: reveale, wejście hero, front karty, akordeon, menu (easeOutQuint).
+     Tempo loadera: ruch rusza od razu i miękko siada, bez rozpędzania się na starcie */
+  --d-enter: 0.7s;
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Rysowanie znaku x: loader, węzły siatki, x w stanie sukcesu (easeInOutQuart), w czasie --d-enter */
+  --ease-draw: cubic-bezier(0.76, 0, 0.24, 1);
   /* Zmiana kontekstu: kurtyna przejścia strony (easeInOutCubic) */
-  --d-context: 2s;
+  --d-context: 1s;
   --ease-context: cubic-bezier(0.65, 0, 0.35, 1);
 
   /* --- Tekst ciągły --- */

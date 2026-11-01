@@ -70,7 +70,7 @@ export function easeToken(token: string): string {
   return name;
 }
 
-/** Czas z tokenu CSS (np. '--d-enter': 1.2s) w sekundach. */
+/** Czas z tokenu CSS (np. '--d-enter': 0.7s) w sekundach. */
 export function durationToken(token: string): number {
   const value = cssVar(token);
   const n = parseFloat(value);

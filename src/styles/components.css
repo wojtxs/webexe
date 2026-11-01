@@ -96,7 +96,7 @@
 .grid-sys.is-armed .grid-sys__node path {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  transition: stroke-dashoffset var(--d-enter) var(--ease-enter);
+  transition: stroke-dashoffset var(--d-enter) var(--ease-draw);
   transition-delay: calc(var(--k) * 90ms);
 }
 
@@ -687,8 +687,8 @@
 /* --- Loader (00, components/Loader.astro): x rysuje się dwiema kreskami na Głębi ---
    Tylko przy html.js-motion (Base.astro); .is-leaving trzyma go przy wyjściu, gdy fallback zdejmie klasę. */
 .loader {
-  /* Skrócone tempo wejścia, żeby loader zmieścił się w 2,5 s (LOADER_SCALE w modules/loader.ts) */
-  --loader-d: calc(var(--d-enter) * 0.6);
+  /* Tempo wejścia; całość mieści się w 2,5 s (modules/loader.ts liczy z tego samego tokenu) */
+  --loader-d: var(--d-enter);
 
   position: fixed;
   inset: 0;
@@ -725,7 +725,7 @@
 .loader__x path {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: loader-draw var(--loader-d) var(--ease-enter) forwards;
+  animation: loader-draw var(--loader-d) var(--ease-draw) forwards;
 }
 
 /* Druga kreska po 0.4 pierwszej: x gotowy po 1.4 × --loader-d (to samo liczy modules/loader.ts) */
@@ -756,7 +756,7 @@
   max-width: calc(100vw - 2 * var(--grid-padding));
   color: var(--c-ink-muted-dark);
   translate: 0 110%;
-  animation: loader-rise var(--loader-d) var(--ease-enter) forwards;
+  animation: loader-rise var(--loader-d) var(--ease-draw) forwards;
   animation-delay: calc(var(--loader-d) * 0.15);
 }
 

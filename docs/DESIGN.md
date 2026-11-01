@@ -90,18 +90,19 @@ Makiety referencyjne mają 1440 (desktop), 834 (tablet) i 390 (mobile). Wymiar z
 
 ## Ruch
 
-Trzy tempa (z Chipsy), każde z jedną krzywą. Czas i krzywa idą zawsze w parze.
+Trzy tempa (z Chipsy), każde z jedną krzywą. Czas i krzywa idą zawsze w parze. Wzorcem jest loader: ruch krótki, rusza od razu i miękko siada (2026-11-01, wcześniej 1.2 s / 2 s w easeInOut, odebrane jako ciężkie).
 
 | Tempo | Czas | Krzywa | Użycie |
 |---|---|---|---|
 | UI | `--d-ui` 0.3 s | `--ease-ui` `cubic-bezier(0.33, 1, 0.68, 1)` (easeOutCubic) | hover, focus, kursor, etykiety, przełączenia stanów |
-| Wejście treści | `--d-enter` 1.2 s | `--ease-enter` `cubic-bezier(0.76, 0, 0.24, 1)` (easeInOutQuart) | reveale słów i mediów, wejście hero, front karty, akordeon, menu |
-| Zmiana kontekstu | `--d-context` 2 s | `--ease-context` `cubic-bezier(0.65, 0, 0.35, 1)` (easeInOutCubic) | kurtyna przejścia strony |
+| Wejście treści | `--d-enter` 0.7 s | `--ease-enter` `cubic-bezier(0.22, 1, 0.36, 1)` (easeOutQuint) | reveale słów i mediów, wejście hero, front karty, akordeon, menu |
+| Zmiana kontekstu | `--d-context` 1 s | `--ease-context` `cubic-bezier(0.65, 0, 0.35, 1)` (easeInOutCubic) | kurtyna przejścia strony, akcent na liniach siatki |
 
 | Inne | Wartość |
 |---|---|
+| rysowanie x | `--ease-draw` `cubic-bezier(0.76, 0, 0.24, 1)` (easeInOutQuart) w czasie `--d-enter`: kreski x w loaderze, węzłach siatki i stanie sukcesu, wyjście panelu loadera |
 | stagger linii | 0.08 s (SplitText lines) |
-| loader | kreski x i wyjście panelu w 0.6 × `--d-enter` (`--loader-d`), żeby całość zmieściła się w 2,5 s |
+| loader | kreski x, wiersze i wyjście panelu w `--d-enter` (`--loader-d`), całość mieści się w 2,5 s |
 | Lenis | `lerp 0.2`, na dotyku natywny scroll (bez `syncTouch`) |
 
 Pętle wewnątrz zrzutów aplikacji (kursor, powiadomienia, pakiety) mają własne czasy, bo udają ruch w produkcie, a nie ruch strony.
