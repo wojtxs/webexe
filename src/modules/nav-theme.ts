@@ -1,18 +1,18 @@
 /**
- * nav-theme.ts — kolory stałych elementów w rogach według tła pod nimi.
+ * nav-theme.ts — kolory paska systemu (components/Header.astro) według tła pod nim.
  *
- * Dwie sondy przy lewej krawędzi, pod rogami: górna (wordmark, CTA) i dolna (mapa rozdziałów).
- * Lewa krawędź, a nie środek: hit-testing kreski x ignoruje jej niedorysowanie. Dla każdej najbliższy
- * [data-nav-theme] pod punktem decyduje o klasie is-top-dark / is-bottom-dark na root.
+ * Sonda przy lewej krawędzi, pod paskiem. Lewa krawędź, a nie środek: hit-testing kreski x ignoruje
+ * jej niedorysowanie. Najbliższy [data-nav-theme] pod punktem decyduje o klasie is-top-dark na root:
+ * goły pasek dostaje jasny tusz, a pasek z powierzchnią jaśniejszą Głębię, żeby odciął się od ciemnej sekcji.
  * Znak x w x-zoom ma własne data-nav-theme="dark", więc gdy po zoomie zakrywa ekran,
- * rogi przechodzą na ciemny motyw, choć sekcja pod spodem jest jasna.
+ * pasek przechodzi na ciemny motyw, choć sekcja pod spodem jest jasna.
  * Sprawdzane w gsap.ticker tylko wtedy, gdy zmienił się scroll albo rozmiar okna.
  */
 
 import type { Module } from '@core/lifecycle';
 import gsap from 'gsap';
 
-// Odległość sond od krawędzi ekranu (px)
+// Odległość sondy od krawędzi ekranu (px)
 const PROBE_INSET = 40;
 
 const themeAt = (root: HTMLElement, x: number, y: number): string | undefined => {
@@ -33,9 +33,7 @@ const NavTheme: Module = {
       if (key === lastKey) return;
       lastKey = key;
 
-      const bottom = window.innerHeight - PROBE_INSET;
       root.classList.toggle('is-top-dark', themeAt(root, PROBE_INSET, PROBE_INSET) === 'dark');
-      root.classList.toggle('is-bottom-dark', themeAt(root, PROBE_INSET, bottom) === 'dark');
     };
 
     gsap.ticker.add(update);
@@ -43,7 +41,7 @@ const NavTheme: Module = {
 
     this.destroy = () => {
       gsap.ticker.remove(update);
-      root.classList.remove('is-top-dark', 'is-bottom-dark');
+      root.classList.remove('is-top-dark');
     };
   },
 

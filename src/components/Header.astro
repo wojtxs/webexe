@@ -1,0 +1,125 @@
+---
+/**
+ * Header — pasek systemu (docs/INSPIRACJE.md, wiersz Nawigacja): zwijany pasek z Alpanetu
+ * i elementy z własną powierzchnią z Chipsy, w naszej formie.
+ * Na górze hero pasek jest goły: wordmark, CTA i menu na tle strony (kolory według tła: nav-theme).
+ * Po zjechaniu ze startu (header.ts: is-condensed) powierzchnia Głębi rysuje się od lewej jak kreska x,
+ * wordmark się zmniejsza, a w pasku pojawia się bieżący rozdział (chapter-map), którego x rysuje się
+ * postępem sekcji. Pasek stoi między skrajnymi liniami siatki, a jego dolna krawędź to postęp strony:
+ * linia Laguny i węzły x na liniach siatki, które zapalają się, gdy linia je minie (motyw, DESIGN.md).
+ * Ikona menu to dwie kreski, które przy otwarciu składają się w x. Menu wyrasta z przycisku
+ * (na mobile pełny ekran z CTA na dole); przycisk pokazuje dopiero moduł menu, bez JS zostaje CTA.
+ */
+import { demoContact } from '../data/demo';
+import Button from './Button.astro';
+import Wordmark from './Wordmark.astro';
+import XMark from './XMark.astro';
+
+// TODO(treść): etykiety rozdziałów; roboczo nazwy z mapy w BRIEF, „Start” dla hero
+const chapters = [
+  { id: 'hero', label: 'Start' },
+  { id: 'manifest', label: 'Manifest' },
+  { id: 'realizacje', label: 'Realizacje' },
+  { id: 'produkt', label: 'Produkt' },
+  { id: 'jak-pracujemy', label: 'Jak pracujemy' },
+  { id: 'poznaj-nas', label: 'Poznaj nas' },
+  { id: 'kontakt', label: 'Kontakt' },
+];
+// Węzły na wewnętrznych liniach siatki (desktop 1–3, poniżej 992 px tylko środkowa)
+const nodes = [1, 2, 3];
+---
+
+<header class="header" data-module="header nav-theme menu">
+  <div class="header__bar" data-header-bar>
+    <div class="header__surface" aria-hidden="true">
+      <span class="header__track" data-header-track></span>
+    </div>
+
+    <div class="header__nodes" aria-hidden="true">
+      {nodes.map((k) => (
+        <span class="header__node" style={`--k: ${k}`} data-header-node>
+          <XMark draw />
+        </span>
+      ))}
+    </div>
+
+    <a class="header__brand" href="#hero" aria-label="webexe, początek strony" data-intro>
+      <Wordmark />
+    </a>
+
+    <!-- Tylko podgląd położenia; nawigację po rozdziałach daje menu -->
+    <div class="header__chapter" aria-hidden="true" data-module="chapter-map">
+      <ol class="header__chapters">
+        {chapters.map((chapter, i) => (
+          <li class="header__chapter-item" data-chapter={chapter.id}>
+            <span class="header__mark">
+              <XMark class="header__x" />
+              <XMark class="header__x header__x--progress" draw />
+            </span>
+            <span class="header__num t-label">{String(i + 1).padStart(2, '0')}</span>
+            <span class="header__label t-label">{chapter.label}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="header__actions">
+      <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
+      <Button href="#kontakt" class="header__cta" data-intro>
+        Porozmawiajmy o projekcie
+      </Button>
+
+      <Button
+        variant="ghost"
+        class="header__menu"
+        aria-expanded="false"
+        aria-controls="menu"
+        data-menu-toggle
+        data-intro
+        hidden
+      >
+        Menu
+        <svg
+          slot="icon"
+          class="header__menu-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M5 9h14"></path>
+          <path d="M5 15h14"></path>
+        </svg>
+      </Button>
+    </div>
+  </div>
+
+  <div class="menu" id="menu" data-menu-panel inert>
+    <nav class="menu__nav" aria-label="Menu">
+      <ul class="menu__list">
+        {chapters.map((chapter) => (
+          <li data-menu-item>
+            <a class="menu__link t-h3" href={`#${chapter.id}`}>
+              <XMark class="menu__x" />
+              {chapter.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- TODO(treść): DEMO, przykładowy kontakt z src/data/demo.ts; docelowo D7 -->
+    <div class="menu__contact" data-menu-item>
+      <a class="link" href={`mailto:${demoContact.email}`}>
+        {demoContact.email}
+      </a>
+      <a class="link" href={`tel:${demoContact.phone.replaceAll(' ', '')}`}>
+        {demoContact.phone}
+      </a>
+    </div>
+
+    <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
+    <Button href="#kontakt" class="menu__cta" data-menu-item>
+      Porozmawiajmy o projekcie
+    </Button>
+  </div>
+</header>

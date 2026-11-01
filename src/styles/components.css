@@ -206,7 +206,7 @@
 .btn--ghost {
   background: transparent;
   box-shadow: inset 0 0 0 1px currentColor;
-  color: var(--corner-ink, currentColor);
+  color: var(--header-ink, currentColor);
 }
 
 .btn[hidden] {
@@ -323,66 +323,305 @@
   color: var(--ink-muted);
 }
 
-/* --- Rogi ekranu: wordmark, stałe CTA, mapa rozdziałów ---
-   Kolor rogów zależy od tła pod nimi (nav-theme): is-top-dark / is-bottom-dark. */
-.corners {
-  --corner-ink: var(--c-glebia);
-  --corner-muted: var(--c-ink-muted);
+/* --- Pasek systemu (components/Header.astro): wordmark, bieżący rozdział, CTA i menu ---
+   Na starcie goły, w kolorach tła pod paskiem (nav-theme: is-top-dark). Po zjechaniu ze startu
+   (header.ts: is-condensed) powierzchnia Głębi rysuje się od lewej w krzywej rysowania x, a pasek
+   dostaje własne kolory. Stoi między skrajnymi liniami siatki, więc węzły x na jego dolnej krawędzi
+   (left: k / kolumny) leżą na liniach siatki sekcji. */
+.header {
+  --header-ink: var(--c-glebia);
   position: fixed;
   inset: 0;
   z-index: 50;
   pointer-events: none;
 }
 
-.corners > * {
+.header.is-top-dark,
+.header.is-condensed,
+.header.is-menu-open {
+  --header-ink: var(--c-piana);
+}
+
+.header__bar {
+  --header-cols: 4;
+  position: absolute;
+  top: var(--s-3);
+  right: calc(var(--grid-padding) - var(--grid-gap) / 2);
+  left: calc(var(--grid-padding) - var(--grid-gap) / 2);
+  display: flex;
+  align-items: center;
+  height: calc(var(--s-12) + var(--s-2));
+  padding-inline: calc(var(--grid-gap) / 2);
+  color: var(--header-ink);
+}
+
+/* Z powierzchnią pasek łapie kliknięcia na całej długości, goły tylko na swoich elementach */
+.header.is-condensed .header__bar,
+.header__brand,
+.header__actions,
+.menu {
   pointer-events: auto;
 }
 
-.corners__brand {
+.header__surface {
   position: absolute;
-  top: var(--s-6);
-  left: var(--grid-padding);
-  width: 7rem;
-  color: var(--corner-ink);
-  transition: color var(--d-ui) var(--ease-ui);
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background-color: var(--c-glebia);
+  box-shadow: inset 0 0 0 1px var(--c-glebia-raise);
+  clip-path: inset(0 100% 0 0 round var(--r-card));
+  transition:
+    clip-path var(--d-enter) var(--ease-draw),
+    background-color var(--d-ui) var(--ease-ui);
 }
 
-/* CTA i przycisk menu nad panelem menu */
-.corners__actions {
+.header.is-condensed .header__surface {
+  clip-path: inset(0 0 0 0 round var(--r-card));
+}
+
+/* Nad ciemną sekcją pasek jest o stopień jaśniejszy, żeby się od niej odciął */
+.header.is-top-dark .header__surface {
+  background-color: var(--c-glebia-raise);
+}
+
+/* Postęp strony: header.ts skaluje linię od lewej (scaleX 0–1) */
+.header__track {
   position: absolute;
-  top: var(--s-4);
-  right: var(--grid-padding);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-image: var(--g-laguna);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.header__nodes {
+  position: absolute;
+  inset: 0;
+}
+
+/* Węzeł na przecięciu linii siatki z dolną krawędzią paska; rysuje się po powierzchni
+   i zapala, gdy minie go linia postępu (header.ts: is-on) */
+.header__node {
+  position: absolute;
+  bottom: 0;
+  left: calc(var(--k) / var(--header-cols) * 100%);
+  width: var(--s-4);
+  height: var(--s-4);
+  /* Połowa węzła leży na pasku, połowa na stronie: kolor czytelny na obu */
+  color: var(--c-ink-muted-dark);
+  transform: translate(-50%, 50%);
+}
+
+.header__node path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--d-enter) var(--ease-draw);
+}
+
+.header.is-condensed .header__node path {
+  stroke-dashoffset: 0;
+  transition-delay: calc(var(--k) * 90ms + 150ms);
+}
+
+.header.is-condensed .header__node path + path {
+  transition-delay: calc(var(--k) * 90ms + 400ms);
+}
+
+.header__node .xmark {
+  width: 100%;
+  height: 100%;
+}
+
+/* Gradient ma tylko węzeł aktywny (DESIGN.md), więc minięte węzły dostają sam kolor Laguny */
+.header__node.is-on {
+  color: var(--c-laguna-end);
+}
+
+/* Wordmark: na starcie przy krawędzi treści, w pasku mniejszy i odsunięty od krawędzi powierzchni */
+/* Kolor zmienia się wtedy, gdy powierzchnia jest pod elementem: wordmark ciemnieje dopiero
+   pod koniec zwijania powierzchni, przycisk menu jaśnieje dopiero, gdy powierzchnia do niego dojedzie */
+.header__brand {
+  position: relative;
+  width: 7rem;
+  color: var(--header-ink);
+  transform-origin: 0 50%;
+  transition:
+    color var(--d-ui) var(--ease-ui) calc(var(--d-enter) * 0.6),
+    translate var(--d-enter) var(--ease-enter),
+    scale var(--d-enter) var(--ease-enter);
+}
+
+.header.is-condensed .header__brand,
+.header.is-menu-open .header__brand {
+  transition-delay: 0s;
+}
+
+.header.is-condensed .header__brand {
+  translate: var(--s-3) 0;
+  scale: 0.8;
+}
+
+/* Bieżący rozdział: od drugiej kolumny wizualnej, tylko w pasku z powierzchnią */
+.header__chapter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(100% / var(--header-cols) + var(--grid-gap) / 2);
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  translate: 0 var(--s-2);
+  transition:
+    opacity var(--d-ui) var(--ease-ui),
+    translate var(--d-enter) var(--ease-enter);
+}
+
+.header.is-condensed .header__chapter {
+  opacity: 1;
+  translate: none;
+  transition-delay: 0.2s;
+}
+
+/* Wszystkie rozdziały w jednej komórce: wcześniejsze nad maską, późniejsze pod nią (chapter-map: is-current) */
+.header__chapters {
+  display: grid;
+  overflow: hidden;
+  padding-block: var(--s-1);
+  list-style: none;
+}
+
+.header__chapter-item {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  white-space: nowrap;
+  opacity: 0;
+  translate: 0 110%;
+  transition:
+    translate var(--d-enter) var(--ease-enter),
+    opacity var(--d-enter) var(--ease-enter);
+}
+
+.header__chapter-item:has(~ .is-current) {
+  translate: 0 -110%;
+}
+
+.header__chapter-item.is-current {
+  opacity: 1;
+  translate: none;
+}
+
+.header__num {
+  color: var(--c-ink-muted-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.header__mark {
+  position: relative;
+  flex: none;
+  width: var(--s-4);
+  height: var(--s-4);
+}
+
+.header__x {
+  width: 100%;
+  height: 100%;
+  color: var(--c-ink-muted-dark);
+  opacity: 0.35;
+}
+
+/* x rozdziału: na przygaszonym kreski rysowane postępem sekcji (--progress z chapter-map,
+   pierwsza kreska w pierwszej połowie, druga w drugiej; przy reduced motion pełny) */
+.header__x--progress {
+  position: absolute;
+  inset: 0;
+  stroke: url(#x-laguna);
+  opacity: 1;
+}
+
+.header__x--progress path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - clamp(0, var(--progress, 1) * 2, 1));
+}
+
+.header__x--progress path + path {
+  stroke-dashoffset: calc(1 - clamp(0, var(--progress, 1) * 2 - 1, 1));
+}
+
+/* CTA i przycisk menu nad panelem menu, w pasku niższe niż zwykłe przyciski */
+.header__actions {
+  position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   gap: var(--s-2);
+  margin-left: auto;
 }
 
-.corners__cta {
+.header__actions .btn {
+  padding: var(--s-3) var(--s-6);
+}
+
+.header__cta {
   transition:
     opacity var(--d-ui) var(--ease-ui),
     visibility var(--d-ui) var(--ease-ui);
 }
 
-.corners.is-menu-open .corners__cta {
+.header.is-menu-open .header__cta {
   opacity: 0;
   visibility: hidden;
 }
 
-.corners__menu {
+.header__menu {
   transition: color var(--d-ui) var(--ease-ui);
 }
 
-.corners.is-top-dark .corners__menu,
-.corners.is-menu-open .corners__menu {
-  color: var(--c-piana);
+.header.is-condensed:not(.is-menu-open) .header__menu {
+  transition-delay: calc(var(--d-enter) * 0.6);
 }
 
-/* --- Menu (modules/menu.ts): panel Głębi wyrasta z przycisku (clip-path), pozycje wchodzą po kolei --- */
+/* Dwie kreski menu składają się w x (motyw); przesunięcie w jednostkach viewBox ikony */
+.header__menu-icon {
+  width: var(--s-4);
+  height: var(--s-4);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  overflow: visible;
+}
+
+.header__menu-icon path {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  transition:
+    transform var(--d-ui) var(--ease-ui),
+    stroke var(--d-ui) var(--ease-ui);
+}
+
+.header.is-menu-open .header__menu-icon path {
+  stroke: var(--c-laguna-end);
+}
+
+.header.is-menu-open .header__menu-icon path:first-child {
+  transform: rotate(45deg) translateY(3px);
+}
+
+.header.is-menu-open .header__menu-icon path:last-child {
+  transform: rotate(-45deg) translateY(-3px);
+}
+
+/* --- Menu (modules/menu.ts): panel Głębi wyrasta z przycisku (clip-path) nad prawym końcem paska,
+   pozycje wchodzą po kolei --- */
 .menu {
   position: absolute;
-  top: var(--s-4);
-  right: var(--grid-padding);
+  top: var(--s-3);
+  right: calc(var(--grid-padding) - var(--grid-gap) / 2);
   /* display, nie visibility: przejścia (też globalne 0.01ms przy reduced motion) nie opóźniają
      pokazania, więc pierwsza pozycja dostaje fokus od razu po otwarciu */
   display: none;
@@ -435,139 +674,42 @@
   justify-self: start;
 }
 
-.corners.is-top-dark .corners__brand {
-  color: var(--c-piana);
-}
-
-.chapters {
-  position: absolute;
-  bottom: var(--s-6);
-  left: var(--grid-padding);
-  color: var(--corner-muted);
-  transition: color var(--d-ui) var(--ease-ui);
-}
-
-.corners.is-bottom-dark .chapters {
-  --corner-ink: var(--c-piana);
-  color: var(--c-ink-muted-dark);
-}
-
-/* Zwinięta: widać tylko bieżący rozdział. Hover albo focus rozwija listę w górę (wiersze 0fr → 1fr).
-   Bez bieżącego (bez JS) lista jest rozwinięta. */
-.chapters__list {
-  display: grid;
-  list-style: none;
-}
-
-.chapters__list > li {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transition:
-    grid-template-rows var(--d-ui) var(--ease-ui),
-    opacity var(--d-ui) var(--ease-ui);
-}
-
-.chapters__list > li:has([aria-current]),
-.chapters:is(:hover, :focus-within) .chapters__list > li,
-.chapters:not(:has([aria-current])) .chapters__list > li {
-  grid-template-rows: 1fr;
-  opacity: 1;
-}
-
-.chapters__link {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  /* Bez paddingu: zwinięty wiersz (0fr) musi zejść do zera, odstęp daje etykieta */
-  min-height: 0;
-  overflow: hidden;
-  color: inherit;
-  text-decoration: none;
-}
-
-.chapters__mark {
-  position: relative;
-  flex: none;
-  width: var(--s-3);
-  height: var(--s-3);
-  transition: scale var(--d-ui) var(--ease-ui);
-}
-
-.chapters__x {
-  width: 100%;
-  height: 100%;
-}
-
-/* Bieżący x: pod spodem przygaszony, na nim kreski rysowane postępem sekcji (--progress z chapter-map,
-   pierwsza kreska w pierwszej połowie, druga w drugiej; bez JS i przy reduced motion pełny) */
-.chapters__x--progress {
-  position: absolute;
-  inset: 0;
-  stroke: url(#x-laguna);
-  opacity: 0;
-}
-
-.chapters__x--progress path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: calc(1 - clamp(0, var(--progress, 1) * 2, 1));
-}
-
-.chapters__x--progress path + path {
-  stroke-dashoffset: calc(1 - clamp(0, var(--progress, 1) * 2 - 1, 1));
-}
-
-.chapters__label {
-  padding-block: var(--s-1);
-  opacity: 0;
-  transform: translateX(calc(-1 * var(--s-2)));
-  transition:
-    opacity var(--d-ui) var(--ease-ui),
-    transform var(--d-ui) var(--ease-ui);
-}
-
-.chapters__link:is(:hover, :focus-visible, [aria-current]) .chapters__label,
-.chapters:is(:hover, :focus-within) .chapters__label {
-  opacity: 1;
-  transform: none;
-}
-
-.chapters__link:is(:hover, :focus-visible) {
-  color: var(--corner-ink);
-}
-
-.chapters__link[aria-current] {
-  color: var(--corner-ink);
-}
-
-.chapters__link[aria-current] .chapters__mark {
-  scale: 1.5;
-}
-
-.chapters__link[aria-current] .chapters__x:not(.chapters__x--progress) {
-  opacity: 0.3;
-}
-
-.chapters__link[aria-current] .chapters__x--progress {
-  opacity: 1;
-}
-
-/* Mapa tylko na desktopie; na mniejszych ekranach zostają wordmark i CTA */
+/* Poniżej 992 px: pasek na dwie kolumny wizualne (jeden węzeł na środkowej linii), rozdział zaraz
+   za wordmarkiem, CTA w panelu menu, a menu na pełny ekran z CTA na dole */
 @media (max-width: 991px) {
-  .chapters {
+  .header__bar {
+    --header-cols: 2;
+    top: var(--s-2);
+    height: var(--s-12);
+  }
+
+  .header__node:nth-child(n + 2) {
     display: none;
   }
 
-  /* Z menu stałe CTA jest w panelu: w rogu zostaje wordmark i przycisk menu */
-  .corners__actions:has(.corners__menu:not([hidden])) .corners__cta {
+  .header__brand {
+    width: 5.5rem;
+  }
+
+  /* W przepływie paska, ale pozycjonowana: inaczej malowałaby się pod powierzchnią */
+  .header__chapter {
+    position: relative;
+    left: auto;
+    margin-left: var(--s-3);
+  }
+
+  .header__chapter-item {
+    gap: var(--s-2);
+  }
+
+  .header__actions:has(.header__menu:not([hidden])) .header__cta {
     display: none;
   }
 
-  .corners__menu {
-    padding: var(--s-3) var(--s-4);
+  .header__actions .btn {
+    padding: var(--s-2) var(--s-4);
   }
 
-  /* Na mobile menu to pełny ekran z CTA na dole */
   .menu {
     inset: 0;
     grid-template-rows: 1fr auto auto;
@@ -579,16 +721,13 @@
   .menu__cta {
     justify-self: stretch;
   }
-
-  .corners__brand {
-    width: 5.5rem;
-  }
-
-  .corners__cta {
-    padding: var(--s-3) var(--s-4);
-  }
 }
 
+@media (max-width: 767px) {
+  .header__num {
+    display: none;
+  }
+}
 /* --- Kursor (components/Cursor.astro, modules/cursor.ts) ---
    Moduł prowadzi pozycję (x, y) i przełącza stany; zmiany wyglądu idą w tempie UI. */
 .cursor {

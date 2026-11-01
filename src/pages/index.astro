@@ -1,7 +1,7 @@
 ---
-// One-pager według mapy w docs/BRIEF.md: loader (00), rogi ekranu i sekcje 01–07.
+// One-pager według mapy w docs/BRIEF.md: loader (00), pasek systemu i sekcje 01–07.
 import Base from '../layouts/Base.astro';
-import Corners from '../components/Corners.astro';
+import Header from '../components/Header.astro';
 import Loader from '../components/Loader.astro';
 import Hero from '../sections/Hero.astro';
 import Manifest from '../sections/Manifest.astro';
@@ -14,7 +14,7 @@ import Contact from '../sections/Contact.astro';
 
 <Base>
   <Loader slot="chrome" />
-  <Corners slot="chrome" />
+  <Header slot="chrome" />
   <Hero />
   <Manifest />
   <Work />

@@ -121,6 +121,7 @@ Zasady:
    - Węzeł to znak x w miejscu, gdzie linia przecina granicę bloku. Gradient Laguna ma tylko węzeł aktywny: bieżąca sekcja w mapie rozdziałów i CTA.
    - Karty i zdjęcia stoją na kolumnach siatki, przesunięte w pionie (stagger).
    - Siatka jest statyczna: nie płynie i nie reaguje na kursor.
+   - Pasek systemu (header) stoi między skrajnymi liniami siatki. Węzły x na jego dolnej krawędzi leżą na liniach i zapalają się kolorem Laguny (bez gradientu), gdy minie je linia postępu strony (eksperyment 2026-11-01).
    - Gdzie motyw pracuje w poszczególnych sekcjach, opisuje `INSPIRACJE.md` (sekcja 4).
 2. **Znak x.** Dwie kreski o zaokrąglonych końcach. Rysuje się w loaderze i na końcu Manifestu, gdzie zoom przez jego środek otwiera ciemną część strony. Stoi w węzłach siatki, w punktach mapy rozdziałów i jako separator w wierszach tekstu. Nie ma wersji 3D.
 3. **Wordmark webexe.** Mały w nawigacji, wielki w stopce. Zawsze SVG, a x zawsze ma gradient.

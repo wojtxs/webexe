@@ -4,7 +4,7 @@
  * Wariant ghost: obrys i tekst w kolorze rogu (przycisk menu).
  * Hover „roll” na znakach (DESIGN.md, Ruch): tekst z treści rozbity na słowa i znaki, każdy znak
  * ze swoim --i do stopniowania w CSS. Czytniki dostają cały tekst z .sr-only, znaki są aria-hidden.
- * Treść z HTML-em (np. ikona) zostaje bez rozbicia.
+ * Treść z HTML-em zostaje bez rozbicia; ikonę obok tekstu z rollem podaje slot "icon".
  */
 interface Props {
   href?: string;
@@ -53,4 +53,5 @@ const words = plain
   ) : (
     <Fragment set:html={html} />
   )}
+  <slot name="icon" />
 </Tag>

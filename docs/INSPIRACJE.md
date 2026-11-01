@@ -44,6 +44,7 @@ Ten plik ustala, jaką **mechanikę** bierzemy z referencji i w którym miejscu 
 ### Z naszymi dokumentami
 
 - **Zamknięte 2026-10-31 (gałąź eksperymentu):** natywny scroll na dotyku i trzy tempa z Chipsy jako tokeny ruchu (`--d-ui`, `--d-enter`, `--d-context` z krzywymi) są w `DESIGN.md` (Ruch). Do wycofania, jeśli się nie sprawdzą. 2026-11-01: wejście skrócone do 0,7 s w easeOutQuint, a zmiana kontekstu do 1 s (tempo loadera), bo 1,2 s i 2 s w easeInOut były odbierane jako ciężkie.
+- **Eksperyment 2026-11-01 (wiersz Nawigacja):** rogi zastąpione paskiem systemu. Z Alpanetu bierzemy pasek, który po zjechaniu ze startu zwija się w zwartą ciemną powierzchnię, a z Chipsy elementy z własną powierzchnią, czytelne na każdym tle. Mapa rozdziałów z lewego dolnego rogu przeszła do paska jako bieżący rozdział (odpowiedź na pytanie 6 do oceny), a pełną listę rozdziałów ma menu. Opis w `components/Header.astro`.
 - **Zamknięte 2026-10-30:** `BRIEF.md`, `CLAUDE.md`, `DESIGN.md` i `ARCHITECTURE.md` nie wskazują już landonorris.com. Obowiązuje wygląd z `DESIGN.md` (Laguna), a palety v2 i v3 w `tokens.css` są do usunięcia w sesji kodu.
 
 ## 4. Motyw przewodni: system na siatce, węzły to znak x
