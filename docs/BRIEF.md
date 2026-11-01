@@ -78,7 +78,7 @@ Wersja 1 to one-pager plus `/polityka-prywatnosci` i `/404`, bez kosztorysu i ko
 | 00 | Loader | — | znak x rysuje się dwiema kreskami, potem wejście hero, limit 2,5 s | D8 |
 | 01 | Hero | Hero | karta z nagraniem jednego projektu rozszerza się na sticky torze do pełnego kontenera, etykiety warstw na obrazie (Alpanet) | **D3** (materiał), D9 |
 | 02 | Manifest | Manifest | wypełnianie scrollem **słowo po słowie**, słowo-akcent „latami”, na końcu znak x i zoom przez jego środek do ciemnej części strony (Alpanet) | — |
-| 03 | Realizacje | **D3** (min. 4 projekty: tytuł, opis, obraz, wideo), na końcu dowody (logotypy, liczby) | duże karty, hover obraz → wideo, ściskanie przy szybkim scrollu (Chipsa); logotypy w komórkach siatki, liczby jako odometr (Alpanet) | **D3** |
+| 03 | Realizacje | **D3** (min. 4 projekty: tytuł, opis, obraz, wideo), na końcu technologie, na których budujemy *(2026-11-01, zamiast liczb i logotypów klientów)* | duże karty, hover obraz → wideo, ściskanie przy szybkim scrollu (Chipsa); ikony technologii w komórkach siatki (Alpanet) | **D3** |
 | 04 | Produkt | **D3** (jeden produkt) | ten sam produkt na laptopie i telefonie, nagranie ekranu, paralaksa scrollem (Alpanet) | **D3** |
 | 05 | Jak pracujemy | 4 kroki; przykładowe rozwiązania 4 + 4 w panelach Budujemy i Automatyzujemy | akordeon 4 kolumn, poniżej 992 px stos paneli sticky (Chipsa) | D10, D11 |
 | 06 | Poznaj nas | D10 | zdjęcia na kolumnach siatki ze staggerem (Alpanet, „Kim jesteśmy”), szczegóły w specu; spina się z „piszecie do ludzi, którzy to zbudowali” | D4, D10 |
@@ -94,7 +94,7 @@ Rozstrzygnięte:
 
 Otwarte (w nawiasie faza, którą blokują):
 - **D2. Koncept hero.** Kierunek z `INSPIRACJE.md`: karta z nagraniem jednego projektu, która rozszerza się scrollem do pełnego kontenera. Otwarte: który projekt i jaki kadr. Rozstrzyga style frame i nowy spec hero w F2. *(blokuje F4)*
-- **D3. Realizacje.** Częściowo rozstrzygnięte: jest minimum 4 projekty do pokazania *(2026-10-30)*. Otwarte: które projekty, zrzuty, nagrania i opisy (tytuł, krótki opis) do tego pliku, logotypy klientów za zgodą, prawdziwe liczby, jeśli są. *(blokuje 01, 03 i 04)*
+- **D3. Realizacje.** Częściowo rozstrzygnięte: jest minimum 4 projekty do pokazania *(2026-10-30)*. Otwarte: które projekty, zrzuty, nagrania i opisy (tytuł, krótki opis) do tego pliku, lista technologii, na których budujemy (liczby i logotypy klientów wypadły 2026-11-01). *(blokuje 01, 03 i 04)*
 - **D4. Zdjęcia founderów.** Sesja: termin, miejsce, kto robi. *(blokuje 06)*
 - **D5. Żywy widget w hero.** Jakie dane z platformy mogą być publiczne i pod jakim endpointem? Po zmianie oferty to **dowód na „utrzymujemy na własnej infrastrukturze”**, więc warto go mieć w wersji 1. *(nie blokuje, jest za flagą)*
 - **D6. Język.** Tylko PL czy także EN?
