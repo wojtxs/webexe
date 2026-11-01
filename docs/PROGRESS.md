@@ -513,3 +513,17 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 - Lista (`demoStack`, `TODO(treść)`): Cloudflare, Google Cloud, Astro, Jira (od użytkownika, „Google” odczytane jako Google Cloud) oraz TypeScript, Node.js, Docker, GitHub (stack tej strony). Do potwierdzenia przez użytkownika, tak samo jak etykieta „Technologie, na których budujemy”.
 - Sprawdzone (Edge, 1440, 834, 390, reduced motion na 1440): 8 komórek, ikony `aria-hidden`, hover zmienia kolor z `#9DB5B0` na Pianę, po starych elementach nie ma śladu. Konsola bez błędów. Check, lint i build czyste.
 - Zostało: potwierdzenie listy technologii. Lista „przed merge” w `ARCHITECTURE.md` nie obejmuje już `proof` i `odometer`.
+
+### 2026-11-01 — treść: teksty z przeglądu tekstów
+
+- Kontekst: użytkownik wkleił zewnętrzny przegląd tekstów z pełną propozycją copy (start, manifest, czym się zajmujemy, realizacje, Grafik, jak pracujemy, poznaj nas, FAQ, kontakt, stopka, SEO) i zapytał, czy ją wdrożyć, ale bez rzeczy, których nie ma na stronie (FAQ).
+- Weszło (najpierw `BRIEF.md`, potem kod): lead hero, teksty kroków 01–03 w Jak pracujemy, tekst Poznaj nas (rozstrzyga część D10, bez zdania powtarzającego krok 01), lead w kontakcie nad bezpośrednim kontaktem (`.contact__lead`) oraz tytuł i opis strony w `Base.astro`.
+- Zostało po staremu i dlaczego:
+  - H1 hero, bo sam przegląd uznał go za mocny.
+  - Manifest, bo propozycja ma ok. 80 słów i tłumaczy oczywistości, czyli robi to, co przegląd krytykuje. Wypełnianie słowo po słowie potrzebuje krótkiej tezy.
+  - Krok 04, bo „piszecie do ludzi, którzy to zbudowali” niesie wyróżnik, a propozycja („dalej możemy się tym zajmować”) go rozmywa.
+  - Nagłówek kontaktu, bo „Opowiedz nam…” i „Lub napisz…” są w formie „Ty”, której `BRIEF.md` zabrania. Poza tym CTA to D9.
+  - Opisy realizacji i Grafiku, bo to DEMO do wymiany w D3. Propozycja jest dłuższa od obecnych, a przepisywanie fikcji nic nie daje.
+  - Pominięte jako nowe elementy: sekcja Czym się zajmujemy, FAQ, drugi przycisk w hero, „Dowiedz się więcej o Grafiku” (nie ma dokąd prowadzić), opis w stopce.
+- Sprawdzone (Edge, 1440, 834, 390): lead hero ma 5 linii na desktopie i 6 na mobile i mieści się nad kartą. Kroki akordeonu bez nadmiaru przy otwarciu. Poznaj nas: 6 zdań podświetlanych scrollem. Kontakt: lead nad bezpośrednim kontaktem. Tytuł strony nowy. Konsola bez błędów. Check, lint i build czyste.
+- Zostało: z przeglądu warto wziąć przy D3 pomysł na dwa techniczne zdania pod każdym projektem (kto korzysta, co połączono, co było trudne). Etykieta „Napiszcie albo zadzwońcie bezpośrednio” stoi teraz pod leadem, który też zaczyna się od „Napiszcie”, do poprawki przy D7.
