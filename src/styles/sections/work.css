@@ -21,9 +21,12 @@
   grid-column: 4 / -1;
 }
 
-/* Wiersz-link do listy realizacji: nazwa po lewej, liczba projektów po prawej */
+/* Wiersz-link do listy realizacji: nazwa po lewej, liczba projektów po prawej.
+   Hover i fokus: powierzchnia Głębi raise rysuje się od lewej jak kreska x (--d-enter, --ease-draw),
+   zjeżdża w tempie UI. Reduced motion: zmiana bez ruchu (globalne wyłączenie przejść). */
 .work__all {
   position: relative;
+  isolation: isolate;
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
@@ -37,9 +40,45 @@
   text-decoration: none;
 }
 
+.work__all-surface {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--c-glebia-raise);
+  /* Skala od lewej zamiast clip-path: płaski prostokąt wygląda tak samo, a transform idzie na kompozytorze */
+  transform-origin: 0 50%;
+  scale: 0 1;
+  transition: scale var(--d-ui) var(--ease-ui);
+}
+
 .work__all-count {
   color: var(--ink-muted);
   font-variant-numeric: tabular-nums;
+  transition:
+    translate var(--d-ui) var(--ease-ui),
+    color var(--d-ui) var(--ease-ui);
+}
+
+.work__all:focus-visible .work__all-surface {
+  scale: 1 1;
+  transition: scale var(--d-enter) var(--ease-draw);
+}
+
+.work__all:focus-visible .work__all-count {
+  translate: calc(var(--s-2) * -1) 0;
+  color: inherit;
+}
+
+@media (hover: hover) {
+  .work__all:hover .work__all-surface {
+    scale: 1 1;
+    transition: scale var(--d-enter) var(--ease-draw);
+  }
+
+  .work__all:hover .work__all-count {
+    translate: calc(var(--s-2) * -1) 0;
+    color: inherit;
+  }
 }
 
 /* Technologie, na których budujemy */
@@ -70,6 +109,6 @@
   .work__all {
     min-height: 7rem;
     margin-top: var(--s-24);
-    padding-inline: 0;
+    padding-inline: var(--s-4);
   }
 }

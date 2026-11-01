@@ -23,12 +23,17 @@ const Squeeze: Module = {
     if (!lenis) return;
 
     let squeeze = 0;
+    let written = '';
 
     const tick = () => {
       const target = Math.min((Math.abs(lenis.velocity) / window.innerWidth) * GAIN, MAX);
       squeeze += (target - squeeze) * SMOOTHING;
       if (squeeze < 0.0005 && target === 0) squeeze = 0;
-      root.style.setProperty('--squeeze', squeeze.toFixed(4));
+      // Zapis tylko przy zmianie: w spoczynku lista nie przelicza stylów w każdej klatce
+      const value = squeeze.toFixed(4);
+      if (value === written) return;
+      written = value;
+      root.style.setProperty('--squeeze', value);
     };
 
     gsap.ticker.add(tick);

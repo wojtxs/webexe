@@ -3,6 +3,7 @@
  * Zamiast wideo gra żywa warstwa nad zrzutem (components/live/*, eksperyment, DEMO).
  *
  * Precyzyjny kursor: gra tylko karta pod kursorem, po zjechaniu wraca toner i ruch staje.
+ * Fokus z klawiatury w [data-live-host] (karta z linkiem w tytule) gra jej kadr tak samo.
  * Dotyk: gra karta w środkowej części ekranu. Reduced motion i bez JS: zrzut w stanie z HTML.
  *
  * Wejście w kartę zdejmuje z niej toner Głębi skośnym frontem, a zrzut dojeżdża do skali 1
@@ -86,6 +87,20 @@ const WorkLive: Module = {
             card.style.removeProperty('--front');
             card.style.removeProperty('--front-angle');
           });
+
+          // Fokus gra kadr na każdym urządzeniu; wyjście fokusu poza host zatrzymuje go
+          const host = card.closest<HTMLElement>('[data-live-host]');
+          const onFocusOut = (event: FocusEvent) => {
+            if (!host?.contains(event.relatedTarget as Node | null)) pause();
+          };
+          if (host) {
+            host.addEventListener('focusin', play);
+            host.addEventListener('focusout', onFocusOut);
+            cleanups.push(() => {
+              host.removeEventListener('focusin', play);
+              host.removeEventListener('focusout', onFocusOut);
+            });
+          }
 
           if (fine) {
             card.addEventListener('pointerenter', play);

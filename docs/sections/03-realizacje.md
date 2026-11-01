@@ -173,7 +173,7 @@ Jeden moment na widok: na głównej i liście grają karty, a na stronie projekt
 | 1 | Kursor albo fokus na karcie (główna, lista, następna) | Toner Głębi zdejmuje się skośnym frontem, gra żywa warstwa, tilt | jak dziś: `work-live` (`--d-enter`, `--ease-enter`), tilt 3° |
 | 2 | Szybki scroll | Media kart lekko się ściskają | `squeeze`: GAIN 1.8, MAX 0.08 |
 | 3 | Wejście mediów w widok | Kurtyna od góry, zoom 1.2 → 1 | `media-reveal`, `--d-enter` |
-| 4 | Kursor albo fokus na wierszu „Wszystkie realizacje” | Powierzchnia Głębia raise rysuje się od lewej jak kreska x. Liczba przesuwa się o `--s-2` w lewo | `clip-path: inset(0 100% 0 0)` → `inset(0)`, `--d-enter`, `--ease-draw`; zjazd: `--d-ui`, `--ease-ui` |
+| 4 | Kursor albo fokus na wierszu „Wszystkie realizacje” | Powierzchnia Głębia raise rysuje się od lewej jak kreska x. Liczba przesuwa się o `--s-2` w lewo | `scale: 0 1` → `1 1` od lewej krawędzi (płaski prostokąt, transform na kompozytorze), `--d-enter`, `--ease-draw`; zjazd: `--d-ui`, `--ease-ui` |
 | 5 | Klik karty (główna, lista, następna) | **Morf:** media karty płynnie przechodzą w okładkę strony projektu, reszta przenika się | View Transitions między dokumentami: grupa `case-<slug>` w `--d-enter`, `--ease-enter`; root: przenikanie w `--d-ui` |
 | 6 | Klik innego linku między stronami | Kurtyna | `curtain` jak dziś (`--d-context`) |
 | 7 | Nagłówki h1/h2 | Słowa spod maski | `split-reveal`, jak na głównej |
