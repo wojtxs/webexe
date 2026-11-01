@@ -35,13 +35,17 @@ export async function initLifecycle(): Promise<void> {
 
   await Promise.all(
     entries.map(async ({ el, name }) => {
-      let instance: Module;
+      let module: Module;
       try {
-        instance = ((await import(`../modules/${name}.ts`)) as { default: Module }).default;
+        module = ((await import(`../modules/${name}.ts`)) as { default: Module }).default;
       } catch {
         // Moduł jeszcze nie istnieje — cicho pomijamy (F1 to fundament, nie finalna strona)
         return;
       }
+      // Osobna instancja na element: moduły w init przypisują this.destroy, a na jednej stronie
+      // moduł bywa kilka razy (work-live w hero i w następnej realizacji). Na wspólnym obiekcie
+      // drugi init nadpisałby destroy pierwszego i jego kontekst nigdy by się nie wycofał.
+      const instance = Object.create(module) as Module;
       try {
         await instance.init(el);
         registry.push({ name, root: el, instance });
