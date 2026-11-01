@@ -10,14 +10,29 @@
  * Zwinięty pasek chowa się przy scrollu w dół i wraca przy scrollu w górę (header.ts: is-hidden).
  * Ikona menu to dwie kreski, które przy otwarciu składają się w x. Menu wyrasta z przycisku
  * (na mobile pełny ekran z CTA na dole); przycisk pokazuje dopiero moduł menu, bez JS zostaje CTA.
+ * Na podstronach (home = false) wordmark prowadzi na główną, menu do jej sekcji (/#id), a komórka
+ * rozdziału pokazuje rozdziały podstrony z propsa chapters. CTA zostaje #kontakt, bo każda
+ * podstrona kończy się sekcją kontaktu.
  */
 import { demoContact } from '../data/demo';
 import Button from './Button.astro';
 import Wordmark from './Wordmark.astro';
 import XMark from './XMark.astro';
 
+interface Chapter {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  /** Rozdziały w komórce paska (id sekcji na tej stronie); domyślnie sekcje strony głównej */
+  chapters?: Chapter[];
+  /** Strona główna: linki do sekcji bez przejścia między stronami */
+  home?: boolean;
+}
+
 // TODO(treść): etykiety rozdziałów; roboczo nazwy z mapy w BRIEF, „Start” dla hero
-const chapters = [
+const homeChapters: Chapter[] = [
   { id: 'hero', label: 'Start' },
   { id: 'manifest', label: 'Manifest' },
   { id: 'realizacje', label: 'Realizacje' },
@@ -26,6 +41,17 @@ const chapters = [
   { id: 'poznaj-nas', label: 'Poznaj nas' },
   { id: 'kontakt', label: 'Kontakt' },
 ];
+
+const { chapters = homeChapters, home = true } = Astro.props;
+const base = home ? '' : '/';
+// Menu: sekcje głównej i lista realizacji zaraz po sekcji Realizacje
+const menuItems = homeChapters.flatMap((chapter) => {
+  const item = { href: `${base}#${chapter.id}`, label: chapter.label };
+  // TODO(treść): etykieta pozycji menu
+  return chapter.id === 'realizacje'
+    ? [item, { href: '/realizacje', label: 'Wszystkie realizacje' }]
+    : [item];
+});
 // Węzły na wewnętrznych liniach siatki (desktop 1–3, poniżej 992 px tylko środkowa)
 const nodes = [1, 2, 3];
 ---
@@ -44,7 +70,12 @@ const nodes = [1, 2, 3];
       ))}
     </div>
 
-    <a class="header__brand" href="#hero" aria-label="webexe, początek strony" data-intro>
+    <a
+      class="header__brand"
+      href={home ? '#hero' : '/'}
+      aria-label={home ? 'webexe, początek strony' : 'webexe, strona główna'}
+      data-intro
+    >
       <Wordmark />
     </a>
 
@@ -97,11 +128,11 @@ const nodes = [1, 2, 3];
   <div class="menu" id="menu" data-menu-panel inert>
     <nav class="menu__nav" aria-label="Menu">
       <ul class="menu__list">
-        {chapters.map((chapter) => (
+        {menuItems.map((item) => (
           <li data-menu-item>
-            <a class="menu__link t-h3" href={`#${chapter.id}`}>
+            <a class="menu__link t-h3" href={item.href}>
               <XMark class="menu__x" />
-              {chapter.label}
+              {item.label}
             </a>
           </li>
         ))}

@@ -1,0 +1,42 @@
+---
+/**
+ * CaseShot — wnętrze kadru realizacji: zrzut, żywa warstwa (components/live/*) i toner Głębi.
+ * Kontener z klasą .shot i [data-live-card] daje strona (karta, okładka projektu, następna realizacja),
+ * a ruch dokłada work-live (front tonera, żywa warstwa) i media-reveal ([data-reveal-zoom]).
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import FakturyLive from './live/FakturyLive.astro';
+import FlotaLive from './live/FlotaLive.astro';
+import PrzeplywyLive from './live/PrzeplywyLive.astro';
+import SerwisLive from './live/SerwisLive.astro';
+
+interface Props {
+  image: ImageMetadata;
+  alt: string;
+  live?: 'flota' | 'faktury' | 'przeplywy' | 'serwis';
+  /** Prefiks identyfikatorów w żywej warstwie, unikalny na stronie */
+  uid: string;
+  sizes: string;
+  eager?: boolean;
+}
+
+const { image, alt, live, uid, sizes, eager = false } = Astro.props;
+---
+
+<div class="shot__zoom" data-reveal-zoom>
+  <div class="shot__frame">
+    <Image
+      src={image}
+      alt={alt}
+      widths={[640, 1024, 1440, 2048]}
+      sizes={sizes}
+      loading={eager ? 'eager' : 'lazy'}
+    />
+    {live === 'flota' && <FlotaLive uid={uid} />}
+    {live === 'faktury' && <FakturyLive uid={uid} />}
+    {live === 'przeplywy' && <PrzeplywyLive />}
+    {live === 'serwis' && <SerwisLive uid={uid} />}
+  </div>
+  <div class="shot__toner"></div>
+</div>

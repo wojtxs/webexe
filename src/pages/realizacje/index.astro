@@ -1,0 +1,52 @@
+---
+/**
+ * /realizacje (docs/sections/03-realizacje.md, widok B): wszystkie realizacje z kolekcji
+ * w dwóch kolumnach na siatce, prawa przesunięta w dół (stagger jak w Alpanecie). Karty grają
+ * pod kursorem jak na głównej (work-live, tilt, squeeze). Strona kończy się kontaktem.
+ */
+import Base from '../../layouts/Base.astro';
+import Grid from '../../components/Grid.astro';
+import Header from '../../components/Header.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import Contact from '../../sections/Contact.astro';
+import { getRealizacje } from '../../data/realizacje';
+import '../../styles/sections/cases.css';
+
+const all = await getRealizacje();
+
+// TODO(treść): etykiety rozdziałów podstrony
+const chapters = [
+  { id: 'realizacje', label: 'Realizacje' },
+  { id: 'kontakt', label: 'Kontakt' },
+];
+---
+
+<Base title="Realizacje — webexe">
+  <Header slot="chrome" chapters={chapters} home={false} />
+
+  <section
+    id="realizacje"
+    class="section cases theme-dark"
+    data-nav-theme="dark"
+    aria-labelledby="cases-title"
+  >
+    <Grid />
+
+    <div class="container" data-module="work-live">
+      <h1 id="cases-title" class="cases__title t-impact" data-split="words">
+        Realizacje
+      </h1>
+      <!-- TODO(treść): lead listy realizacji -->
+
+      <ol class="cases__list" data-module="squeeze">
+        {all.map((entry) => (
+          <li class="cases__item">
+            <WorkCard entry={entry} heading="h2" sizes="(min-width: 768px) 50vw, 100vw" />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Contact />
+</Base>

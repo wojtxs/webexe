@@ -1,0 +1,236 @@
+---
+/**
+ * /realizacje/<projekt> (docs/sections/03-realizacje.md, widok C): pełny opis jednej realizacji.
+ * Hero na Głębi (powrót do listy, tytuł, tagi, okładka z żywą warstwą, fakty), opis na Pianie
+ * (lead i bloki z frontmattera: tekst, media, para desktop + telefon, technologie), następna
+ * realizacja na Głębi (po ostatniej pierwsza) i kontakt. Pola bez wartości się nie renderują.
+ */
+import type { GetStaticPaths } from 'astro';
+import { Image, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CaseShot from '../../components/CaseShot.astro';
+import Grid from '../../components/Grid.astro';
+import Header from '../../components/Header.astro';
+import Tags from '../../components/Tags.astro';
+import XMark from '../../components/XMark.astro';
+import Contact from '../../sections/Contact.astro';
+import { caseHref, getRealizacje, nextOf, type Realizacja } from '../../data/realizacje';
+import { tech } from '../../data/tech';
+import '../../styles/sections/case.css';
+
+export const getStaticPaths = (async () => {
+  const all = await getRealizacje();
+  return all.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, next: nextOf(all, entry.id) },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: Realizacja;
+  next: Realizacja;
+}
+
+const { entry, next } = Astro.props;
+const { data } = entry;
+
+// TODO(treść): etykiety faktów, bloków i rozdziałów (propozycja ze speca, do BRIEF po akceptacji)
+const factLabels = { industry: 'Branża', scope: 'Zakres', year: 'Rok', status: 'Status' } as const;
+const facts = (Object.keys(factLabels) as (keyof typeof factLabels)[])
+  .filter((key) => data.facts[key] !== undefined)
+  .map((key) => ({ label: factLabels[key], value: data.facts[key] }));
+
+const chapters = [
+  { id: 'projekt', label: 'Projekt' },
+  { id: 'opis', label: 'Opis' },
+  { id: 'nastepna', label: 'Następna' },
+  { id: 'kontakt', label: 'Kontakt' },
+];
+
+const og = await getImage({ src: data.cover, width: 1200, format: 'jpg' });
+const ogImage = new URL(og.src, Astro.site).href;
+---
+
+<Base title={`${data.title} — realizacje webexe`} description={data.summary} ogImage={ogImage}>
+  <Header slot="chrome" chapters={chapters} home={false} />
+
+  <section
+    id="projekt"
+    class="section case-hero theme-dark"
+    data-nav-theme="dark"
+    aria-labelledby="case-title"
+  >
+    <Grid />
+
+    <div class="container" data-module="work-live">
+      <a class="case-hero__back t-label" href="/realizacje">
+        <XMark class="case-hero__x" />
+        Wszystkie realizacje
+      </a>
+
+      <h1 id="case-title" class="case-hero__title t-h1" data-split="words">
+        {data.title}
+      </h1>
+      <Tags tags={data.tags} class="case-hero__tags muted" />
+
+      <div class="shot case-hero__cover" data-live-card data-reveal>
+        <CaseShot
+          image={data.cover}
+          alt={data.coverAlt}
+          live={data.live}
+          uid={`cover-${entry.id}`}
+          sizes="100vw"
+          eager
+        />
+      </div>
+
+      {facts.length > 0 && (
+        <dl class="case-facts">
+          {facts.map((fact) => (
+            <div class="case-facts__cell">
+              <dt class="t-label muted">{fact.label}</dt>
+              <dd class="t-lead">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+    </div>
+  </section>
+
+  <section
+    id="opis"
+    class="section case-body theme-light"
+    data-nav-theme="light"
+    aria-label="Opis projektu"
+  >
+    <Grid />
+
+    <div class="container case-body__inner">
+      <p class="case-body__lead t-lead">{data.summary}</p>
+      {data.url && (
+        <p class="case-body__url">
+          {/* TODO(treść): etykieta linku do działającego projektu */}
+          <a class="link" href={data.url} rel="noopener" target="_blank">
+            Zobacz na żywo
+          </a>
+        </p>
+      )}
+
+      {data.blocks.map((block, i) => {
+        if (block.type === 'media') {
+          return (
+            <figure class="case-media">
+              <div class="case-media__frame" data-reveal>
+                <div data-reveal-zoom>
+                  <Image
+                    src={block.image}
+                    alt={block.alt}
+                    widths={[640, 1024, 1440, 2048]}
+                    sizes="100vw"
+                  />
+                </div>
+              </div>
+              {block.caption && <figcaption class="t-small muted">{block.caption}</figcaption>}
+            </figure>
+          );
+        }
+        if (block.type === 'pair') {
+          return (
+            <div class="case-pair">
+              <div class="case-media__frame case-pair__desktop" data-reveal>
+                <div data-reveal-zoom>
+                  <Image
+                    src={block.desktop}
+                    alt={block.desktopAlt}
+                    widths={[640, 1024, 1440]}
+                    sizes="(min-width: 768px) 66vw, 100vw"
+                  />
+                </div>
+              </div>
+              <div class="case-media__frame case-pair__mobile" data-reveal>
+                <div data-reveal-zoom>
+                  <Image
+                    src={block.mobile}
+                    alt={block.mobileAlt}
+                    widths={[390, 780]}
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <section class="case-block" aria-labelledby={`blok-${i}`}>
+            <h2 id={`blok-${i}`} class="case-block__title t-label muted">
+              {block.title}
+            </h2>
+            {block.body.length > 0 && (
+              <div class="case-block__text">
+                {block.body.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            )}
+            {block.type === 'tech' && data.tech.length > 0 && (
+              <ul class="stack__list case-block__tech" aria-label="Technologie">
+                {data.tech.map((key) => {
+                  const { name, icon: Icon } = tech[key];
+                  return (
+                    <li class="stack__cell">
+                      <Icon class="stack__icon" aria-hidden="true" focusable="false" />
+                      <span class="t-small">{name}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
+        );
+      })}
+    </div>
+  </section>
+
+  <section
+    id="nastepna"
+    class="section case-next theme-dark"
+    data-nav-theme="dark"
+    aria-labelledby="next-title"
+  >
+    <Grid />
+
+    <div class="container case-next__inner" data-module="work-live">
+      <div class="case-next__copy">
+        <p class="t-label muted">Następna realizacja</p>
+        <h2 id="next-title" class="case-next__title t-h1">
+          <a class="case-next__link" href={caseHref(next)}>
+            {next.data.title}
+          </a>
+        </h2>
+        <Tags tags={next.data.tags} class="muted" />
+      </div>
+
+      <!-- TODO(treść): etykieta kursora -->
+      <a
+        class="shot case-next__shot"
+        href={caseHref(next)}
+        tabindex="-1"
+        aria-hidden="true"
+        data-live-card
+        data-cursor="Zobacz realizację"
+        data-tilt="3"
+        data-reveal
+      >
+        <CaseShot
+          image={next.data.cover}
+          alt={next.data.coverAlt}
+          live={next.data.live}
+          uid={`next-${next.id}`}
+          sizes="(min-width: 992px) 50vw, 100vw"
+        />
+      </a>
+    </div>
+  </section>
+
+  <Contact />
+</Base>

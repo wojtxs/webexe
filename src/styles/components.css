@@ -323,6 +323,156 @@
   color: var(--ink-muted);
 }
 
+/* --- Kadr realizacji (components/CaseShot.astro): karta, okładka projektu, następna realizacja ---
+   Przechył za kursorem (tilt) i ściskanie przy szybkim scrollu (squeeze) w jednym transformie.
+   Toner Głębi zdejmuje skośny front (work-live: --front 0 → 1, --front-angle losowany);
+   bez JS i przy reduced motion tonera nie ma (klasa is-front). */
+.shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background-color: var(--surface);
+  transform: perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+    scale(calc(1 - var(--squeeze, 0)));
+}
+
+.shot__zoom,
+.shot__frame {
+  position: absolute;
+  inset: 0;
+}
+
+/* Zrzut dojeżdża do skali 1 razem z frontem tonera */
+.shot__frame {
+  transform: scale(calc(1.04 - var(--front, 1) * 0.04));
+}
+
+.shot__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shot__toner {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background-color: var(--c-glebia);
+  opacity: 0.5;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    var(--front-angle, 100deg),
+    transparent calc(var(--front, 1) * 140% - 30%),
+    var(--c-glebia) calc(var(--front, 1) * 140% - 10%)
+  );
+}
+
+.shot.is-front .shot__toner {
+  display: block;
+}
+
+/* --- Karta realizacji (components/WorkCard.astro) --- */
+.work-card {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.work-card__media {
+  margin-bottom: var(--s-2);
+}
+
+.work-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Jedyny przystanek tabulatora to tytuł, a jego fokus obrysowuje też kadr */
+.work-card:has(.work-card__link:focus-visible) .work-card__media {
+  outline: 2px solid var(--c-laguna-start);
+  outline-offset: 3px;
+}
+
+.work-card__desc {
+  max-width: var(--prose-max-width);
+}
+
+/* --- Tagi (components/Tags.astro): znak x między pozycjami --- */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  list-style: none;
+}
+
+.tags__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.tags__x {
+  width: 0.7em;
+  height: 0.7em;
+}
+
+/* --- Siatka technologii (03 na głównej, blok „Z czym połączyliśmy” na stronie projektu) ---
+   Ikona i nazwa w komórkach po 3 kolumny, przygaszone, na hover w kolorze tekstu sekcji (tempo UI).
+   Linie komórek to linie siatki. */
+.stack__list {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  border-bottom: 1px solid var(--grid-line);
+  list-style: none;
+}
+
+.stack__cell {
+  grid-column: span 3;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--s-4);
+  min-height: 10rem;
+  padding: var(--s-6);
+  border-top: 1px solid var(--grid-line);
+  color: var(--ink-muted);
+  text-align: center;
+  transition: color var(--d-ui) var(--ease-ui);
+}
+
+.stack__icon {
+  width: var(--s-12);
+  height: var(--s-12);
+  fill: currentColor;
+}
+
+@media (hover: hover) {
+  .stack__cell:hover {
+    color: inherit;
+  }
+}
+
+@media (max-width: 991px) {
+  .stack__cell {
+    grid-column: span 4;
+  }
+}
+
+@media (max-width: 767px) {
+  .stack__cell {
+    grid-column: span 2;
+    min-height: 8rem;
+  }
+
+  .stack__icon {
+    width: var(--s-8);
+    height: var(--s-8);
+  }
+}
+
 /* --- Pasek systemu (components/Header.astro): wordmark, bieżący rozdział, CTA i menu ---
    Na starcie goły, w kolorach tła pod paskiem (nav-theme: is-top-dark). Po zjechaniu ze startu
    (header.ts: is-condensed) powierzchnia Głębi rysuje się od lewej w krzywej rysowania x, a pasek

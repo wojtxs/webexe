@@ -1,0 +1,23 @@
+---
+/**
+ * Tags — tagi realizacji jako lista; między pozycjami stoi znak x (DESIGN.md: separatorem
+ * jest x, nie kropka). x jest dekoracją (aria-hidden w XMark).
+ */
+import XMark from './XMark.astro';
+
+interface Props {
+  tags: readonly string[];
+  class?: string;
+}
+
+const { tags, class: className } = Astro.props;
+---
+
+<ul class:list={['tags t-label', className]}>
+  {tags.map((tag, i) => (
+    <li class="tags__item">
+      {i > 0 && <XMark class="tags__x" />}
+      {tag}
+    </li>
+  ))}
+</ul>

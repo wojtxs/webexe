@@ -1,18 +1,19 @@
 ---
 /**
- * 03 Realizacje i dowody — greybox (F3). Cała treść zależy od D3 (min. 4 projekty).
- * Duże karty na kolumnach siatki ze staggerem (docs/INSPIRACJE.md, wiersz Realizacje).
- * Na końcu technologie, na których budujemy: ikona i nazwa w komórkach widocznej siatki,
- * przygaszone, na hover w kolorze tekstu (2026-11-01, zamiast zmyślonych klientów i liczników).
+ * 03 Realizacje (docs/sections/03-realizacje.md, widok A). Treść zależy od D3, do tego czasu DEMO.
+ * Trzy wyróżnione realizacje z kolekcji (data/realizacje.ts) jako duże karty na kolumnach siatki
+ * ze staggerem (docs/INSPIRACJE.md, wiersz Realizacje), wiersz-link do /realizacje, a na końcu
+ * technologie, na których budujemy: ikona i nazwa w komórkach widocznej siatki.
  */
-import { Image } from 'astro:assets';
 import Grid from '../components/Grid.astro';
-import FakturyLive from '../components/live/FakturyLive.astro';
-import FlotaLive from '../components/live/FlotaLive.astro';
-import PrzeplywyLive from '../components/live/PrzeplywyLive.astro';
-import SerwisLive from '../components/live/SerwisLive.astro';
-import { demoProjects, demoStack } from '../data/demo';
+import WorkCard from '../components/WorkCard.astro';
+import { demoStack } from '../data/demo';
+import { featuredOf, getRealizacje } from '../data/realizacje';
+import { tech } from '../data/tech';
 import '../styles/sections/work.css';
+
+const all = await getRealizacje();
+const featured = featuredOf(all);
 ---
 
 <section
@@ -30,41 +31,20 @@ import '../styles/sections/work.css';
     </h2>
 
     <ol class="work__list" data-module="squeeze">
-      <!-- TODO(treść): DEMO, fikcyjne projekty z src/data/demo.ts; docelowo D3 (obraz + pętla wideo).
-           Zamiast wideo gra żywa warstwa nad zrzutem (components/live/*, modules/work-live.ts). -->
-      {demoProjects.map((project) => (
+      {featured.map((entry) => (
         <li class="work__item">
-          <article class="work-card">
-            <div
-              class="work-card__media"
-              data-live-card
-              data-cursor="Podgląd na żywo"
-              data-tilt="3"
-              data-reveal
-            >
-              <div class="work-card__shot" data-reveal-zoom>
-                <div class="work-card__frame">
-                  <Image
-                    src={project.image}
-                    alt={project.alt}
-                    widths={[640, 1024, 1440, 2048]}
-                    sizes="(min-width: 992px) 75vw, 100vw"
-                  />
-                  {project.live === 'flota' && <FlotaLive uid="work-flota" />}
-                  {project.live === 'faktury' && <FakturyLive uid="work-faktury" />}
-                  {project.live === 'przeplywy' && <PrzeplywyLive />}
-                  {project.live === 'serwis' && <SerwisLive uid="work-serwis" />}
-                </div>
-                <div class="work-card__toner"></div>
-              </div>
-            </div>
-            <p class="work-card__tags t-label muted">{project.tags}</p>
-            <h3 class="work-card__title t-h3">{project.title}</h3>
-            <p class="work-card__desc muted">{project.desc}</p>
-          </article>
+          <WorkCard entry={entry} sizes="(min-width: 992px) 75vw, 100vw" />
         </li>
       ))}
     </ol>
+
+    <!-- TODO(treść): etykieta wiersza; liczba to liczba wpisów w kolekcji -->
+    <a class="work__all" href="/realizacje">
+      <span class="t-h2">Wszystkie realizacje</span>
+      <span class="work__all-count t-label" aria-hidden="true">
+        {String(all.length).padStart(2, '0')}
+      </span>
+    </a>
 
     <!-- TODO(treść): DEMO, lista technologii z src/data/demo.ts do potwierdzenia; nagłówek roboczy -->
     <div class="stack">
@@ -72,12 +52,15 @@ import '../styles/sections/work.css';
         Technologie, na których budujemy
       </h3>
       <ul class="stack__list" aria-labelledby="stack-title">
-        {demoStack.map(({ name, icon: Icon }) => (
-          <li class="stack__cell">
-            <Icon class="stack__icon" aria-hidden="true" focusable="false" />
-            <span class="stack__name t-small">{name}</span>
-          </li>
-        ))}
+        {demoStack.map((key) => {
+          const { name, icon: Icon } = tech[key];
+          return (
+            <li class="stack__cell">
+              <Icon class="stack__icon" aria-hidden="true" focusable="false" />
+              <span class="t-small">{name}</span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   </div>

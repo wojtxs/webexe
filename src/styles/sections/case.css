@@ -1,0 +1,210 @@
+/* ==========================================================================
+   /realizacje/<projekt> (docs/sections/03-realizacje.md, widok C).
+   Hero na Głębi: powrót, tytuł na kolumnach 1–9, okładka na całą szerokość,
+   fakty w komórkach po 3 kolumny (jak technologie). Opis na Pianie: lead i tekst
+   bloków na kolumnach 4–10, etykieta bloku na 1–3, media na całą szerokość,
+   para desktop 1–8 + telefon 9–12. Następna realizacja: tytuł 1–6, kadr 7–12.
+   Kadr i komórki technologii: components.css.
+   ========================================================================== */
+
+/* --- Hero --- */
+.case-hero__back {
+  grid-column: 1 / -1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-12);
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color var(--d-ui) var(--ease-ui);
+}
+
+.case-hero__x {
+  width: 0.8em;
+  height: 0.8em;
+}
+
+@media (hover: hover) {
+  .case-hero__back:hover {
+    color: inherit;
+  }
+}
+
+.case-hero__title {
+  grid-column: 1 / 10;
+}
+
+.case-hero__tags {
+  grid-column: 1 / -1;
+  margin-top: var(--s-6);
+}
+
+.case-hero__cover {
+  grid-column: 1 / -1;
+  margin-top: var(--s-16);
+}
+
+.case-facts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  margin-top: var(--s-16);
+  border-bottom: 1px solid var(--grid-line);
+}
+
+.case-facts__cell {
+  grid-column: span 3;
+  display: grid;
+  align-content: start;
+  gap: var(--s-2);
+  min-height: 7rem;
+  padding-block: var(--s-6);
+  border-top: 1px solid var(--grid-line);
+}
+
+/* --- Opis --- */
+.case-body__inner {
+  row-gap: var(--s-24);
+}
+
+.case-body__lead,
+.case-body__url {
+  grid-column: 4 / 11;
+}
+
+.case-body__url {
+  margin-top: calc(var(--s-16) * -1);
+}
+
+.case-block {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: var(--s-8);
+}
+
+.case-block__title {
+  grid-column: 1 / 4;
+  padding-top: 0.35em;
+}
+
+.case-block__text {
+  grid-column: 4 / 11;
+  display: grid;
+  gap: var(--s-4);
+  max-width: var(--prose-max-width);
+}
+
+.case-media {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--s-3);
+}
+
+.case-media__frame {
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background-color: var(--surface);
+}
+
+.case-media__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.case-pair {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
+}
+
+.case-pair__desktop {
+  grid-column: 1 / 9;
+}
+
+.case-pair__mobile {
+  grid-column: 9 / -1;
+}
+
+/* --- Następna realizacja --- */
+.case-next__inner {
+  align-items: center;
+  row-gap: var(--s-12);
+}
+
+.case-next__copy {
+  grid-column: 1 / 7;
+  display: grid;
+  gap: var(--s-6);
+}
+
+.case-next__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.case-next:has(.case-next__link:focus-visible) .case-next__shot {
+  outline: 2px solid var(--c-laguna-start);
+  outline-offset: 3px;
+}
+
+.case-next__shot {
+  grid-column: 7 / -1;
+}
+
+@media (max-width: 991px) {
+  .case-hero__title,
+  .case-body__lead,
+  .case-body__url,
+  .case-block__title,
+  .case-block__text,
+  .case-next__copy,
+  .case-next__shot {
+    grid-column: 1 / -1;
+  }
+
+  .case-facts__cell {
+    grid-column: span 4;
+  }
+
+  .case-block__title {
+    padding-top: 0;
+  }
+
+  .case-block {
+    row-gap: var(--s-4);
+  }
+
+  .case-pair__desktop {
+    grid-column: 1 / 6;
+  }
+
+  .case-pair__mobile {
+    grid-column: 6 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .case-facts__cell {
+    grid-column: span 2;
+  }
+
+  .case-body__inner {
+    row-gap: var(--s-16);
+  }
+
+  .case-pair {
+    row-gap: var(--s-6);
+  }
+
+  .case-pair__desktop {
+    grid-column: 1 / -1;
+  }
+
+  .case-pair__mobile {
+    grid-column: 2 / 4;
+  }
+}

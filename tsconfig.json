@@ -10,5 +10,5 @@
       "@components/*": ["src/components/*"]
     }
   },
-  "include": ["src", "scripts"]
+  "include": [".astro/types.d.ts", "src", "scripts"]
 }
