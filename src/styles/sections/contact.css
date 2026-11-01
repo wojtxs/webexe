@@ -35,6 +35,12 @@
   justify-items: start;
 }
 
+/* Lead nad bezpośrednim kontaktem: co napisać, bez specyfikacji */
+.contact__lead {
+  max-width: var(--prose-max-width);
+  margin-bottom: var(--s-8);
+}
+
 .contact__link {
   justify-self: start;
 }

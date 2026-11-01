@@ -30,7 +30,7 @@ Konkretny, spokojny, bez żargonu. Mówimy wprost, także o tym, czego nie warto
 
 ### 01 Hero
 - **H1:** Budujemy / oprogramowanie / dla firm i zostajemy / przy nim na lata.
-- **Lead:** Aplikacje webowe, systemy wewnętrzne, integracje i automatyzacje z AI. Projektujemy je razem z wami, wdrażamy etapami i utrzymujemy na własnej infrastrukturze.
+- **Lead:** Tworzymy aplikacje do codziennej pracy, łączymy istniejące systemy i automatyzujemy powtarzalne zadania. Zajmujemy się całym projektem — od ustalenia, co trzeba zrobić, po wdrożenie, serwery i późniejszy rozwój. *(2026-11-01, z przeglądu tekstów)*
 - **CTA:** *(D9, propozycja: „Porozmawiajmy o projekcie”)*
 - **Etykiety warstw rdzenia** (hover i rozkład przy scrollu, od góry): Aplikacje, Integracje, Automatyzacje, Utrzymanie. *(2026-10-27, od użytkownika; Utrzymanie jako podstawa, bo to rdzeń oferty)*
 
@@ -41,16 +41,34 @@ Konkretny, spokojny, bez żargonu. Mówimy wprost, także o tym, czego nie warto
 ### 05 Jak pracujemy (4 kroki)
 
 **01 / 04 Projektujemy**
-Zaczynamy od tego, jak naprawdę pracujecie, a nie od technologii. Rozpisujemy proces, mówimy wprost, co warto zbudować, a czego nie, i wyceniamy zakres przed startem.
+Na początku poznajemy proces, który chcecie usprawnić. Sprawdzamy, jakich systemów już używacie, co można z nimi połączyć i gdzie potrzebne będzie nowe oprogramowanie. Ustalamy zakres pierwszego etapu i przygotowujemy wycenę.
 
 **02 / 04 Budujemy**
-Aplikacje webowe, panele, systemy wewnętrzne i integracje z tym, czego już używacie. Etapami: najpierw najważniejsza część, potem kolejne, każda po testach.
+Dzielimy pracę na etapy, żeby nie trzeba było czekać do końca projektu na zobaczenie efektów. Udostępniamy kolejne wersje do sprawdzenia, zbieramy uwagi i testujemy funkcje przed wdrożeniem.
 
 **03 / 04 Automatyzujemy**
-Powtarzalną pracę przejmuje automat albo agent AI. Tam, gdzie decyzja ma znaczenie, system przygotowuje, a człowiek zatwierdza.
+Podłączamy potrzebne systemy, przygotowujemy przepływ danych i automatyzujemy wybrane czynności. Sprawdzamy również sytuacje, w których coś pójdzie nie tak — na przykład zewnętrzny system przestanie odpowiadać albo dokument będzie zawierał niepełne dane.
 
 **04 / 04 Utrzymujemy**
 Serwery, kopie zapasowe, monitoring, aktualizacje i dalszy rozwój. Gdy coś trzeba zmienić, piszecie do ludzi, którzy to zbudowali.
+
+*(2026-11-01: teksty kroków 01–03 z przeglądu tekstów; 04 zostaje, bo niesie wyróżnik.)*
+
+### 06 Poznaj nas
+
+Jesteśmy dwuosobowym zespołem programistycznym. Tworzymy aplikacje webowe, integracje i automatyzacje dla firm. Pracujemy bezpośrednio z klientami, od pierwszych ustaleń po wdrożenie i późniejsze utrzymanie. Lubimy projekty, w których można uporządkować skomplikowany proces, zastąpić kilka niepołączonych narzędzi jednym rozwiązaniem albo pozbyć się pracy wykonywanej codziennie ręcznie. Sami piszemy i utrzymujemy oprogramowanie, które dostarczamy. Dzięki temu znamy te systemy również po zakończeniu pierwszego etapu projektu.
+
+*(2026-11-01, z przeglądu tekstów, zastępuje tekst z wersji 1. Bez zdania „Zależy nam, żeby dobrze zrozumieć, jak działa firma…”, bo powtarza krok 01 z Jak pracujemy.)*
+
+### 07 Kontakt
+
+- **Nagłówek:** CTA z D9.
+- **Lead:** Napiszcie krótko, jak to teraz wygląda i co chcielibyście zmienić. Nie musicie przygotowywać specyfikacji technicznej. Odezwiemy się, żeby porozmawiać o szczegółach. *(2026-11-01)*
+
+### SEO
+
+- **Tytuł:** webexe — aplikacje, integracje i automatyzacje dla firm
+- **Opis:** Tworzymy aplikacje biznesowe, integrujemy systemy i automatyzujemy procesy. Zajmujemy się wdrożeniem, utrzymaniem i dalszym rozwojem oprogramowania. *(2026-11-01)*
 
 ### Treść z wersji 1, do decyzji D10
 
@@ -65,9 +83,6 @@ Zostaje tylko wtedy, gdy ją potwierdzimy i dostosujemy do formy „wy”.
 - Generowanie raportów, ofert i zestawień
 - Automatyzacja obiegu informacji
 - Wykorzystanie AI do wspomagania codziennych zadań
-
-**Poznaj nas** (kandydat do sekcji 06):
-Jesteśmy dwuosobowym zespołem programistycznym specjalizującym się w tworzeniu aplikacji i automatyzacji procesów biznesowych. Stawiamy na bezpośrednią współpracę, przemyślane rozwiązania i praktyczne wykorzystanie technologii. Naszym celem jest dostarczanie oprogramowania, które nie tylko dobrze działa, ale przede wszystkim wnosi rzeczywistą wartość do działalności klienta.
 
 ## Mapa strony
 
@@ -101,5 +116,5 @@ Otwarte (w nawiasie faza, którą blokują):
 - **D7. Kontakt i analityka.** Formularz przez nasz serwer pocztowy czy mailto + telefon? Plausible, GA4 czy nic? Od tego zależy baner cookies.
 - **D8. Wordmark SVG.** Plik od projektanta czy generujemy z Comfortaa 700? Litera x musi być osobną ścieżką.
 - **D9. Brzmienie CTA w formie „wy”.** Propozycja: „Porozmawiajmy o projekcie”. *(blokuje F3)*
-- **D10. Treść z wersji 1.** Czy zostają przykładowe rozwiązania (w panelach sekcji 05) i „Poznaj nas” (06)? Jeśli tak, trzeba je przepisać na formę „wy” i nowy ton. *(blokuje F3)*
+- **D10. Treść z wersji 1.** „Poznaj nas” rozstrzygnięte: nowy tekst w sekcji 06 powyżej *(2026-11-01)*. Otwarte: czy zostają przykładowe rozwiązania (w panelach sekcji 05). Jeśli tak, trzeba je przepisać na formę „wy” i nowy ton. *(blokuje F3)*
 - **D11. Kroki 01–04.** Numeracja mówi „to jest kolejność”. Projektujemy → Budujemy → Utrzymujemy to faktycznie etapy, ale Automatyzujemy jest bardziej rodzajem pracy niż etapem. Zostawiamy numerację (czytaną jako cykl życia projektu), czy krok 03 przeformułowujemy? Akordeon w sekcji 05 stawia kroki obok siebie jako równorzędne, co łagodzi problem. *(blokuje 05)*
