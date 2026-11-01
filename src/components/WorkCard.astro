@@ -4,9 +4,10 @@
  * Dwa linki do tej samej strony projektu: kadr (myszą, poza tabulatorem i czytnikiem, bo powtarza
  * tytuł) i tytuł (jedyny przystanek tabulatora, nazwa linku = tytuł). Focus ring tytułu obrysowuje
  * kadr (components.css). Kadr gra pod kursorem (work-live), przechyla się (tilt) i ściska przy
- * szybkim scrollu (squeeze na liście).
+ * szybkim scrollu (squeeze na liście). Klik w którykolwiek link przenosi kadr w okładkę projektu
+ * (data-morph, curtain.ts).
  */
-import { caseHref, type Realizacja } from '../data/realizacje';
+import { caseHref, morphName, type Realizacja } from '../data/realizacje';
 import CaseShot from './CaseShot.astro';
 import Tags from './Tags.astro';
 
@@ -20,6 +21,7 @@ interface Props {
 const { entry, sizes, heading: Heading = 'h3' } = Astro.props;
 const { data } = entry;
 const href = caseHref(entry);
+const morph = morphName(entry);
 ---
 
 <article class="work-card" data-live-host>
@@ -33,6 +35,8 @@ const href = caseHref(entry);
     data-cursor="Zobacz realizację"
     data-tilt="3"
     data-reveal
+    data-morph={morph}
+    data-morph-source={morph}
   >
     <CaseShot
       image={data.cover}
@@ -44,7 +48,7 @@ const href = caseHref(entry);
   </a>
   <Tags tags={data.tags} class="work-card__tags muted" />
   <Heading class="work-card__title t-h3">
-    <a class="work-card__link" href={href}>
+    <a class="work-card__link" href={href} data-morph={morph}>
       {data.title}
     </a>
   </Heading>

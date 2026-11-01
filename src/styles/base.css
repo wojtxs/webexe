@@ -67,6 +67,29 @@ video {
   color: var(--c-biel);
 }
 
+/* --- Przejście między stronami: morf kadru karty w okładkę projektu ---
+   View Transitions między dokumentami (docs/sections/03-realizacje.md, ruch #5). Nazwę kadrowi
+   nadaje curtain.ts przy kliknięciu, a inne nawigacje pomija (tam gra kurtyna). Kadr leci
+   w tempie wejścia treści, reszta strony przenika się w tempie UI. Reduced motion: bez przejścia. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: var(--d-enter);
+  animation-timing-function: var(--ease-enter);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--d-ui);
+  animation-timing-function: var(--ease-ui);
+}
+
 /* --- Reduced motion: wyłącz wszystkie CSS transitions i animations --- */
 @media (prefers-reduced-motion: reduce) {
   *,

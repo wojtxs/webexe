@@ -1,6 +1,6 @@
 # 03 — Realizacje (sekcja na głównej, lista, strona projektu)
 
-**Status:** zaakceptowany (2026-11-01), w budowie
+**Status:** zaakceptowany (2026-11-01), w budowie: S1–S3 zrobione, zostaje S4
 **Zależności:** decyzja z 2026-11-01 (`PROGRESS.md`, log decyzji). Istniejące moduły: `work-live`, `tilt`, `squeeze`, `media-reveal`, `split-reveal`, `curtain`, `header`, `chapter-map`, `menu`, `cursor`. Komponenty `Grid`, `XMark`, `Button`, `Contact.astro`. Treść: **D3** (prawdziwe projekty), do tego czasu DEMO. Bez nowych zależności npm.
 **Wzorzec:** `docs/INSPIRACJE.md`, wiersz „Realizacje / showcase” (z notką 2026-11-01). `docs/reference/chipsa-analiza.md`: 3 (Best works, link do wszystkich), 4.2 (`/works/[slug]`: powrót „×”, hero z mediami, bloki z tytułem, następny projekt), 5.3 (front obraz → wideo), 7.2 (przejście). `docs/reference/alpanet-analiza.md`, 3 wiersz 8 (karty realizacji na siatce, stagger kolumn ±133 px) i 4.3 (rytm). Klatek w `docs/refs/03-*/` brak.
 
@@ -58,10 +58,10 @@ Hero na głównej zostaje na `demoHero` z `demo.ts`, bo jest związany z żywą 
   <ol class="work__list" data-module="squeeze">
     <li class="work__item">
       <article class="work-card">
-        <div class="work-card__media" data-live-card data-cursor="Zobacz realizację" data-tilt="3" data-reveal
-             style="view-transition-name: case-kokpit-floty">…zrzut + żywa warstwa + toner…</div>
+        <a class="work-card__media" data-live-card data-cursor="Zobacz realizację" data-tilt="3" data-reveal
+           data-morph="case-kokpit-floty" data-morph-source="case-kokpit-floty">…zrzut + żywa warstwa + toner…</a>
         <ul class="tags">…<li>Aplikacja</li><li><XMark/></li><li>Integracje</li>…</ul>
-        <h3 class="work-card__title"><a class="work-card__link" href="/realizacje/kokpit-floty">Kokpit floty</a></h3>
+        <h3 class="work-card__title"><a class="work-card__link" href="/realizacje/kokpit-floty" data-morph="case-kokpit-floty">Kokpit floty</a></h3>
         <p class="work-card__desc">…</p>
       </article>
     </li>
@@ -84,7 +84,7 @@ Hero na głównej zostaje na `demoHero` z `demo.ts`, bo jest związany z żywą 
 <section id="projekt" class="case-hero theme-dark" data-nav-theme="dark">
   <a class="case-hero__back" href="/realizacje"><XMark/> Wszystkie realizacje</a>
   <h1>Kokpit floty</h1><ul class="tags">…</ul>
-  <figure class="case-hero__cover" data-live-card style="view-transition-name: case-kokpit-floty">…</figure>
+  <div class="case-hero__cover" data-live-card="view" style="view-transition-name: case-kokpit-floty">…</div>
   <dl class="case-facts">…4 komórki…</dl>
 </section>
 <section id="opis" class="case-body theme-light" data-nav-theme="light">
@@ -103,7 +103,8 @@ Wspólna karta wychodzi do `components/WorkCard.astro` (główna i lista). Link 
 
 Pliki spoza sekcji:
 - `Header.astro`: propsy `chapters` i `home` (na podstronach wordmark → `/`, menu → `/#id` plus pozycja „Wszystkie realizacje”). Na głównej bez zmian.
-- `curtain.ts`: pomija linki z `data-morph`, gdy przeglądarka obsługuje przejścia między dokumentami (wtedy gra morf).
+- `curtain.ts`: pomija linki z `data-morph`, gdy przeglądarka obsługuje przejścia między dokumentami (wtedy gra morf). W chwili kliknięcia nadaje `view-transition-name` kadrowi z `data-morph-source` o tej samej nazwie. Okładka ma nazwę na stałe. Stałe nazwy na wszystkich kartach morfowałyby każdą parę o tej samej nazwie (główna → lista, kadr następnej realizacji w stopce projektu). Inne nawigacje `pageswap` pozbawia przejścia przeglądarki (`skipTransition()`), żeby nie dublowało kurtyny.
+- `nav-theme.ts`: w trakcie przejścia hit-testing trafia tylko w `<html>`, więc wynik „nieznany” sonda sprawdza w następnej klatce. `Header.astro`: prop `top` (podstrony `dark`), żeby pierwsza klatka nowej strony miała właściwe kolory paska.
 - `base.css`: reguła `@view-transition`.
 - `ARCHITECTURE.md`: strony, kolekcja, `data-morph`, propsy Header.
 - `index.astro` i `Hero.astro`: bez zmian.
@@ -172,7 +173,7 @@ Jeden moment na widok: na głównej i liście grają karty, a na stronie projekt
 |---|---|---|---|
 | 1 | Kursor albo fokus na karcie (główna, lista, następna) | Toner Głębi zdejmuje się skośnym frontem, gra żywa warstwa, tilt | jak dziś: `work-live` (`--d-enter`, `--ease-enter`), tilt 3° |
 | 2 | Szybki scroll | Media kart lekko się ściskają | `squeeze`: GAIN 1.8, MAX 0.08 |
-| 3 | Wejście mediów w widok | Kurtyna od góry, zoom 1.2 → 1 | `media-reveal`, `--d-enter` |
+| 3 | Wejście mediów w widok | Kurtyna od góry, zoom 1.2 → 1. Okładka projektu bez kurtyny: stoi od pierwszej klatki, bo morf nie może lecieć w ukryty element, a jej żywa warstwa gra w widoku jak wideo (`data-live-card="view"`) | `media-reveal`, `--d-enter` |
 | 4 | Kursor albo fokus na wierszu „Wszystkie realizacje” | Powierzchnia Głębia raise rysuje się od lewej jak kreska x. Liczba przesuwa się o `--s-2` w lewo | `scale: 0 1` → `1 1` od lewej krawędzi (płaski prostokąt, transform na kompozytorze), `--d-enter`, `--ease-draw`; zjazd: `--d-ui`, `--ease-ui` |
 | 5 | Klik karty (główna, lista, następna) | **Morf:** media karty płynnie przechodzą w okładkę strony projektu, reszta przenika się | View Transitions między dokumentami: grupa `case-<slug>` w `--d-enter`, `--ease-enter`; root: przenikanie w `--d-ui` |
 | 6 | Klik innego linku między stronami | Kurtyna | `curtain` jak dziś (`--d-context`) |
@@ -184,7 +185,7 @@ Jeden moment na widok: na głównej i liście grają karty, a na stronie projekt
 - **Reduced motion:** bez morfu (reguła `@view-transition` tylko przy `no-preference`), bez kurtyny, media stoją, karty bez tonera i tiltu, wiersz-link zmienia tło bez ruchu. Treść kompletna.
 - **Bez WebGL:** nie używamy WebGL.
 - **Dotyk:** #1 gra karta w środkowej części ekranu (jak dziś), tap przechodzi do projektu. #4 nie ma odpowiednika hover (świadomie): wiersz ma stałe linie i wygląda klikalnie.
-- **Bez JS:** wszystkie linki działają, a morf też, bo View Transitions między dokumentami to sam CSS. Karty pokazują zrzut.
+- **Bez JS:** wszystkie linki działają. Strony przenikają się (reguła `@view-transition` to sam CSS), ale bez morfu, bo nazwę kadrowi nadaje skrypt w chwili kliknięcia. Karty pokazują zrzut.
 - **Przeglądarka bez View Transitions** (np. Firefox): klik karty idzie przez kurtynę.
 
 ## Assety

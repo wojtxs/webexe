@@ -4,6 +4,8 @@
  * Hero na Głębi (powrót do listy, tytuł, tagi, okładka z żywą warstwą, fakty), opis na Pianie
  * (lead i bloki z frontmattera: tekst, media, para desktop + telefon, technologie), następna
  * realizacja na Głębi (po ostatniej pierwsza) i kontakt. Pola bez wartości się nie renderują.
+ * Okładka ma na stałe view-transition-name z kadru karty (morf, curtain.ts), dlatego stoi od
+ * pierwszej klatki, bez media-reveal: morf nie może lecieć w ukryty element.
  */
 import type { GetStaticPaths } from 'astro';
 import { Image, getImage } from 'astro:assets';
@@ -14,7 +16,7 @@ import Header from '../../components/Header.astro';
 import Tags from '../../components/Tags.astro';
 import XMark from '../../components/XMark.astro';
 import Contact from '../../sections/Contact.astro';
-import { caseHref, getRealizacje, nextOf, type Realizacja } from '../../data/realizacje';
+import { caseHref, getRealizacje, morphName, nextOf, type Realizacja } from '../../data/realizacje';
 import { tech } from '../../data/tech';
 import '../../styles/sections/case.css';
 
@@ -52,7 +54,7 @@ const ogImage = new URL(og.src, Astro.site).href;
 ---
 
 <Base title={`${data.title} — realizacje webexe`} description={data.summary} ogImage={ogImage}>
-  <Header slot="chrome" chapters={chapters} home={false} />
+  <Header slot="chrome" chapters={chapters} home={false} top="dark" />
 
   <section
     id="projekt"
@@ -73,7 +75,11 @@ const ogImage = new URL(og.src, Astro.site).href;
       </h1>
       <Tags tags={data.tags} class="case-hero__tags muted" />
 
-      <div class="shot case-hero__cover" data-live-card data-reveal>
+      <div
+        class="shot case-hero__cover"
+        data-live-card="view"
+        style={`view-transition-name: ${morphName(entry)}`}
+      >
         <CaseShot
           image={data.cover}
           alt={data.coverAlt}
@@ -203,7 +209,7 @@ const ogImage = new URL(og.src, Astro.site).href;
       <div class="case-next__copy">
         <p class="t-label muted">Następna realizacja</p>
         <h2 id="next-title" class="case-next__title t-h1">
-          <a class="case-next__link" href={caseHref(next)}>
+          <a class="case-next__link" href={caseHref(next)} data-morph={morphName(next)}>
             {next.data.title}
           </a>
         </h2>
@@ -220,6 +226,8 @@ const ogImage = new URL(og.src, Astro.site).href;
         data-cursor="Zobacz realizację"
         data-tilt="3"
         data-reveal
+        data-morph={morphName(next)}
+        data-morph-source={morphName(next)}
       >
         <CaseShot
           image={next.data.cover}

@@ -5,6 +5,7 @@
  * Precyzyjny kursor: gra tylko karta pod kursorem, po zjechaniu wraca toner i ruch staje.
  * Fokus z klawiatury w [data-live-host] (karta z linkiem w tytule) gra jej kadr tak samo.
  * Dotyk: gra karta w środkowej części ekranu. Reduced motion i bez JS: zrzut w stanie z HTML.
+ * [data-live-card="view"] (okładka projektu): gra w widoku jak wideo, bez tonera i kursora.
  *
  * Wejście w kartę zdejmuje z niej toner Głębi skośnym frontem, a zrzut dojeżdża do skali 1
  * (shader obraz → wideo z chipsa-analiza.md, sekcja 5.3, w CSS: work.css, --front i --front-angle).
@@ -58,6 +59,17 @@ const WorkLive: Module = {
           const live = build(svg, TIME_SCALE[kind] ?? 1);
           lives.push(live);
           live.animations.forEach((a) => a.pause());
+
+          if (card.dataset.liveCard === 'view') {
+            ScrollTrigger.create({
+              trigger: card,
+              start: 'top bottom',
+              end: 'bottom top',
+              onToggle: (self) =>
+                live.animations.forEach((a) => (self.isActive ? a.resume() : a.pause())),
+            });
+            return;
+          }
 
           const front = { p: 0 };
           const setFront = () => card.style.setProperty('--front', front.p.toFixed(4));

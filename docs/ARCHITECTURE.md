@@ -37,7 +37,7 @@ export interface Module {
 
 - `lifecycle.ts` skanuje `[data-module]`, importuje moduł dynamicznie (`import()`, code-splitting) i woła `init(el)`.
 - Każdy moduł tworzy animacje w `const ctx = gsap.context(() => { … }, root)`, a w `destroy()` woła `ctx.revert()`. Odpina też listenery, `ResizeObserver` i `IntersectionObserver`.
-- W wersji 1 nie ma routera SPA ani przejść między stronami. Kontrakt `init/destroy` jest od pierwszego dnia, żeby ewentualne przejścia (View Transitions) nie wymagały przepisywania modułów.
+- Nie ma routera SPA. Każda strona to osobny dokument, a przejścia między nimi robi `curtain` (kurtyna) albo przeglądarka (View Transitions między dokumentami, sam CSS w `base.css`). Kadr karty realizacji dostaje `view-transition-name` w chwili kliknięcia (`data-morph`), okładka projektu ma tę nazwę na stałe, więc media przechodzą w okładkę (morf). Pozostałe nawigacje `curtain` pomija w `pageswap` (`skipTransition()`), tam gra kurtyna. Bez View Transitions (Firefox) też kurtyna, przy reduced motion zwykła nawigacja. Kontrakt `init/destroy` zostaje na wypadek routera.
 
 ## API atrybutów `data-*`
 
@@ -55,6 +55,14 @@ export interface Module {
 | `data-marquee` + `-speed` / `-direction` | marquee (pauza przez IntersectionObserver) |
 | `data-hide="d\|t\|m"` | ukrywanie per breakpoint |
 | `data-feature="live-stats"` | element za feature flagą (`PUBLIC_FEATURE_LIVE_STATS`) |
+| `data-reveal` + `data-reveal-zoom` | `media-reveal`: kurtyna od góry na mediach, zoom 1.2 → 1 na wnętrzu |
+| `data-tilt="3"` + `data-tilt-area` | `tilt`: przechył za kursorem do podanego kąta (°), opcjonalnie względem innego prostokąta |
+| `data-cursor="etykieta"` | `cursor`: etykieta kursora nad elementem |
+| `data-live-card` | `work-live`: kadr realizacji z żywą warstwą, gra pod kursorem (toner zdejmuje się frontem) |
+| `data-live-card="view"` | `work-live`: okładka projektu, gra w widoku jak wideo, bez tonera i kursora |
+| `data-live-host` | `work-live`: fokus w środku (link w tytule karty) gra kadr hosta |
+| `data-morph="case-<slug>"` | `curtain`: link przechodzi do projektu morfem (View Transitions), a nie kurtyną |
+| `data-morph-source="case-<slug>"` | `curtain`: element, który w chwili kliknięcia dostaje `view-transition-name` (kadr karty) |
 
 Nowy atrybut dopisujesz najpierw do tej tabeli, potem do kodu.
 
