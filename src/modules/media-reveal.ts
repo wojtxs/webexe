@@ -37,9 +37,12 @@ const MediaReveal: Module = {
           tl.fromTo(
             el,
             { clipPath: 'inset(0% 0% 100% 0%)' },
-            { clipPath: 'inset(0% 0% 0% 0%)', duration, ease, clearProps: 'clipPath' }
+            { clipPath: 'inset(0% 0% 0% 0%)', duration, ease }
           );
           if (zoom) tl.fromTo(zoom, { scale: ZOOM }, { scale: 1, duration, ease }, 0);
+          // Na koniec inline none, a nie clearProps: do 3 s od startu reguła html.js-motion
+          // ukryłaby media z powrotem (miganie na podstronach bez loadera). none nie przycina fokusu.
+          tl.set(el, { clipPath: 'none' });
         });
       });
     }, root);
