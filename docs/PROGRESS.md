@@ -56,7 +56,7 @@ Spike'a nie robimy: karta hero to prosty DOM, a ryzyko leży w materiale i wygl�
 Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptujesz, potem build.
 
 - [x] 02 Manifest (wypełnianie scrollem, zoom przez x), tag `manifest-v1`; brak tylko trace 60 fps w Chrome
-- [ ] 03 Realizacje i dowody (zależy od D3)
+- [x] 03 Realizacje: sekcja na głównej, `/realizacje` i strony projektów, tag `realizacje-v1`. Treść DEMO do wymiany w D3. Brak trace 60 fps (RDP 32 Hz), Firefoxa i sprawdzenia bloku `pair`
 - [ ] 04 Produkt (zależy od D3)
 - [ ] 05 Jak pracujemy (akordeon, D10, D11)
 - [ ] 06 Poznaj nas (zależy od D4)
@@ -542,3 +542,48 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - Nawigacja: następna realizacja na końcu strony projektu (bez odliczania), powrót do listy. Pasek systemu na podstronach: co pokazuje komórka rozdziału i co ma menu.
   - Ruch: kurtyna przejścia między stronami już istnieje (`modules/curtain.ts`). Do ustalenia: czy karta na liście przechodzi w nagłówek strony projektu.
   - Treść: D3 blokuje prawdziwe projekty. Greybox może stać na 4 projektach DEMO.
+
+### 2026-11-01 — 03 Realizacje: trzy widoki (S1–S4)
+
+- Zrobione:
+  - **S1 statyka** (`e82ae9c`): kolekcja `realizacje` (`content.config.ts`, 4 wpisy DEMO), `WorkCard`, `CaseShot`, `Tags`. Główna: 3 karty, wiersz „Wszystkie realizacje” z liczbą, technologie. Strony `/realizacje` i `/realizacje/<slug>`. `Header` z propsami dla podstron, SEO per strona.
+  - **S2 ruch** (`1df9783`): fokus gra kadr (`data-live-host`), wiersz-link rysuje powierzchnię od lewej, a `squeeze` zapisuje tylko przy zmianie.
+  - **S3 przejście** (`9cf2696`): morf kadru w okładkę projektu przez View Transitions między dokumentami. Inne nawigacje idą kurtyną, przeglądarka bez VT też, reduced motion zwykłą nawigacją. Okładka w trybie `data-live-card="view"`.
+  - **S4**: mobile, dotyk, reduced motion i bez JS sprawdzone. Pełna kontrola `visual-qa`: PASS z uwagami. Poprawione po raporcie:
+    - przycisk Menu od pierwszej klatki (`html.js` zamiast atrybutu `hidden`, CLS 0.0028 → 0),
+    - `AbortError` po `skipTransition()`,
+    - Tab pokazuje cały kadr (`scroll-margin-top` w `cqi`),
+    - kursor nad całą kartą gra kadr,
+    - na dotyku gra karta przecinająca środek ekranu (wcześniej nawet dwie naraz),
+    - „Następna realizacja” na kol 1–7 │ 8–12 jak w specu,
+    - liczba „4” zamiast „04” (zakaz numeracji z `DESIGN.md`),
+    - miejsce na lead listy i `og:image` listy,
+    - kursor znika przy morfie,
+    - linki z końcowym „/” jak canonical (bez 301 na nginx),
+    - `--squeeze` na kadrach jako `@property` bez dziedziczenia, bo przeliczanie stylów dominowało przy szybkim scrollu.
+  - **Poprawki poza sekcją** (znalezione przy testach S3/S4):
+    - `fix(core)` `6a407b8`: osobna instancja modułu na element. Drugi `work-live` nadpisywał `destroy` pierwszego.
+    - `fix(media-reveal)` `0ba201b`: media nie znikają po odsłonięciu w pierwszych 3 s.
+    - `nav-theme`: ponawia sondę w trakcie VT.
+    - `Header`: prop `top`.
+    - `ARCHITECTURE.md`: struktura, tabela `data-*`, wzorce.
+    - `BRIEF.md`: etykiety bloków i faktów.
+    - `ASSETS.md`: `CASE-<slug>-*`, `TECH-*`; LOGO wypadło.
+- Zostało:
+  - D3: prawdziwe projekty, zrzuty i media bloków.
+  - Treść z `TODO(treść)`: lead listy, opis listy w SEO, etykiety (nagłówki, kursor, rozdziały, „Zobacz na żywo”).
+  - Do sprawdzenia: blok `pair` (brak danych), Firefox (fallback tylko zasymulowany), trace 60 fps na maszynie bez RDP.
+  - Globalne: `favicon.ico` 404 (FAVICON w `ASSETS.md`).
+  - Otwarte od wcześniej: potwierdzenie listy technologii, „Napiszcie” dwa razy w kontakcie (D7), loader po wejściu na `/#realizacje` z podstrony.
+- Decyzje:
+  - **Nazwa przejścia tylko na klikniętym kadrze, nadawana w `curtain.ts`.** Okładka ma ją na stałe. Stałe nazwy na wszystkich kartach morfowałyby każdą parę o tej samej nazwie (główna → lista, kadr następnej realizacji). Bez JS strony się tylko przenikają, bez morfu. Odstępstwo od speca, zapisane w specu.
+  - **Okładka projektu stoi od pierwszej klatki, bez `media-reveal`**, bo morf nie może lecieć w ukryty element.
+  - **Karta ma dwa linki (kadr i tytuł), a nie `::after` na całą kartę.** Tekst da się zaznaczyć, a tabulator i czytnik widzą jeden link. Odstępstwo od speca z S1, zapisane w specu.
+- Lekcje:
+  - W trakcie View Transition `elementsFromPoint` trafia tylko w `<html>` (`ARCHITECTURE.md`, Ładowanie 7).
+  - `clearProps` na końcu wejścia oddaje element regule `html.js-motion` do 3 s od startu (`ARCHITECTURE.md`, Ładowanie 6).
+  - Moduły przypisują `this.destroy`, więc lifecycle musi trzymać osobną instancję na element (`ARCHITECTURE.md`, Lifecycle).
+  - Pod RDP przejścia CSS przy `:hover` w Edge z oknem stają w połowie. Klatki przejść sprawdzać w headless.
+  - `tsconfig` musi obejmować `.astro/types.d.ts`, bo inaczej `astro:content` nie ma typów w `tsc`.
+  - Pliki mają CRLF, więc zamiany wieloliniowe przez `node -e` nie trafiają. Używać Edit albo normalizować końce linii.
+  - Playwright MCP i Chrome DevTools MCP szukają Google Chrome, którego na maszynie nie ma. `visual-qa` działał przez playwright-core z Edge, ale bez trace DevTools. Propozycja do `CLAUDE.md` (Narzędzia): kanał `msedge` w konfiguracji MCP albo instalacja Chrome.

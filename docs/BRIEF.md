@@ -38,6 +38,16 @@ Konkretny, spokojny, bez żargonu. Mówimy wprost, także o tym, czego nie warto
 - **Problem:** Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach nikt nie wie, jak działa, a każda zmiana jest ryzykiem.
 - **Odpowiedź:** My budujemy tak, żeby dało się to rozwijać latami. I sami to rozwijamy.
 
+### 03 Realizacje: strona projektu
+
+*(2026-11-01, z akceptacji speca `docs/sections/03-realizacje.md`)* Treść projektów (tytuł, opis, zrzuty, pełny opis) czeka na D3.
+
+- **Etykiety bloków opisu:** Problem · Co zbudowaliśmy · Z czym połączyliśmy · Co było trudne · Utrzymanie.
+- **Fakty:** Branża · Zakres · Rok · Status. Pole bez danych się nie wyświetla (bez „—”).
+- **Powrót do listy:** Wszystkie realizacje.
+- **Koniec strony:** Następna realizacja.
+- Nadal robocze (`TODO(treść)` w kodzie): nagłówek sekcji i listy „Realizacje”, lead listy, wiersz „Wszystkie realizacje” na głównej, etykieta kursora „Zobacz realizację”, link „Zobacz na żywo”, nagłówek „Technologie, na których budujemy”, rozdziały w pasku (Projekt, Opis, Następna, Kontakt).
+
 ### 05 Jak pracujemy (4 kroki)
 
 **01 / 04 Projektujemy**

@@ -1,6 +1,6 @@
 # 03 — Realizacje (sekcja na głównej, lista, strona projektu)
 
-**Status:** zaakceptowany (2026-11-01), w budowie: S1–S3 zrobione, zostaje S4
+**Status:** done (2026-11-01, S1–S4, tag `realizacje-v1`). Treść to DEMO do wymiany w D3. Niesprawdzone: blok `pair` (brak danych), Firefox (fallback zasymulowany), trace 60 fps (RDP daje 32 Hz)
 **Zależności:** decyzja z 2026-11-01 (`PROGRESS.md`, log decyzji). Istniejące moduły: `work-live`, `tilt`, `squeeze`, `media-reveal`, `split-reveal`, `curtain`, `header`, `chapter-map`, `menu`, `cursor`. Komponenty `Grid`, `XMark`, `Button`, `Contact.astro`. Treść: **D3** (prawdziwe projekty), do tego czasu DEMO. Bez nowych zależności npm.
 **Wzorzec:** `docs/INSPIRACJE.md`, wiersz „Realizacje / showcase” (z notką 2026-11-01). `docs/reference/chipsa-analiza.md`: 3 (Best works, link do wszystkich), 4.2 (`/works/[slug]`: powrót „×”, hero z mediami, bloki z tytułem, następny projekt), 5.3 (front obraz → wideo), 7.2 (przejście). `docs/reference/alpanet-analiza.md`, 3 wiersz 8 (karty realizacji na siatce, stagger kolumn ±133 px) i 4.3 (rytm). Klatek w `docs/refs/03-*/` brak.
 
@@ -75,7 +75,7 @@ Hero na głównej zostaje na `demoHero` z `demo.ts`, bo jest związany z żywą 
 
 <!-- B. /realizacje: pages/realizacje/index.astro -->
 <section id="realizacje" class="section cases theme-dark" data-nav-theme="dark">
-  <h1>Realizacje</h1><p class="cases__lead">TODO(treść)</p>
+  <h1>Realizacje</h1><p class="cases__lead">lead, renderuje się, gdy BRIEF go poda</p>
   <ol class="cases__list" data-module="squeeze">…ta sama karta (WorkCard.astro)…</ol>
 </section>
 <Contact />
@@ -99,7 +99,7 @@ Hero na głównej zostaje na `demoHero` z `demo.ts`, bo jest związany z żywą 
 <Contact />
 ```
 
-Wspólna karta wychodzi do `components/WorkCard.astro` (główna i lista). Link w karcie jest jeden i ma nazwę z tytułu. Jego `::after` rozciąga się na całą kartę, więc karta to jeden przystanek tabulatora, a focus ring obejmuje kartę przez `:has(:focus-visible)`.
+Wspólna karta wychodzi do `components/WorkCard.astro` (główna i lista). Karta ma dwa linki do projektu *(zmiana w S1 względem pierwotnego `::after` na całą kartę)*: kadr dla myszy i dotyku (`tabindex="-1"`, `aria-hidden`, bo powtarza tytuł) i tytuł, który jest jedynym przystankiem tabulatora i daje nazwę linku. Focus ring tytułu obrysowuje kadr przez `:has(:focus-visible)`, a `scroll-margin-top` tytułu w wysokości kadru sprawia, że Tab pokazuje cały kadr. Tagi i opis nie są linkiem, więc tekst da się zaznaczyć. Kursor nad całą kartą gra kadr (#1).
 
 Pliki spoza sekcji:
 - `Header.astro`: propsy `chapters` i `home` (na podstronach wordmark → `/`, menu → `/#id` plus pozycja „Wszystkie realizacje”). Na głównej bez zmian.
@@ -184,7 +184,7 @@ Jeden moment na widok: na głównej i liście grają karty, a na stronie projekt
 
 - **Reduced motion:** bez morfu (reguła `@view-transition` tylko przy `no-preference`), bez kurtyny, media stoją, karty bez tonera i tiltu, wiersz-link zmienia tło bez ruchu. Treść kompletna.
 - **Bez WebGL:** nie używamy WebGL.
-- **Dotyk:** #1 gra karta w środkowej części ekranu (jak dziś), tap przechodzi do projektu. #4 nie ma odpowiednika hover (świadomie): wiersz ma stałe linie i wygląda klikalnie.
+- **Dotyk:** #1 gra karta, która przecina środek ekranu (najwyżej jedna w kolumnie), tap przechodzi do projektu. #4 nie ma odpowiednika hover (świadomie): wiersz ma stałe linie i wygląda klikalnie.
 - **Bez JS:** wszystkie linki działają. Strony przenikają się (reguła `@view-transition` to sam CSS), ale bez morfu, bo nazwę kadrowi nadaje skrypt w chwili kliknięcia. Karty pokazują zrzut.
 - **Przeglądarka bez View Transitions** (np. Firefox): klik karty idzie przez kurtynę.
 

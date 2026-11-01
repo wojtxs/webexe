@@ -29,8 +29,10 @@ Format wpisu w `manifest.json`:
 | BRAND-X | 00, 02, węzły siatki, mapa rozdziałów, separator | znak x jako dwie linie `<line>` z `stroke-linecap: round` (pod DrawSVG) | ręcznie w SVG | ☐ |
 | HERO-MEDIA | 01 | nagranie jednego projektu do karty hero (pętla, bez dźwięku) | nagranie ekranu prawdziwego systemu (D3) | ☐ |
 | HERO-POSTER | 01 | pierwsza klatka HERO-MEDIA (fallback, reduced motion, LCP) | z HERO-MEDIA | ☐ |
-| WORK-* | 03 | na każdą realizację: obraz okładki + krótka pętla wideo (hover obraz → wideo) | prawdziwe projekty (D3) | ☐ |
-| LOGO-* | 03 | logotypy klientów do komórek siatki | od klientów, za zgodą (D3) | ☐ |
+| WORK-* | 03 | na każdą realizację: okładka 16:10 (karta, okładka strony projektu, „Następna realizacja”, og:image projektu) + żywa warstwa albo krótka pętla wideo (hover obraz → wideo). Ścieżka w polu `cover` wpisu `src/content/realizacje/<slug>.md` | prawdziwe projekty (D3); do tego czasu DEMO z `src/assets/demo/` | ☐ |
+| CASE-<slug>-* | 03, strona projektu | media bloków opisu: `media` (szeroki zrzut ekranu, opcjonalny podpis) i `pair` (desktop + telefon), każde z altem; pola w `blocks` wpisu | zrzuty prawdziwych systemów (D3) | ☐ |
+| TECH-* | 03 | ikony technologii w komórkach siatki (`src/assets/tech/*.svg`, rejestr `src/data/tech.ts`) | Simple Icons 16.36.0, CC0 | ☑ |
+| ~~LOGO-*~~ | 03 | ~~logotypy klientów do komórek siatki~~ *(2026-11-01: wypadły, zamiast nich TECH-\*)* | — | — |
 | PRODUCT-* | 04 | nagrania ekranu jednego produktu w wersji desktop i mobile + urządzenia (laptop, telefon) jako render albo zdjęcie | nagranie (D3), render / zdjęcie | ☐ |
 | TEAM-1/2 | 06, CTA | portrety founderów | sesja zdjęciowa (D4) | ☐ |
 | OG | head | obraz udostępnień 1200×630 | z wordmarku + kadru hero | ☐ |

@@ -6,10 +6,15 @@ Model: **serwerowy HTML + zachowania w JS podpinane przez `data-*`**. Astro gene
 
 ```
 src/
-  pages/            index.astro · polityka-prywatnosci.astro · 404.astro · lab/[...].astro (sandbox, noindex, tylko dev)
+  pages/            index.astro · realizacje/index.astro (lista) · realizacje/[slug].astro (strona projektu, getStaticPaths)
+                    · polityka-prywatnosci.astro · 404.astro · lab/[...].astro (sandbox, noindex, tylko dev)
+  content/          realizacje/*.md (frontmatter: schemat w content.config.ts, kolekcja „realizacje”, loader glob)
+  data/             realizacje.ts (getRealizacje, featuredOf, nextOf, caseHref, morphName) · tech.ts + tech-keys.ts
+                    (rejestr ikon technologii) · demo.ts (DEMO poza realizacjami)
   layouts/          Base.astro (head, fonty, nav, loader, kursor, scroll indicator)
   sections/         Hero.astro · Manifest.astro · Work.astro · Product.astro · HowWeWork.astro · About.astro · Contact.astro
-  components/       Button.astro · Wordmark.astro · XMark.astro · Grid.astro (siatka z węzłami x) · …
+  components/       Button.astro · Wordmark.astro · XMark.astro · Grid.astro (siatka z węzłami x) · Header.astro
+                    · Curtain.astro · WorkCard.astro · CaseShot.astro (kadr: zrzut, żywa warstwa, toner) · Tags.astro · …
   styles/           tokens.css · fluid.css · base.css · utils.css · sections/*.css
   core/
     app.ts          bootstrap: fonty → scroll → moduły → loader
@@ -18,7 +23,8 @@ src/
     motion.ts       gsap.matchMedia: kontekst „full” i „reduced”
     events.ts       mała szyna zdarzeń (app:ready, app:resize, nav:open)
     css.ts          cssVar() (cssColor() wraca dopiero razem z GL)
-  modules/          card-expand.ts · scroll-fill.ts · x-zoom.ts · split-lines.ts · accordion.ts · cursor.ts · menu.ts · chapter-map.ts · counter.ts · btn-roll.ts · nav-theme.ts · live-stats.ts …
+  modules/          card-expand.ts · scroll-fill.ts · x-zoom.ts · split-reveal.ts · media-reveal.ts · cursor.ts · tilt.ts
+                    · header.ts · menu.ts · chapter-map.ts · nav-theme.ts · curtain.ts · work-live.ts · squeeze.ts · …
   gl/               tylko wtedy, gdy spec sekcji wymaga WebGL (patrz „GL (opcjonalny)”)
 public/
   media/              nagrania i postery: hero, work, product (D3)
@@ -35,7 +41,8 @@ export interface Module {
 }
 ```
 
-- `lifecycle.ts` skanuje `[data-module]`, importuje moduł dynamicznie (`import()`, code-splitting) i woła `init(el)`.
+- `lifecycle.ts` skanuje `[data-module]`, importuje moduł dynamicznie (`import()`, code-splitting) i woła `init(el)` na osobnej instancji (`Object.create(module)`). Moduł w `init` przypisuje `this.destroy`, więc ten sam moduł może stać na stronie kilka razy (np. `work-live` w hero projektu i w następnej realizacji), a każdy element wycofuje własny kontekst.
+- Pasek systemu (`Header.astro`, moduły `header nav-theme menu`) ma propsy dla podstron: `chapters` (rozdziały tej strony w komórce paska), `home={false}` (wordmark prowadzi na `/`, menu do `/#id` i do `/realizacje`) i `top="dark"` (kolory paska od pierwszej klatki, zanim `nav-theme` sprawdzi tło; ważne przy morfie, kiedy nowej strony nie zakrywa kurtyna).
 - Każdy moduł tworzy animacje w `const ctx = gsap.context(() => { … }, root)`, a w `destroy()` woła `ctx.revert()`. Odpina też listenery, `ResizeObserver` i `IntersectionObserver`.
 - Nie ma routera SPA. Każda strona to osobny dokument, a przejścia między nimi robi `curtain` (kurtyna) albo przeglądarka (View Transitions między dokumentami, sam CSS w `base.css`). Kadr karty realizacji dostaje `view-transition-name` w chwili kliknięcia (`data-morph`), okładka projektu ma tę nazwę na stałe, więc media przechodzą w okładkę (morf). Pozostałe nawigacje `curtain` pomija w `pageswap` (`skipTransition()`), tam gra kurtyna. Bez View Transitions (Firefox) też kurtyna, przy reduced motion zwykła nawigacja. Kontrakt `init/destroy` zostaje na wypadek routera.
 
@@ -60,6 +67,7 @@ export interface Module {
 | `data-cursor="etykieta"` | `cursor`: etykieta kursora nad elementem |
 | `data-live-card` | `work-live`: kadr realizacji z żywą warstwą, gra pod kursorem (toner zdejmuje się frontem) |
 | `data-live-card="view"` | `work-live`: okładka projektu, gra w widoku jak wideo, bez tonera i kursora |
+| `data-squeeze` | `squeeze` (moduł na liście kart): kadr dostaje `--squeeze` (ściskanie przy szybkim scrollu); zmienna bez dziedziczenia (`@property`), więc przelicza się sam kadr |
 | `data-live-host` | `work-live`: fokus w środku (link w tytule karty) gra kadr hosta |
 | `data-morph="case-<slug>"` | `curtain`: link przechodzi do projektu morfem (View Transitions), a nie kurtyną |
 | `data-morph-source="case-<slug>"` | `curtain`: element, który w chwili kliknięcia dostaje `view-transition-name` (kadr karty) |
@@ -103,6 +111,8 @@ Jeśli GL wejdzie:
 3. **Pozostałe media** ładujemy leniwie, gdy ich element jest w odległości 1.5 viewportu.
 4. H1 jest w DOM-ie od pierwszego renderu i na nic nie czeka.
 5. Assety mają hash albo wersję w nazwie, długi cache i są self-hostowane.
+6. Do startu modułów elementy z wejściem (`[data-split]`, `[data-reveal]`) ukrywa `html.js-motion`. Klasę zdejmuje stały fallback 3 s w `Base.astro`, a nie start modułu. Moduł nie może więc kończyć wejścia przez `clearProps`, bo do 3 s reguła ukryje element z powrotem. Zostawia stan końcowy inline (`opacity: 1`, `clip-path: none`), a revert kontekstu go zdejmuje.
+7. W trakcie View Transition (morf realizacji) hit-testing trafia tylko w `<html>`, pod którym leżą pseudo-elementy przejścia. Moduł, który na starcie pyta `elementsFromPoint` (np. `nav-theme`), traktuje taki wynik jako nieznany i pyta w następnej klatce.
 
 ## Budżety (sprawdzane w F7, ale pilnowane od F1)
 
