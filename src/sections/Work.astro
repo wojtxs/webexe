@@ -2,8 +2,8 @@
 /**
  * 03 Realizacje i dowody — greybox (F3). Cała treść zależy od D3 (min. 4 projekty).
  * Duże karty na kolumnach siatki ze staggerem (docs/INSPIRACJE.md, wiersz Realizacje).
- * Dowody jak „Achievements” u Chipsy: logotypy w komórkach siatki stoją (sticky), a karta z liczbami
- * wjeżdża na nie od dołu i wtedy ruszają liczniki (modules/proof.ts, odometer.ts).
+ * Na końcu technologie, na których budujemy: ikona i nazwa w komórkach widocznej siatki,
+ * przygaszone, na hover w kolorze tekstu (2026-11-01, zamiast zmyślonych klientów i liczników).
  */
 import { Image } from 'astro:assets';
 import Grid from '../components/Grid.astro';
@@ -11,7 +11,7 @@ import FakturyLive from '../components/live/FakturyLive.astro';
 import FlotaLive from '../components/live/FlotaLive.astro';
 import PrzeplywyLive from '../components/live/PrzeplywyLive.astro';
 import SerwisLive from '../components/live/SerwisLive.astro';
-import { demoClients, demoNumbers, demoProjects } from '../data/demo';
+import { demoProjects, demoStack } from '../data/demo';
 import '../styles/sections/work.css';
 ---
 
@@ -66,28 +66,19 @@ import '../styles/sections/work.css';
       ))}
     </ol>
 
-    <!-- TODO(treść): DEMO, zmyślone liczby i klienci z src/data/demo.ts; docelowo D3 -->
-    <div class="proof" data-module="proof odometer">
-      <ul class="proof__clients" aria-label="Klienci">
-        {demoClients.map((client) => (
-          <li class="proof__cell">
-            <span class="proof__client">{client}</span>
+    <!-- TODO(treść): DEMO, lista technologii z src/data/demo.ts do potwierdzenia; nagłówek roboczy -->
+    <div class="stack">
+      <h3 id="stack-title" class="stack__title t-label muted">
+        Technologie, na których budujemy
+      </h3>
+      <ul class="stack__list" aria-labelledby="stack-title">
+        {demoStack.map(({ name, icon: Icon }) => (
+          <li class="stack__cell">
+            <Icon class="stack__icon" aria-hidden="true" focusable="false" />
+            <span class="stack__name t-small">{name}</span>
           </li>
         ))}
       </ul>
-
-      <div class="proof__card">
-        <ul class="proof__numbers" aria-label="Liczby">
-          {demoNumbers.map((item) => (
-            <li class="proof__number">
-              <span class="proof__value t-h1" data-odometer>
-                {item.value}
-              </span>
-              <span class="t-small muted">{item.label}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   </div>
 </section>

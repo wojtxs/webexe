@@ -1,6 +1,6 @@
 /* ==========================================================================
    03 Realizacje i dowody — greybox (F3).
-   Karty na przemian na kolumnach 1–9 i 4–12, dowody w komórkach
+   Karty na przemian na kolumnach 1–9 i 4–12, technologie w komórkach
    po 3 kolumny (4 kolumny wizualne siatki).
    ========================================================================== */
 
@@ -79,96 +79,52 @@
   max-width: var(--prose-max-width);
 }
 
-/* Dowody: logotypy w komórkach siatki stoją (sticky), karta z liczbami wjeżdża na nie od dołu.
-   Odstęp przed kartą to droga wjazdu, odstęp pod nią to chwila, w której karta leży na logotypach. */
-.proof {
+/* Technologie: ikona i nazwa w komórkach siatki po 3 kolumny, przygaszone,
+   na hover w kolorze tekstu (tempo UI). Linie komórek to linie siatki. */
+.stack {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: subgrid;
   margin-top: var(--s-32);
-  padding-bottom: 30vh;
 }
 
-.proof__clients {
-  position: sticky;
-  top: var(--s-32);
+.stack__title {
+  grid-column: 1 / -1;
+  margin-bottom: var(--s-8);
+}
+
+.stack__list {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: subgrid;
+  border-bottom: 1px solid var(--grid-line);
   list-style: none;
-  transform-origin: 50% 0;
 }
 
-.proof__cell {
+.stack__cell {
   grid-column: span 3;
   display: grid;
   place-items: center;
+  align-content: center;
+  gap: var(--s-4);
   min-height: 10rem;
   padding: var(--s-6);
   border-top: 1px solid var(--grid-line);
-  text-align: center;
-}
-
-.proof__card {
-  position: relative;
-  z-index: 1;
-  grid-column: 1 / -1;
-  margin-top: 45vh;
-  padding: var(--s-16) var(--s-12);
-  border-radius: var(--r-panel);
-  background:
-    radial-gradient(
-      60% 90% at 85% 0%,
-      color-mix(in srgb, var(--c-laguna-end) 22%, transparent),
-      transparent 70%
-    ),
-    var(--c-glebia-raise);
-}
-
-.proof__numbers {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--s-8);
-  list-style: none;
-}
-
-.proof__number {
-  display: grid;
-  align-content: end;
-  gap: var(--s-2);
-}
-
-/* Licznik (odometer.ts): stała wysokość linii, żeby podział na cyfry nie przesuwał układu */
-.proof__value {
-  line-height: 1.15;
-  font-variant-numeric: tabular-nums;
-}
-
-.odo {
-  display: inline-flex;
-}
-
-.odo__window {
-  display: inline-block;
-  height: 1.15em;
-  overflow: hidden;
-}
-
-.odo__column {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-.odo__char {
-  white-space: pre;
-}
-
-.proof__client {
   color: var(--ink-muted);
-  font-size: var(--t-lead);
-  font-weight: var(--w-h3);
-  letter-spacing: var(--ls-h3);
+  text-align: center;
+  transition: color var(--d-ui) var(--ease-ui);
+}
+
+.stack__icon {
+  width: var(--s-12);
+  height: var(--s-12);
+  fill: currentColor;
+}
+
+@media (hover: hover) {
+  .stack__cell:hover {
+    color: var(--c-piana);
+  }
 }
 
 @media (max-width: 991px) {
@@ -181,32 +137,19 @@
     row-gap: var(--s-16);
   }
 
-  .proof__cell {
+  .stack__cell {
     grid-column: span 4;
-  }
-
-  .proof__card {
-    padding: var(--s-12) var(--s-8);
-  }
-
-  .proof__numbers {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: var(--s-12);
   }
 }
 
 @media (max-width: 767px) {
-  .proof__cell {
+  .stack__cell {
     grid-column: span 2;
-    min-height: 7rem;
+    min-height: 8rem;
   }
 
-  .proof__clients {
-    top: var(--s-24);
-  }
-
-  .proof__card {
-    padding: var(--s-8) var(--s-6);
-    border-radius: var(--r-card);
+  .stack__icon {
+    width: var(--s-8);
+    height: var(--s-8);
   }
 }

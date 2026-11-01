@@ -1,7 +1,7 @@
 /**
  * DEMO: przykładowa treść do oceny wyglądu (gałąź eksperyment/ruch-chipsy, 2026-10-30).
  *
- * To NIE jest treść z docs/BRIEF.md. Projekty, liczby, klienci i dane kontaktowe są zmyślone,
+ * To NIE jest treść z docs/BRIEF.md. Projekty i dane kontaktowe są zmyślone,
  * a ekrany to fikcyjne aplikacje zbudowane w assets-src/demo/screens/ (render: assets-src/demo/render.mjs).
  * Przed merge do master: usunąć ten plik i src/assets/demo/, w sekcjach wrócić do TODO(treść)
  * (D3 realizacje i produkt, D7 kontakt).
@@ -13,6 +13,14 @@ import grafikBase from '../assets/demo/grafik-base.webp';
 import grafikMobileBase from '../assets/demo/grafik-mobile-base.webp';
 import przeplywyBase from '../assets/demo/przeplywy-base.webp';
 import serwisBase from '../assets/demo/serwis-base.webp';
+import astro from '../assets/tech/astro.svg';
+import cloudflare from '../assets/tech/cloudflare.svg';
+import docker from '../assets/tech/docker.svg';
+import github from '../assets/tech/github.svg';
+import googleCloud from '../assets/tech/googlecloud.svg';
+import jira from '../assets/tech/jira.svg';
+import nodejs from '../assets/tech/nodedotjs.svg';
+import typescript from '../assets/tech/typescript.svg';
 
 export interface DemoShot {
   image: ImageMetadata;
@@ -78,23 +86,18 @@ export const demoProduct = {
   },
 } satisfies { name: string; lead: string; desktop: DemoShot; mobile: DemoShot };
 
-export const demoNumbers = [
-  { value: '30+', label: 'systemów wdrożonych i utrzymywanych' },
-  { value: '7 lat', label: 'pracy razem w jednym zespole' },
-  { value: '99,9%', label: 'dostępności serwerów w ostatnim roku' },
-  { value: '4 h', label: 'na reakcję na zgłoszenie' },
-];
-
-// Zmyślone nazwy firm, pisane jak sygnety
-export const demoClients = [
-  'nordtrans',
-  'Halvio',
-  'KUBIKO',
-  'spedia',
-  'Wiklina',
-  'MOTOROL',
-  'agrova',
-  'Tessa',
+// TODO(treść): do potwierdzenia, na czym stoją nasze realizacje. Cloudflare, Google Cloud, Astro i Jira
+// wskazał zespół (2026-11-01), TypeScript, Node.js, Docker i GitHub to stack tej strony.
+// Ikony: Simple Icons (CC0), src/assets/tech/, kolor z currentColor.
+export const demoStack = [
+  { name: 'Cloudflare', icon: cloudflare },
+  { name: 'Google Cloud', icon: googleCloud },
+  { name: 'Astro', icon: astro },
+  { name: 'TypeScript', icon: typescript },
+  { name: 'Node.js', icon: nodejs },
+  { name: 'Docker', icon: docker },
+  { name: 'GitHub', icon: github },
+  { name: 'Jira', icon: jira },
 ];
 
 export const demoContact = {
