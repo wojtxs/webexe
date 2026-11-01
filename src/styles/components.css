@@ -353,6 +353,12 @@
   height: calc(var(--s-12) + var(--s-2));
   padding-inline: calc(var(--grid-gap) / 2);
   color: var(--header-ink);
+  transition: translate var(--d-ui) var(--ease-ui);
+}
+
+/* Scroll w dół chowa zwinięty pasek za górną krawędź razem z węzłami (header.ts: is-hidden) */
+.header.is-hidden .header__bar {
+  translate: 0 calc(-100% - var(--s-8));
 }
 
 /* Z powierzchnią pasek łapie kliknięcia na całej długości, goły tylko na swoich elementach */

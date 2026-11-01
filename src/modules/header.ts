@@ -3,6 +3,10 @@
  *
  * is-condensed: strona zjechała ze startu o więcej niż CONDENSE_AT wysokości ekranu. CSS rysuje wtedy
  * powierzchnię paska od lewej i pokazuje bieżący rozdział. Stan działa też przy reduced motion (bez ruchu).
+ * is-hidden: zwinięty pasek chowa się przy scrollu w dół i wraca przy scrollu w górę (o więcej niż
+ * TOLERANCE w jedną stronę, więc drgnięcie kółka nic nie robi). Chowa się dopiero za pierwszym ekranem
+ * (HIDE_AFTER), żeby było widać, jak powierzchnia się rysuje. Na starcie, przy otwartym menu
+ * i przy fokusie w pasku jest zawsze widoczny.
  * Postęp strony (pełny ruch): linia Laguny na dolnej krawędzi paska rośnie ze scrollem, a węzeł x
  * na linii siatki zapala się, gdy linia go minie. Reduced motion: bez linii, węzły przygaszone.
  */
@@ -16,6 +20,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Od jakiego scrolla (część wysokości ekranu) pasek dostaje powierzchnię
 const CONDENSE_AT = 0.1;
+// Ile pikseli przewinięcia w jedną stronę zmienia widoczność paska
+const TOLERANCE = 8;
+// Od jakiego scrolla (wysokości ekranu) pasek może się schować
+const HIDE_AFTER = 1;
 
 const Header: Module = {
   init(root: HTMLElement) {
@@ -24,9 +32,29 @@ const Header: Module = {
     const nodes = Array.from(root.querySelectorAll<HTMLElement>('[data-header-node]'));
     if (!bar) return;
 
+    const setHidden = (hidden: boolean) => {
+      const allowed =
+        root.classList.contains('is-condensed') && !root.classList.contains('is-menu-open');
+      root.classList.toggle('is-hidden', hidden && allowed);
+    };
+
     // Przy stronie wczytanej na samym dole onToggle odpala na wyjściu z zakresu, więc stan liczymy ze scrolla
-    const sync = (self: ScrollTrigger) =>
+    const sync = (self: ScrollTrigger) => {
       root.classList.toggle('is-condensed', self.scroll() > self.start);
+      if (!root.classList.contains('is-condensed')) setHidden(false);
+    };
+
+    // Droga przewinięta w bieżącym kierunku: dodatnia w dół, ujemna w górę
+    let lastY = 0;
+    let travel = 0;
+    const follow = (self: ScrollTrigger) => {
+      const y = self.scroll();
+      const dy = y - lastY;
+      lastY = y;
+      travel = Math.sign(dy) === Math.sign(travel) ? travel + dy : dy;
+      if (travel > TOLERANCE && y > window.innerHeight * HIDE_AFTER) setHidden(true);
+      else if (travel < -TOLERANCE) setHidden(false);
+    };
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -35,7 +63,20 @@ const Header: Module = {
         onToggle: sync,
         onRefresh: sync,
       });
+      ScrollTrigger.create({
+        start: 0,
+        end: 'max',
+        onUpdate: follow,
+        onRefresh: (self) => {
+          lastY = self.scroll();
+          travel = 0;
+        },
+      });
     });
+
+    // Tab do schowanego paska go pokazuje
+    const onFocus = () => setHidden(false);
+    root.addEventListener('focusin', onFocus);
 
     const revertMotion = addMotion((motion) => {
       motion.full(() => {
@@ -77,7 +118,8 @@ const Header: Module = {
     this.destroy = () => {
       ctx.revert();
       revertMotion();
-      root.classList.remove('is-condensed');
+      root.removeEventListener('focusin', onFocus);
+      root.classList.remove('is-condensed', 'is-hidden');
     };
   },
 
