@@ -1,0 +1,113 @@
+---
+/**
+ * WorkIndex — indeks realizacji z żywym ekranem: sekcja 03 na głównej i lista /realizacje
+ * (docs/sections/03-realizacje.md, widoki A i B; wzór: chipsa „Key clients”,
+ * docs/reference/chipsa-analiza.md, sekcja 3).
+ *
+ * Po lewej duże nazwy projektów na liniach siatki. Wiersz, który przecina środek ekranu (albo jest
+ * pod kursorem), jest aktywny: jasny tytuł i węzeł x rysowany w Lagunie. Po prawej przyklejony
+ * ekran z żywą warstwą aktywnego projektu, przełączany kurtyną w kierunku scrolla (work-index).
+ * Klik w wiersz albo w ekran: morf ekranu w okładkę projektu (data-morph, curtain.ts).
+ * Z filters: przyciski typów nad listą, przestawianie przez GSAP Flip.
+ * Bez JS: wiersze są linkami, ekran pokazuje pierwszy projekt.
+ */
+import { caseHref, morphName, type Realizacja } from '../data/realizacje';
+import { noOrphans } from '../data/typo';
+import CaseShot from './CaseShot.astro';
+import Tags from './Tags.astro';
+import XMark from './XMark.astro';
+import '../styles/work-index.css';
+
+interface Props {
+  entries: Realizacja[];
+  /** Poziom tytułów wierszy: h3 pod nagłówkiem sekcji na głównej, h2 pod h1 listy */
+  heading?: 'h2' | 'h3';
+  /** Filtr po typie (lista /realizacje) */
+  filters?: boolean;
+}
+
+const { entries, heading: Heading = 'h3', filters = false } = Astro.props;
+
+// Typy w kolejności ze schematu, tylko te, które mają projekty
+const tagOrder = ['Aplikacja', 'Integracje', 'Automatyzacja', 'AI', 'Utrzymanie'] as const;
+const tagCounts = tagOrder
+  .map((tag) => ({
+    tag,
+    count: entries.filter((entry) => entry.data.tags.includes(tag)).length,
+  }))
+  .filter(({ count }) => count > 0);
+---
+
+<div class:list={['windex', { 'windex--filters': filters }]} data-module="work-index">
+  {filters && (
+    // TODO(treść): etykiety filtra
+    <div class="windex__filters" role="group" aria-label="Filtruj realizacje według typu">
+      <button class="windex__filter t-label" type="button" aria-pressed="true" data-filter="">
+        Wszystkie <span class="windex__filter-count">{entries.length}</span>
+      </button>
+      {tagCounts.map(({ tag, count }) => (
+        <button class="windex__filter t-label" type="button" aria-pressed="false" data-filter={tag}>
+          {tag} <span class="windex__filter-count">{count}</span>
+        </button>
+      ))}
+    </div>
+  )}
+
+  <ol class="windex__list" data-index-list>
+    {entries.map((entry, i) => (
+      <li
+        class:list={['windex__row', { 'is-active': i === 0 }]}
+        data-index-row
+        data-tags={entry.data.tags.join('|')}
+        data-summary={noOrphans(entry.data.summary)}
+      >
+        <XMark class="windex__x" draw />
+        <Heading class="windex__title t-h2">
+          <a class="windex__link" href={caseHref(entry)} data-morph={morphName(entry)}>
+            {noOrphans(entry.data.title)}
+          </a>
+        </Heading>
+        <div class="windex__meta">
+          <Tags tags={entry.data.tags} class="windex__tags" />
+          {(entry.data.facts.year || entry.data.facts.status) && (
+            <p class="windex__facts t-label">
+              {entry.data.facts.year && <span>{entry.data.facts.year}</span>}
+              {entry.data.facts.status && <span>{entry.data.facts.status}</span>}
+            </p>
+          )}
+        </div>
+        <p class="windex__summary t-small">{noOrphans(entry.data.summary)}</p>
+      </li>
+    ))}
+  </ol>
+
+  <div class="windex__aside" aria-hidden="true" data-index-aside>
+    <div class="windex__stage">
+      <!-- TODO(treść): etykieta kursora -->
+      <div class="windex__screen" data-cursor="Zobacz realizację" data-tilt="2">
+        {entries.map((entry, i) => (
+          <a
+            class:list={['shot', 'windex__shot', { 'is-active': i === 0 }]}
+            href={caseHref(entry)}
+            tabindex="-1"
+            data-index-shot
+            data-morph={morphName(entry)}
+            data-morph-source={morphName(entry)}
+          >
+            <CaseShot
+              image={entry.data.cover}
+              alt=""
+              live={entry.data.live}
+              uid={`index-${entry.id}`}
+              sizes="(min-width: 992px) 50vw, 100vw"
+              eager={i === 0}
+            />
+          </a>
+        ))}
+      </div>
+      <p class="windex__caption t-small" data-index-caption>
+        {noOrphans(entries[0]?.data.summary ?? '')}
+      </p>
+    </div>
+  </div>
+</div>

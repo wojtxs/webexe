@@ -1,14 +1,14 @@
 ---
 /**
  * /realizacje (docs/sections/03-realizacje.md, widok B): wszystkie realizacje z kolekcji
- * w dwóch kolumnach na siatce, prawa przesunięta w dół (stagger jak w Alpanecie). Karty grają
- * pod kursorem jak na głównej (work-live, tilt, squeeze). Strona kończy się kontaktem.
+ * w indeksie z żywym ekranem jak na głównej (components/WorkIndex.astro), z filtrem typów
+ * nad listą. Strona kończy się kontaktem.
  */
 import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Grid from '../../components/Grid.astro';
 import Header from '../../components/Header.astro';
-import WorkCard from '../../components/WorkCard.astro';
+import WorkIndex from '../../components/WorkIndex.astro';
 import Contact from '../../sections/Contact.astro';
 import { getRealizacje } from '../../data/realizacje';
 import '../../styles/sections/cases.css';
@@ -41,19 +41,13 @@ const chapters = [
   >
     <Grid />
 
-    <div class="container" data-module="work-live">
+    <div class="container">
       <h1 id="cases-title" class="cases__title t-impact" data-split="words">
         Realizacje
       </h1>
       {lead && <p class="cases__lead t-lead muted">{lead}</p>}
 
-      <ol class="cases__list" data-module="squeeze">
-        {all.map((entry) => (
-          <li class="cases__item">
-            <WorkCard entry={entry} heading="h2" sizes="(min-width: 768px) 50vw, 100vw" />
-          </li>
-        ))}
-      </ol>
+      <WorkIndex entries={all} heading="h2" filters />
     </div>
   </section>
 

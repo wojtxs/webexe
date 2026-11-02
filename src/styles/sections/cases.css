@@ -1,8 +1,6 @@
 /* ==========================================================================
    /realizacje (docs/sections/03-realizacje.md, widok B).
-   Dwie kolumny kart po 6 z 12 (2 kolumny wizualne siatki), parzyste karty
-   przesunięte w dół o --s-32 (stagger jak w Alpanecie, ±133 px). Poniżej 768 px
-   jedna kolumna bez staggera. Karta: components.css.
+   Nagłówek i lead; indeks z filtrem i żywym ekranem: work-index.css.
    ========================================================================== */
 
 .cases__title {
@@ -21,45 +19,5 @@
 @media (max-width: 991px) {
   .cases__lead {
     grid-column: 1 / -1;
-  }
-}
-
-.cases__list {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: subgrid;
-  row-gap: var(--s-24);
-  list-style: none;
-}
-
-.cases__item {
-  grid-column: span 6;
-}
-
-.cases__item:nth-child(even) {
-  margin-top: var(--s-32);
-}
-
-@media (max-width: 991px) {
-  .cases__item {
-    grid-column: span 4;
-  }
-
-  .cases__item:nth-child(even) {
-    margin-top: var(--s-16);
-  }
-}
-
-@media (max-width: 767px) {
-  .cases__list {
-    row-gap: var(--s-16);
-  }
-
-  .cases__item {
-    grid-column: 1 / -1;
-  }
-
-  .cases__item:nth-child(even) {
-    margin-top: 0;
   }
 }

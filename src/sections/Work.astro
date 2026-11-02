@@ -1,12 +1,12 @@
 ---
 /**
  * 03 Realizacje (docs/sections/03-realizacje.md, widok A). Treść zależy od D3, do tego czasu DEMO.
- * Trzy wyróżnione realizacje z kolekcji (data/realizacje.ts) jako duże karty na kolumnach siatki
- * ze staggerem (docs/INSPIRACJE.md, wiersz Realizacje), wiersz-link do /realizacje, a na końcu
- * technologie, na których budujemy: ikona i nazwa w komórkach widocznej siatki.
+ * Trzy wyróżnione realizacje z kolekcji (data/realizacje.ts) jako indeks z żywym ekranem
+ * (components/WorkIndex.astro), wiersz-link do /realizacje, a na końcu technologie,
+ * na których budujemy: ikona i nazwa w komórkach widocznej siatki.
  */
 import Grid from '../components/Grid.astro';
-import WorkCard from '../components/WorkCard.astro';
+import WorkIndex from '../components/WorkIndex.astro';
 import { demoStack } from '../data/demo';
 import { featuredOf, getRealizacje } from '../data/realizacje';
 import { tech } from '../data/tech';
@@ -24,19 +24,13 @@ const featured = featuredOf(all);
 >
   <Grid />
 
-  <div class="container" data-module="work-live">
+  <div class="container">
     <!-- TODO(treść): nagłówek sekcji, roboczo nazwa z mapy w BRIEF -->
     <h2 id="work-title" class="section__title t-h2" data-split="words">
       Realizacje
     </h2>
 
-    <ol class="work__list" data-module="squeeze">
-      {featured.map((entry) => (
-        <li class="work__item">
-          <WorkCard entry={entry} sizes="(min-width: 992px) 75vw, 100vw" />
-        </li>
-      ))}
-    </ol>
+    <WorkIndex entries={featured} />
 
     <!-- TODO(treść): etykieta wiersza; liczba to liczba wpisów w kolekcji -->
     <a class="work__all" href="/realizacje/">

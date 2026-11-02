@@ -329,7 +329,7 @@ html:not(.js) .header__menu {
   color: var(--ink-muted);
 }
 
-/* --- Kadr realizacji (components/CaseShot.astro): karta, okładka projektu, następna realizacja ---
+/* --- Kadr realizacji (components/CaseShot.astro): ekran indeksu, okładka projektu, następna realizacja ---
    Przechył za kursorem (tilt) i ściskanie przy szybkim scrollu (squeeze) w jednym transformie.
    Toner Głębi zdejmuje skośny front (work-live: --front 0 → 1, --front-angle losowany);
    bez JS i przy reduced motion tonera nie ma (klasa is-front). */
@@ -387,35 +387,6 @@ html:not(.js) .header__menu {
 
 .shot.is-front .shot__toner {
   display: block;
-}
-
-/* --- Karta realizacji (components/WorkCard.astro) --- */
-.work-card {
-  container-type: inline-size;
-  display: grid;
-  gap: var(--s-4);
-}
-
-.work-card__media {
-  margin-bottom: var(--s-2);
-}
-
-.work-card__link {
-  color: inherit;
-  text-decoration: none;
-  /* Tab przewija tak, żeby nad tytułem był cały kadr z obrysem fokusu: kadr 16:10 to 62.5 %
-     szerokości karty, do tego tagi, odstępy i pasek systemu */
-  scroll-margin-top: calc(62.5cqi + var(--s-32) + var(--s-4));
-}
-
-/* Jedyny przystanek tabulatora to tytuł, a jego fokus obrysowuje też kadr */
-.work-card:has(.work-card__link:focus-visible) .work-card__media {
-  outline: 2px solid var(--c-laguna-start);
-  outline-offset: 3px;
-}
-
-.work-card__desc {
-  max-width: var(--prose-max-width);
 }
 
 /* --- Tagi (components/Tags.astro): znak x między pozycjami --- */

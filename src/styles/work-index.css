@@ -1,0 +1,326 @@
+/* ==========================================================================
+   Indeks realizacji z żywym ekranem (components/WorkIndex.astro, modules/work-index.ts).
+   Desktop: lista na kolumnach 1–6, ekran na 7–12 przyklejony w połowie
+   wysokości okna (sticky, bez pin). Linia wiersza biegnie od lewej linii siatki do środkowej,
+   a węzeł x wiersza stoi na lewej linii jak węzły siatki. Poniżej 992 px ekran przyklejony
+   u góry, wiersze przewijają się pod nim.
+   ========================================================================== */
+
+.windex {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
+}
+
+/* --- Filtr typów (lista) --- */
+.windex__filters {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-bottom: var(--s-12);
+}
+
+.windex__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid var(--c-glebia-raise);
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--ink-muted);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    color var(--d-ui) var(--ease-ui),
+    background-color var(--d-ui) var(--ease-ui);
+}
+
+.windex__filter[aria-pressed='true'] {
+  background-color: var(--c-glebia-raise);
+  color: inherit;
+}
+
+@media (hover: hover) {
+  .windex__filter:hover {
+    color: inherit;
+  }
+}
+
+.windex__filter-count {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Lista --- */
+.windex__list {
+  position: relative;
+  grid-column: 1 / 7;
+  list-style: none;
+}
+
+/* Linia zamykająca listę, od lewej linii siatki do środkowej */
+.windex__list::after {
+  content: '';
+  position: absolute;
+  right: calc(var(--grid-gap) / -2);
+  bottom: 0;
+  left: calc(var(--grid-gap) / -2);
+  height: 1px;
+  background-color: var(--grid-line);
+}
+
+.windex__row {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  /* Każdy projekt trzyma ekran przez ok. 40 % wysokości okna przewijania */
+  min-height: max(18rem, 42svh);
+  padding-block: var(--s-8) var(--s-12);
+  /* Nieaktywne przygaszone mocniej niż zwykły tekst pomocniczy, ale czytelne (duży tekst ≥ 3:1) */
+  color: color-mix(in oklab, var(--ink-muted) 65%, var(--c-glebia));
+  transition: color var(--d-ui) var(--ease-ui);
+}
+
+.windex__row[hidden] {
+  display: none;
+}
+
+.windex__row.is-active {
+  color: var(--c-piana);
+}
+
+.windex__row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: calc(var(--grid-gap) / -2);
+  left: calc(var(--grid-gap) / -2);
+  height: 1px;
+  background-color: var(--grid-line);
+}
+
+/* Linia aktywnego wiersza rysuje się w Lagunie od węzła x w prawo, w krzywej rysowania x */
+.windex__row::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: calc(var(--grid-gap) / -2);
+  left: calc(var(--grid-gap) / -2);
+  height: 1px;
+  background: var(--g-laguna);
+  transform-origin: 0 50%;
+  scale: 0 1;
+  transition: scale var(--d-ui) var(--ease-ui);
+}
+
+.windex__row.is-active::after {
+  scale: 1 1;
+  transition: scale var(--d-enter) var(--ease-draw);
+}
+
+/* Węzeł x wiersza na lewej linii siatki. Aktywny: większy, w Lagunie, rysuje się od nowa */
+.windex__x {
+  position: absolute;
+  top: 0;
+  left: calc(var(--grid-gap) / -2);
+  z-index: 1;
+  width: var(--s-4);
+  height: var(--s-4);
+  color: var(--grid-node);
+  transform: translate(-50%, -50%);
+}
+
+.windex__x path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.windex__row.is-active .windex__x {
+  width: var(--s-6);
+  height: var(--s-6);
+  stroke: url(#x-laguna);
+}
+
+.windex__row.is-active .windex__x path {
+  animation: windex-draw var(--d-enter) var(--ease-draw) both;
+}
+
+.windex__row.is-active .windex__x path + path {
+  animation-delay: calc(var(--d-enter) * 0.3);
+}
+
+@keyframes windex-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.windex__title {
+  text-wrap: balance;
+}
+
+/* Link rozciągnięty na cały wiersz: wiersz to jeden cel kliknięcia */
+.windex__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.windex__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.windex__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-8);
+  color: var(--ink-muted);
+}
+
+.windex__facts {
+  display: inline-flex;
+  gap: var(--s-4);
+}
+
+/* Opis: na desktopie pod ekranem (podpis), w wierszu tylko dla czytnika */
+.windex__summary {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Ekran --- */
+.windex__aside {
+  grid-column: 7 / -1;
+  align-self: stretch;
+  container-type: inline-size;
+}
+
+/* W połowie wysokości okna: ekran 16:10 (62.5 % szerokości) i podpis */
+.windex__stage {
+  position: sticky;
+  top: calc(50svh - (62.5cqi + var(--s-16)) / 2);
+}
+
+.windex__screen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background-color: var(--surface);
+  transform: perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
+.windex__shot {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  visibility: hidden;
+  transform: none;
+}
+
+.windex__shot.is-active {
+  z-index: 2;
+  visibility: visible;
+}
+
+.windex__shot.is-leaving {
+  z-index: 1;
+  visibility: visible;
+}
+
+.windex__caption {
+  max-width: var(--prose-max-width);
+  min-height: 4.5em;
+  margin-top: var(--s-4);
+  color: var(--ink-muted);
+}
+
+/* --- Tablet i telefon: ekran przyklejony u góry, pod paskiem systemu --- */
+@media (max-width: 991px) {
+  /* Kolumna zamiast siatki: sticky w elemencie siatki trzyma się tylko własnego obszaru (wiersza),
+     a w kolumnie flex ekran zostaje u góry przez cały indeks */
+  .windex {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .windex__filters {
+    order: -2;
+    margin-bottom: var(--s-6);
+  }
+
+  .windex__aside {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    order: -1;
+    padding-top: calc(var(--s-3) + var(--s-12) + var(--s-2) + var(--s-2));
+    padding-bottom: var(--s-4);
+    background-color: var(--c-glebia);
+  }
+
+  /* Tekst wiersza gaśnie pod ekranem zamiast urywać się na krawędzi */
+  .windex__aside::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    height: var(--s-8);
+    background: linear-gradient(var(--c-glebia), transparent);
+    pointer-events: none;
+  }
+
+  .windex__stage {
+    position: static;
+  }
+
+  .windex__caption {
+    display: none;
+  }
+
+  .windex__list {
+    grid-column: 1 / -1;
+  }
+
+  .windex__row {
+    min-height: 0;
+    padding-block: var(--s-6) var(--s-8);
+  }
+
+  .windex__title {
+    font-size: var(--t-h3);
+  }
+
+  /* Tab przewija tytuł tuż pod przyklejony ekran: kadr 16:10 (62.5 % szerokości indeksu),
+     odstępy ekranu i pas wygaszenia pod nim */
+  .windex__link {
+    scroll-margin-top: calc(
+      62.5cqi + var(--s-3) + var(--s-12) + var(--s-2) + var(--s-2) + var(--s-4) + var(--s-8)
+    );
+  }
+
+  .windex__summary {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+}

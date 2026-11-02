@@ -1,25 +1,9 @@
 /* ==========================================================================
    03 Realizacje na głównej (docs/sections/03-realizacje.md).
-   Trzy karty na przemian na kolumnach 1–9 i 4–12, wiersz „Wszystkie realizacje”
+   Indeks z żywym ekranem (work-index.css), wiersz „Wszystkie realizacje”
    na całą szerokość między liniami siatki, potem technologie w komórkach po 3 kolumny.
-   Karta, kadr i komórki technologii: components.css.
+   Kadr i komórki technologii: components.css.
    ========================================================================== */
-
-.work__list {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: subgrid;
-  row-gap: var(--s-24);
-  list-style: none;
-}
-
-.work__item {
-  grid-column: 1 / 10;
-}
-
-.work__item:nth-child(even) {
-  grid-column: 4 / -1;
-}
 
 /* Wiersz-link do listy realizacji: nazwa po lewej, liczba projektów po prawej.
    Hover i fokus: powierzchnia Głębi raise rysuje się od lewej jak kreska x (--d-enter, --ease-draw),
@@ -92,17 +76,6 @@
 .stack__title {
   grid-column: 1 / -1;
   margin-bottom: var(--s-8);
-}
-
-@media (max-width: 991px) {
-  .work__item,
-  .work__item:nth-child(even) {
-    grid-column: 1 / -1;
-  }
-
-  .work__list {
-    row-gap: var(--s-16);
-  }
 }
 
 @media (max-width: 767px) {
