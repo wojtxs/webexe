@@ -17,23 +17,11 @@ import type { Module } from '@core/lifecycle';
 import { addMotion, durationToken, easeToken } from '@core/motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { fakturyLive } from './live/faktury';
-import { flotaLive } from './live/flota';
-import { przeplywyLive } from './live/przeplywy';
-import { serwisLive } from './live/serwis';
-import type { Live, LiveBuilder } from './live/types';
+import { createLive } from './live/registry';
+import type { Live } from './live/types';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BUILDERS: Record<string, LiveBuilder> = {
-  flota: flotaLive,
-  faktury: fakturyLive,
-  przeplywy: przeplywyLive,
-  serwis: serwisLive,
-};
-
-// Flota w hero jedzie w tempie dyspozytorni; w karcie podgląd ma pokazać ruch od razu
-const TIME_SCALE: Record<string, number> = { flota: 4 };
 // Kąty gradientu frontu: od lewej albo od prawej, z lekkim skosem
 const ANGLES = ['100deg', '260deg'];
 
@@ -52,14 +40,9 @@ const WorkLive: Module = {
         const cleanups: Array<() => void> = [];
 
         cards.forEach((card) => {
-          const svg = card.querySelector<SVGSVGElement>('svg[data-live]');
-          const kind = svg?.dataset.live ?? '';
-          const build = BUILDERS[kind];
-          if (!svg || !build) return;
-
-          const live = build(svg, TIME_SCALE[kind] ?? 1);
+          const live = createLive(card);
+          if (!live) return;
           lives.push(live);
-          live.animations.forEach((a) => a.pause());
 
           if (card.dataset.liveCard === 'view') {
             ScrollTrigger.create({
