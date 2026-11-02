@@ -56,7 +56,7 @@ Spike'a nie robimy: karta hero to prosty DOM, a ryzyko leży w materiale i wygl�
 Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptujesz, potem build.
 
 - [x] 02 Manifest (wypełnianie scrollem, zoom przez x), tag `manifest-v1`; brak tylko trace 60 fps w Chrome
-- [x] 03 Realizacje: sekcja na głównej, `/realizacje` i strony projektów, tag `realizacje-v1`. Treść DEMO do wymiany w D3. Brak trace 60 fps (RDP 32 Hz), Firefoxa i sprawdzenia bloku `pair`
+- [x] 03 Realizacje: sekcja na głównej, `/realizacje` i strony projektów, tag `realizacje-v1`; v2 (indeks z żywym ekranem na głównej i liście, filtr typów) tag `realizacje-v2`. Treść DEMO do wymiany w D3. Brak trace 60 fps (RDP 32 Hz), Firefoxa i sprawdzenia bloku `pair`
 - [ ] 04 Produkt (zależy od D3)
 - [ ] 05 Jak pracujemy (akordeon, D10, D11)
 - [ ] 06 Poznaj nas (zależy od D4)
@@ -95,6 +95,7 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
 | 2026-10-28 | Hero: „Build” zamiast wstęgi: terminal `npm run build` i blueprint strony (siatka, ramki z wymiarami z DOM, nagłówek w obrysie) rysują się na żywo, linia skanu renderuje gotowe hero, kursor to rentgen odsłaniający blueprint; nagłówek wersalikami; bez WebGL; nowy token `--f-mono` (krój systemowy); do potwierdzenia na żywo | wstęga odrzucona („do wyjebania, nie pasuje do firmy software”), dwie serie par A/B do maski (monolit, papierologia, szkic, bonsai, dłoń, zegarek) też. Build pokazuje, że jesteśmy software housem, samą stroną. DOM i typografia dają jakość pod kontrolą, czego nie dawały obiekty liczone w three.js |
 | 2026-10-28 | Hero: bohater po intro Build to obiekt `>_` (prompt terminala, chrom i szkło) jako zdjęcie z mapami w GL, rentgen w pasmach szumu jak twarz/kask u Lando; soczewka DOM usunięta; hero sticky 2 × vh, wejście w Manifest z blokiem kursora | użytkownikowi podobało się intro, ale hero „w ogóle nie odwzorowuje Lando”. Wybór z 4 obiektów (kursor, klawisz Enter, `>_`, procesor) po klatkach A/B z pasmami. Zdjęcie z mapami zamiast 3D liczonego na żywo, bo to daje jakość renderu (wniosek z 7 odrzuconych konceptów) |
 | 2026-10-30 | Kierunek z `docs/INSPIRACJE.md` (alpanet.pl: układ i narracja, chipsa.design: ruch i interakcje) zamiast landonorris.com. Strona showcase'owa z realizacjami w centrum, bez kosztorysu i konfiguratora. Motyw „siatka z węzłami x” zamiast pasm i poziomic. three.js tylko na żądanie speca sekcji. Obowiązuje wygląd z `DESIGN.md` (Laguna), palety v2 i v3 do usunięcia. D3: minimum 4 projekty. Deploy w Dockerze | żaden koncept hero z kierunku Lando nie przeszedł; referencje użytkownika dają sprawdzony układ i ruch, a showcase opiera stronę na prawdziwych realizacjach zamiast na efekcie GL |
+| 2026-11-02 | Realizacje v2: na głównej i na `/realizacje` indeks z żywym ekranem zamiast kart (duże nazwy na liniach siatki, aktywny wiersz rysuje x, obok przyklejony ekran z żywą warstwą, na liście filtr typów). Strona projektu bez zmian | użytkownik chciał ciekawszej sekcji po v1; wybrał kierunek „Indeks + żywy ekran” (wzór chipsa „Key clients”) i zaakceptował prototyp z `/lab` |
 | 2026-11-01 | Realizacje na trzech poziomach: na głównej ok. 3 wybrane realizacje i odnośnik do `/realizacje`; `/realizacje` pokazuje wszystkie po kolei we własnym, dopracowanym układzie; `/realizacje/<projekt>` to pełny opis jednej realizacji | decyzja użytkownika: główna ma być krótka, a realizacji będzie przybywać i każda potrzebuje miejsca na pełny opis |
 
 ## Log sesji
@@ -587,3 +588,33 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - `tsconfig` musi obejmować `.astro/types.d.ts`, bo inaczej `astro:content` nie ma typów w `tsc`.
   - Pliki mają CRLF, więc zamiany wieloliniowe przez `node -e` nie trafiają. Używać Edit albo normalizować końce linii.
   - Playwright MCP i Chrome DevTools MCP szukają Google Chrome, którego na maszynie nie ma. `visual-qa` działał przez playwright-core z Edge, ale bez trace DevTools. Propozycja do `CLAUDE.md` (Narzędzia): kanał `msedge` w konfiguracji MCP albo instalacja Chrome.
+
+### 2026-11-01/02 — 03 Realizacje v2: indeks z żywym ekranem
+
+- Zrobione:
+  - Zapis stanu przed zmianą: tag `demo-v4-2026-11-01` i gałąź `backup/demo-v4`.
+  - Kierunek wybrany przez użytkownika: „Indeks + żywy ekran”, zakres: główna i lista. Prototyp w `/lab/realizacje-glowna` i `/lab/realizacje-lista` (po akceptacji usunięty).
+  - `WorkIndex.astro`, `work-index.ts`, `work-index.css`:
+    - po lewej duże nazwy projektów na liniach siatki, aktywny wiersz (środek okna, kursor, fokus, klik) jaśnieje i rysuje x oraz linię w Lagunie,
+    - po prawej przyklejony ekran: kadr wjeżdża kurtyną w kierunku scrolla z dojazdem skali, gra tylko żywa warstwa aktywnego kadru, podpis z opisem,
+    - na liście filtr typów z liczbami (GSAP Flip),
+    - poniżej 992 px ekran przyklejony u góry, wiersze z opisem przewijają się pod nim i gasną przy jego krawędzi.
+  - Główna i `/realizacje` na indeksie, `WorkCard.astro` i jego style usunięte.
+  - Wspólny rejestr żywych warstw kadrów (`modules/live/registry.ts`) dla `work-index` i `work-live`.
+  - `noOrphans` (`data/typo.ts`): twarde spacje po jednoliterowych słowach w tytułach i opisach indeksu.
+  - **Poprawka przejścia** (dotyczyła też v1): morf z głównej w okładkę projektu przepadał (`InvalidStateError … ViewTransition opt-in disabled`, 0 na 5 prób), a z listy działał. Zgoda `@view-transition` stoi teraz inline na początku `<head>` w `Base.astro` (5 na 5 i 6 na 6). W `realizacje-v1` na osobnym serwerze ten sam scenariusz przechodził, więc to wyścig czasowy, a nie nowy kod.
+  - Spec `03-realizacje.md` (v2: DOM, layout, ruch, kryteria, decyzja 4), `ARCHITECTURE.md` (struktura, `data-index-*`, `data-filter`, zgoda inline).
+  - Testy (Edge headless): 7 scenariuszy morfu i kurtyny, init → destroy → init (50/0/50, 16/0/16, 21/0/21), filtr z ruchem i w reduced motion, Tab na 390 i 1440 (aktywny wiersz za fokusem, tytuł nie chowa się pod ekranem), zrzuty 1920 / 1440 / 834 / 390, konsola czysta.
+- Zostało:
+  - Etykiety filtra i kursora `TODO(treść)` (brak w `BRIEF.md`).
+  - `squeeze.ts` nieużywany: zostawić na później albo usunąć (decyzja użytkownika).
+  - Bez zmian z v1: D3, lead listy, blok `pair`, Firefox, trace 60 fps, favicon, lista technologii, „Napiszcie” dwa razy (D7), loader po wejściu na `/#realizacje` z podstrony.
+- Decyzje:
+  - **Poniżej 992 px `.windex` to kolumna flex, a nie podsiatka.** Element siatki ze `sticky` trzyma się tylko własnego obszaru (wiersza siatki), więc ekran odjeżdżał razem z pierwszym wierszem.
+  - **Fokus z klawiatury trzyma swój wiersz do pierwszego przewinięcia** (kółko, dotyk, klawisz przewijania). Przeglądarka stawia fokus w okolicy środka okna, a na mobile to tuż pod linią aktywności, więc scroll oddawał ekran poprzedniemu wierszowi.
+  - **Klik przełącza kadr bez kurtyny**, żeby morf leciał z widocznego kadru.
+- Lekcje:
+  - Przejście między dokumentami: zgodę `@view-transition` trzymać inline na początku `<head>`. Z arkusza przejście bywa odrzucane zależnie od czasu ładowania. Diagnoza: blokowanie chunków JS na stronie docelowej (`route.abort`) zmieniało wynik, a reguła inline usunęła problem.
+  - `astro dev` bez `--host` słucha tylko na `::1`. Przeglądarka, która tłumaczy `localhost` na `127.0.0.1`, nie łączy się. Serwer dla użytkownika uruchamiać z `--host`, jako osobny proces (`Start-Process`), bo zadanie w tle ginie razem z sesją.
+  - Po dojściu nowego importu (GSAP Flip) serwer deweloperski zwraca 504 „Outdated Optimize Dep”. Pomaga restart z `--force`.
+  - W JS `\s` łapie też twardą spację, więc regex dla sierotek potrzebuje lookbehind, żeby obsłużyć „i w”.

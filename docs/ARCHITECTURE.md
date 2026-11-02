@@ -10,11 +10,12 @@ src/
                     · polityka-prywatnosci.astro · 404.astro · lab/[...].astro (sandbox, noindex, tylko dev)
   content/          realizacje/*.md (frontmatter: schemat w content.config.ts, kolekcja „realizacje”, loader glob)
   data/             realizacje.ts (getRealizacje, featuredOf, nextOf, caseHref, morphName) · tech.ts + tech-keys.ts
-                    (rejestr ikon technologii) · demo.ts (DEMO poza realizacjami)
+                    (rejestr ikon technologii) · demo.ts (DEMO poza realizacjami) · typo.ts (noOrphans: twarde spacje)
   layouts/          Base.astro (head, fonty, nav, loader, kursor, scroll indicator)
   sections/         Hero.astro · Manifest.astro · Work.astro · Product.astro · HowWeWork.astro · About.astro · Contact.astro
   components/       Button.astro · Wordmark.astro · XMark.astro · Grid.astro (siatka z węzłami x) · Header.astro
-                    · Curtain.astro · WorkCard.astro · CaseShot.astro (kadr: zrzut, żywa warstwa, toner) · Tags.astro · …
+                    · Curtain.astro · WorkIndex.astro (indeks realizacji z żywym ekranem) · CaseShot.astro (kadr:
+                    zrzut, żywa warstwa, toner) · Tags.astro · …
   styles/           tokens.css · fluid.css · base.css · utils.css · sections/*.css
   core/
     app.ts          bootstrap: fonty → scroll → moduły → loader
@@ -24,7 +25,9 @@ src/
     events.ts       mała szyna zdarzeń (app:ready, app:resize, nav:open)
     css.ts          cssVar() (cssColor() wraca dopiero razem z GL)
   modules/          card-expand.ts · scroll-fill.ts · x-zoom.ts · split-reveal.ts · media-reveal.ts · cursor.ts · tilt.ts
-                    · header.ts · menu.ts · chapter-map.ts · nav-theme.ts · curtain.ts · work-live.ts · squeeze.ts · …
+                    · header.ts · menu.ts · chapter-map.ts · nav-theme.ts · curtain.ts · work-index.ts · work-live.ts
+                    · squeeze.ts (nieużywany od realizacji v2) · live/*.ts (żywe warstwy; registry.ts: kadry realizacji
+                    dla work-index i work-live) · …
   gl/               tylko wtedy, gdy spec sekcji wymaga WebGL (patrz „GL (opcjonalny)”)
 public/
   media/              nagrania i postery: hero, work, product (D3)
@@ -44,7 +47,7 @@ export interface Module {
 - `lifecycle.ts` skanuje `[data-module]`, importuje moduł dynamicznie (`import()`, code-splitting) i woła `init(el)` na osobnej instancji (`Object.create(module)`). Moduł w `init` przypisuje `this.destroy`, więc ten sam moduł może stać na stronie kilka razy (np. `work-live` w hero projektu i w następnej realizacji), a każdy element wycofuje własny kontekst.
 - Pasek systemu (`Header.astro`, moduły `header nav-theme menu`) ma propsy dla podstron: `chapters` (rozdziały tej strony w komórce paska), `home={false}` (wordmark prowadzi na `/`, menu do `/#id` i do `/realizacje`) i `top="dark"` (kolory paska od pierwszej klatki, zanim `nav-theme` sprawdzi tło; ważne przy morfie, kiedy nowej strony nie zakrywa kurtyna).
 - Każdy moduł tworzy animacje w `const ctx = gsap.context(() => { … }, root)`, a w `destroy()` woła `ctx.revert()`. Odpina też listenery, `ResizeObserver` i `IntersectionObserver`.
-- Nie ma routera SPA. Każda strona to osobny dokument, a przejścia między nimi robi `curtain` (kurtyna) albo przeglądarka (View Transitions między dokumentami, sam CSS w `base.css`). Kadr karty realizacji dostaje `view-transition-name` w chwili kliknięcia (`data-morph`), okładka projektu ma tę nazwę na stałe, więc media przechodzą w okładkę (morf). Pozostałe nawigacje `curtain` pomija w `pageswap` (`skipTransition()`), tam gra kurtyna. Bez View Transitions (Firefox) też kurtyna, przy reduced motion zwykła nawigacja. Kontrakt `init/destroy` zostaje na wypadek routera.
+- Nie ma routera SPA. Każda strona to osobny dokument, a przejścia między nimi robi `curtain` (kurtyna) albo przeglądarka (View Transitions między dokumentami, sam CSS: zgoda `@view-transition` inline na początku `<head>` w `Base.astro`, czasy w `base.css`). Zgoda stoi inline, bo z arkusza przeglądarka bywała pytana o nią, zanim arkusz doszedł, i odrzucała przejście. Kadr na ekranie indeksu realizacji (i kadr następnej realizacji) dostaje `view-transition-name` w chwili kliknięcia (`data-morph`), okładka projektu ma tę nazwę na stałe, więc media przechodzą w okładkę (morf). Pozostałe nawigacje `curtain` pomija w `pageswap` (`skipTransition()`), tam gra kurtyna. Bez View Transitions (Firefox) też kurtyna, przy reduced motion zwykła nawigacja. Kontrakt `init/destroy` zostaje na wypadek routera.
 
 ## API atrybutów `data-*`
 
@@ -65,12 +68,15 @@ export interface Module {
 | `data-reveal` + `data-reveal-zoom` | `media-reveal`: kurtyna od góry na mediach, zoom 1.2 → 1 na wnętrzu |
 | `data-tilt="3"` + `data-tilt-area` | `tilt`: przechył za kursorem do podanego kąta (°), opcjonalnie względem innego prostokąta |
 | `data-cursor="etykieta"` | `cursor`: etykieta kursora nad elementem |
-| `data-live-card` | `work-live`: kadr realizacji z żywą warstwą, gra pod kursorem (toner zdejmuje się frontem) |
+| `data-live-card` | `work-live`: kadr następnej realizacji z żywą warstwą, gra pod kursorem (toner zdejmuje się frontem) |
 | `data-live-card="view"` | `work-live`: okładka projektu, gra w widoku jak wideo, bez tonera i kursora |
-| `data-squeeze` | `squeeze` (moduł na liście kart): kadr dostaje `--squeeze` (ściskanie przy szybkim scrollu); zmienna bez dziedziczenia (`@property`), więc przelicza się sam kadr |
-| `data-live-host` | `work-live`: fokus w środku (link w tytule karty) gra kadr hosta |
+| `data-squeeze` | `squeeze`: kadr dostaje `--squeeze` (ściskanie przy szybkim scrollu); zmienna bez dziedziczenia (`@property`), więc przelicza się sam kadr. Od realizacji v2 nigdzie nieużywany |
+| `data-live-host` | `work-live`: fokus w środku (link) gra kadr hosta |
+| `data-index-list` · `data-index-row` | `work-index`: lista i wiersze indeksu realizacji. Wiersz niesie `data-tags` (typy rozdzielone pionową kreską, dla filtra) i `data-summary` (podpis pod ekranem) |
+| `data-index-aside` · `data-index-shot` · `data-index-caption` | `work-index`: kolumna ekranu (jej wysokość wyznacza linię aktywności na mobile), kadry na ekranie (po jednym na wiersz, ta sama kolejność), podpis aktywnego projektu |
+| `data-filter="Typ"` | `work-index`: przycisk filtra (`aria-pressed`); pusta wartość to „Wszystkie” |
 | `data-morph="case-<slug>"` | `curtain`: link przechodzi do projektu morfem (View Transitions), a nie kurtyną |
-| `data-morph-source="case-<slug>"` | `curtain`: element, który w chwili kliknięcia dostaje `view-transition-name` (kadr karty) |
+| `data-morph-source="case-<slug>"` | `curtain`: element, który w chwili kliknięcia dostaje `view-transition-name` (kadr na ekranie indeksu, kadr następnej realizacji) |
 
 Nowy atrybut dopisujesz najpierw do tej tabeli, potem do kodu.
 
@@ -94,7 +100,7 @@ Nowy atrybut dopisujesz najpierw do tej tabeli, potem do kodu.
 
 ## GL (opcjonalny)
 
-Bazowy stack jest bez WebGL. three.js dochodzi tylko wtedy, gdy spec sekcji uzasadni efekt, którego nie da się zrobić w DOM, CSS albo wideo, i wtedy jak nowa zależność (zasada 8 w `CLAUDE.md`). Dziś jedynym kandydatem jest przejście obraz → wideo na kartach realizacji (03) przy `(hover: hover) and (pointer: fine)`.
+Bazowy stack jest bez WebGL. three.js dochodzi tylko wtedy, gdy spec sekcji uzasadni efekt, którego nie da się zrobić w DOM, CSS albo wideo, i wtedy jak nowa zależność (zasada 8 w `CLAUDE.md`). Dziś jedynym kandydatem jest przejście obraz → wideo na kadrach realizacji (03) przy `(hover: hover) and (pointer: fine)`.
 
 Jeśli GL wejdzie:
 
