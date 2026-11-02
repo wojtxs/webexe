@@ -37,6 +37,16 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 <html lang="pl" {...rest}>
   <head>
     <meta charset="UTF-8" />
+    <!-- Zgoda na przejście między dokumentami (morf kadru w okładkę, curtain.ts) inline na samym
+         początku head: z regułą w arkuszu nowa strona bywała oceniana, zanim arkusz doszedł,
+         i przeglądarka odrzucała przejście („opt-in disabled”). Czasy przejścia: base.css -->
+    <style is:inline>
+      @media (prefers-reduced-motion: no-preference) {
+        @view-transition {
+          navigation: auto;
+        }
+      }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 

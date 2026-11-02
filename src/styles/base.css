@@ -67,16 +67,11 @@ video {
   color: var(--c-biel);
 }
 
-/* --- Przejście między stronami: morf kadru karty w okładkę projektu ---
-   View Transitions między dokumentami (docs/sections/03-realizacje.md, ruch #5). Nazwę kadrowi
-   nadaje curtain.ts przy kliknięciu, a inne nawigacje pomija (tam gra kurtyna). Kadr leci
-   w tempie wejścia treści, reszta strony przenika się w tempie UI. Reduced motion: bez przejścia. */
-@media (prefers-reduced-motion: no-preference) {
-  @view-transition {
-    navigation: auto;
-  }
-}
-
+/* --- Przejście między stronami: morf kadru w okładkę projektu ---
+   View Transitions między dokumentami (docs/sections/03-realizacje.md, ruch #5). Zgoda
+   (@view-transition, bez niej przy reduced motion) stoi inline na początku head w Base.astro.
+   Nazwę kadrowi nadaje curtain.ts przy kliknięciu, a inne nawigacje pomija (tam gra kurtyna).
+   Kadr leci w tempie wejścia treści, reszta strony przenika się w tempie UI. */
 ::view-transition-group(*),
 ::view-transition-old(*),
 ::view-transition-new(*) {
