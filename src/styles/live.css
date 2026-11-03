@@ -109,11 +109,6 @@
   opacity: 0;
 }
 
-/* Flota: kanał powiadomień w hero (hero-live), w spoczynku ukryty */
-.live-flota__toast {
-  opacity: 0;
-}
-
 /* Grafik: zmiany ze stanu „po” (sprite'y), kursor, fala kliknięcia i ramka, w spoczynku ukryte */
 .live-grafik__sprite,
 .live-grafik__cursor,

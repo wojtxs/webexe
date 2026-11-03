@@ -7,7 +7,6 @@
  * (D3 realizacje i produkt, D7 kontakt).
  */
 import type { ImageMetadata } from 'astro';
-import flotaBase from '../assets/demo/flota-base.webp';
 import grafikBase from '../assets/demo/grafik-base.webp';
 import grafikMobileBase from '../assets/demo/grafik-mobile-base.webp';
 import type { TechKey } from './tech-keys';
@@ -17,12 +16,7 @@ export interface DemoShot {
   alt: string;
 }
 
-// Projekty DEMO są w kolekcji src/content/realizacje/ (demo: true).
-// Hero pokazuje zrzut kokpitu floty z tą samą żywą warstwą (FlotaLive).
-export const demoHero: DemoShot = {
-  image: flotaBase,
-  alt: 'Pulpit dyspozytora: mapa Polski z trasami pojazdów, lista pojazdów w trasie i liczba zleceń dnia',
-};
+// Projekty DEMO są w kolekcji src/content/realizacje/ (demo: true); hero pokazuje je po kolei.
 
 export const demoProduct = {
   name: 'Grafik',

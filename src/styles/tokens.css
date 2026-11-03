@@ -30,6 +30,8 @@
 
   /* --- Typografia — skala rem (1 rem = 16 px @1440) --- */
   --t-impact: 8rem;
+  /* Nagłówek-plakat hero: dwa wiersze na 12 kolumnach, drugi wcięty o kolumnę siatki */
+  --t-hero: 4.75rem;
   --t-h1: 4.5rem;
   --t-h2: 3.5rem;
   --t-h3: 2rem;
@@ -67,6 +69,11 @@
   --ls-body: 0;
   --ls-small: 0;
   --ls-label: 0;
+
+  /* --- Odstępy w nagłówkach display ---
+     Spacja w Jakarcie przy ciasnym trackingu jest wąska (0,15 em), a kropka ma szerokie światło */
+  --ws-display: 0.08em;
+  --kern-stop: -0.06em;
 
   /* --- Spacing (rem) --- */
   --s-1: 0.25rem;
@@ -113,6 +120,7 @@
 @media (max-width: 767px) {
   :root {
     --t-impact: 3.5rem;
+    --t-hero: 2.5rem;
     --t-h1: 2.5rem;
     --t-h2: 2rem;
     --t-h3: 1.5rem;
@@ -127,6 +135,7 @@
 /* --- Nadpisania tablet --- */
 @media (min-width: 768px) and (max-width: 991px) {
   :root {
+    --t-hero: 4.5rem;
     --grid-cols: 8;
   }
 }

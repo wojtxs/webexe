@@ -1,6 +1,6 @@
 /**
- * registry.ts — żywe warstwy kadrów realizacji (svg[data-live] w CaseShot) dla work-live i work-index.
- * Hero i produkt budują swoje warstwy same (hero-live, product-live).
+ * registry.ts — żywe warstwy kadrów realizacji (svg[data-live] w CaseShot) dla work-live, work-index
+ * i pokazu w hero (hero-reel). Produkt buduje swoją warstwę sam (product-live).
  */
 
 import { fakturyLive } from './faktury';
@@ -16,7 +16,7 @@ const BUILDERS: Record<string, LiveBuilder> = {
   serwis: serwisLive,
 };
 
-// Flota w hero jedzie w tempie dyspozytorni; w kadrze realizacji ma pokazać ruch od razu
+// Flota ma tempo dyspozytorni; w kadrze realizacji ma pokazać ruch od razu
 const TIME_SCALE: Record<string, number> = { flota: 4 };
 
 /** Żywa warstwa kadru, zatrzymana do pierwszego resume(); null, gdy kadr jej nie ma */

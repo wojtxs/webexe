@@ -1,76 +1,150 @@
 ---
 /**
- * 01 Hero — greybox (F3). Karta z nagraniem projektu rozszerza się na sticky torze
- * od okna w prawym dolnym rogu do pełnego kontenera (docs/INSPIRACJE.md, wiersz Hero).
- * Docelowy spec: docs/sections/01-hero.md (F2). Materiał karty: D3.
+ * 01 Hero — „Plakat + ekran” (docs/sections/01-hero.md).
+ *
+ * Nagłówek w dwóch wierszach na całą szerokość, drugi wiersz wcięty o kolumnę siatki. Pod nim
+ * lead i pokaz realizacji po lewej, a na kolumnach 5–12 żywy ekran, który co kilka sekund
+ * pokazuje następną realizację (hero-reel: kurtyna, pasek postępu, pauza). Za treścią siatka
+ * węzłów x zapala się wokół kursora (hero-field). Scroll: ekran rośnie do pełnej sceny, potem
+ * odjeżdża w górę i odsłania Manifest (card-expand z fazą wyjścia).
+ * Bez JS i przy reduced motion: pierwszy projekt na ekranie, przyciski przełączają bez ruchu.
  */
-import { Image } from 'astro:assets';
-import Button from '../components/Button.astro';
+import CaseShot from '../components/CaseShot.astro';
 import Grid from '../components/Grid.astro';
-import FlotaLive from '../components/live/FlotaLive.astro';
-import { demoHero } from '../data/demo';
-import { layers } from '../data/layers';
+import Tags from '../components/Tags.astro';
+import { caseHref, getRealizacje, morphName } from '../data/realizacje';
+import { noOrphans } from '../data/typo';
 import '../styles/sections/hero.css';
+
+const reel = await getRealizacje();
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
 <section
   id="hero"
-  class="hero theme-light sticky-track"
+  class="hp theme-light sticky-track"
   data-nav-theme="light"
-  data-module="card-expand"
+  data-module="card-expand hero-reel"
+  data-card-expand-leave
   aria-labelledby="hero-title"
 >
   <Grid nodes={false} />
 
-  <div class="sticky-item hero__stage">
-    <div class="container hero__inner">
-      <div class="hero__copy" data-card-expand="fade">
-        <h1 id="hero-title" class="hero__title t-h1" data-split="words" data-split-intro>
-          Budujemy <br class="br-d" />
-          oprogramowanie <br class="br-d" />
-          dla firm i zostajemy <br class="br-d" />
-          przy nim na lata.
-        </h1>
-        <p class="hero__lead t-lead" data-intro>
-          Tworzymy aplikacje do codziennej pracy, łączymy istniejące systemy i automatyzujemy
-          powtarzalne zadania. Zajmujemy się całym projektem — od ustalenia, co trzeba zrobić, po
-          wdrożenie, serwery i późniejszy rozwój.
+  <div class="sticky-item hp__stage">
+    <canvas class="hp__field" aria-hidden="true" data-module="hero-field"></canvas>
+
+    <div class="container hp__inner">
+      <!-- Zanikanie przy rozszerzaniu (card-expand) na opakowaniach: wejście (split-reveal, loader)
+           animuje elementy w środku i nie zderza się z tweenem opacity -->
+      <h1 id="hero-title" class="hp__title" data-card-expand="fade">
+        <!-- prettier-ignore -->
+        <span class="hp__title-in" data-split="words" data-split-intro>Budujemy oprogramowanie dla firm <br class="br-d" /><span class="hp__keep">i zostajemy</span> przy nim na lata<span class="hp__stop">.</span></span>
+      </h1>
+
+      <div class="hp__lead-box" data-card-expand="fade">
+        <p class="hp__lead" data-intro>
+          {noOrphans(
+            'Tworzymy aplikacje do codziennej pracy, łączymy istniejące systemy i automatyzujemy powtarzalne zadania. Zajmujemy się całym projektem — od ustalenia, co trzeba zrobić, po wdrożenie, serwery i późniejszy rozwój.'
+          )}
         </p>
-        <!-- TODO(treść): D9, brzmienie CTA (propozycja z BRIEF) -->
-        <Button href="#kontakt" class="hero__cta" data-intro>
-          Porozmawiajmy o projekcie
-        </Button>
       </div>
 
-      <div class="hero__window" data-card-expand="window" aria-hidden="true"></div>
+      <div class="hp__window" data-card-expand="window" aria-hidden="true"></div>
 
+      <!-- TODO(treść): etykieta kursora -->
       <figure
-        class="hero__card"
+        class="hp__card"
         data-card-expand="card"
-        data-module="hero-live"
-        data-intro="fade"
-        data-tilt="6"
+        data-tilt="3"
         data-tilt-area="[data-card-expand=window]"
+        data-cursor="Zobacz realizację"
       >
-        <!-- TODO(treść): DEMO, zrzut fikcyjnego projektu z src/data/demo.ts; docelowo nagranie (D3, HERO-MEDIA) -->
-        <Image
-          class="hero__media"
-          src={demoHero.image}
-          alt=""
-          widths={[960, 1440, 1920, 2880]}
-          sizes="100vw"
-          loading="eager"
-          fetchpriority="high"
-          data-loader-wait
-        />
-        <FlotaLive uid="hero" feed />
-        <figcaption class="sr-only">{demoHero.alt}</figcaption>
-        <ul class="hero__layers" aria-label="Warstwy systemu">
-          {layers.map((layer) => (
-            <li class="hero__layer t-label">{layer}</li>
+        <!-- Kadr ma rozmiar pełnej sceny (okno to przycięcie card-expand): na desktopie szerokość okna,
+             poniżej 992 px wysoka scena i cover 16:10, więc szerokość obrazu to ok. 1,6 wysokości okna -->
+        <div class="hp__screen" data-reel-screen>
+          {reel.map((entry, i) => (
+            <a
+              class:list={['shot', 'hp__shot', { 'is-active': i === 0 }]}
+              href={caseHref(entry)}
+              tabindex="-1"
+              aria-hidden="true"
+              data-reel-shot
+              data-morph={morphName(entry)}
+              data-morph-source={morphName(entry)}
+            >
+              <CaseShot
+                image={entry.data.cover}
+                alt=""
+                live={entry.data.live}
+                uid={`hero-${entry.id}`}
+                sizes="(max-width: 991px) 150vh, 100vw"
+                eager={i === 0}
+              />
+            </a>
           ))}
-        </ul>
+        </div>
+        <figcaption class="sr-only">Wybrane realizacje webexe</figcaption>
       </figure>
+
+      <!-- TODO(treść): etykiety pokazu (licznik, pauza, przyciski projektów) -->
+      <div class="hp__reel-box" data-card-expand="fade">
+        <div
+          class="hp__reel"
+          role="group"
+          aria-roledescription="pokaz"
+          aria-label="Realizacje"
+          data-intro
+        >
+          <div class="hp__items" aria-live="off" data-reel-live>
+            {reel.map((entry, i) => (
+              <div
+                class:list={['hp__item', { 'is-active': i === 0 }]}
+                data-reel-item
+                hidden={i !== 0}
+              >
+                <a class="hp__item-link t-h3" href={caseHref(entry)} data-morph={morphName(entry)}>
+                  {noOrphans(entry.data.title)}
+                </a>
+                <Tags tags={entry.data.tags} class="hp__item-tags" />
+              </div>
+            ))}
+          </div>
+
+          <ol class="hp__segs">
+            {reel.map((entry, i) => (
+              <li>
+                <button
+                  class:list={['hp__seg', { 'is-active': i === 0 }]}
+                  type="button"
+                  aria-label={`Pokaż realizację ${i + 1}: ${entry.data.title}`}
+                  aria-current={i === 0 ? 'true' : undefined}
+                  data-reel-seg
+                >
+                  <span class="hp__seg-fill" data-reel-fill></span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <div class="hp__reel-head t-label">
+            <p class="hp__count" aria-hidden="true">
+              <span class="hp__count-now" data-reel-count>
+                01
+              </span>
+              <span class="hp__count-sep">/</span>
+              <span>{pad(reel.length)}</span>
+            </p>
+            <button
+              class="hp__pause"
+              type="button"
+              aria-pressed="false"
+              aria-label="Zatrzymaj pokaz realizacji"
+              data-reel-pause
+            >
+              <span class="hp__pause-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

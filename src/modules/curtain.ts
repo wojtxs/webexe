@@ -32,6 +32,24 @@ const REVEAL = 0.6;
 // View Transitions między dokumentami (Chrome 126+, Safari 18.2+): jest reguła @view-transition
 const CAN_MORPH = 'CSSViewTransitionRule' in window;
 
+/**
+ * Kadr, z którego leci morf: sam link, jeśli jest kadrem, a inaczej widoczny kadr z tą nazwą
+ * w oknie. Na głównej ten sam projekt ma kadr w hero i w indeksie realizacji, więc pierwszy
+ * w dokumencie bywa ukryty albo daleko poza ekranem.
+ */
+const morphSource = (link: HTMLElement, name: string): HTMLElement | null => {
+  if (link.dataset.morphSource === name) return link;
+  const all = Array.from(document.querySelectorAll<HTMLElement>(`[data-morph-source="${name}"]`));
+  return (
+    all.find((el) => {
+      const rect = el.getBoundingClientRect();
+      const shown =
+        el.checkVisibility?.({ visibilityProperty: true, opacityProperty: true }) ?? true;
+      return shown && rect.bottom > 0 && rect.top < window.innerHeight && rect.width > 0;
+    }) ?? null
+  );
+};
+
 const flag = {
   set: () => {
     try {
@@ -110,10 +128,7 @@ const Curtain: Module = {
           if (url.origin !== location.origin || url.pathname === location.pathname) return;
 
           const name = link.dataset.morph;
-          const source =
-            CAN_MORPH && name
-              ? document.querySelector<HTMLElement>(`[data-morph-source="${name}"]`)
-              : null;
+          const source = CAN_MORPH && name ? morphSource(link, name) : null;
           if (name && source) {
             clearMorph();
             source.style.setProperty('view-transition-name', name);
