@@ -19,6 +19,16 @@
   isolation: isolate;
 }
 
+/* Tło hero-field: nad liniami siatki (późniejszy w DOM), pod treścią */
+.hs__field {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .hs__head,
 .hs__system {
   --col: calc(
@@ -221,7 +231,7 @@
   position: absolute;
   inset: 0;
   background-color: var(--c-glebia);
-  opacity: 0.5;
+  opacity: 0.35;
   transition: opacity var(--d-context) var(--ease-context);
   pointer-events: none;
 }

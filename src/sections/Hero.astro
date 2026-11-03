@@ -44,6 +44,8 @@ const NARROW = 2;
   aria-labelledby="hero-title"
 >
   <Grid nodes={false} />
+  <!-- Tło: sieć węzłów x, pakiety danych do aktywnego modułu, węzły za kursorem (hero-field) -->
+  <canvas class="hs__field" aria-hidden="true" data-module="hero-field"></canvas>
 
   <div class="container hs__head">
     <h1 id="hero-title" class="hs__title">
@@ -62,8 +64,8 @@ const NARROW = 2;
     </p>
 
     <!-- TODO(treść): „Zobacz realizacje” -->
+    <!-- CTA kontaktu stoi tylko w pasku (użytkownik 2026-11-03: z hero do wyrzucenia) -->
     <div class="hs__actions" data-intro>
-      <Button href="#kontakt">Porozmawiajmy o projekcie</Button>
       <Button href="#realizacje" variant="ghost">
         Zobacz realizacje
       </Button>

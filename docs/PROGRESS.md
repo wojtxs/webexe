@@ -687,3 +687,14 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - Grid sekcji bez `grid-template-columns` ma kolumnę `auto`: tekst z `nowrap` (etykieta z tytułem realizacji) rozpychał ją ponad ekran na 390. `minmax(0, 1fr)`.
   - Reguła `.js-motion` ukrywająca element do wejścia nie może używać właściwości `scale`, jeśli GSAP animuje `transform`: obie się składają, a inline transform nie nadpisuje `scale`. Ukrywać tą samą właściwością, którą animuje GSAP.
   - Kadr przycięty `clamp(100% − szer., 50% − fx × szer., 0)` w module z `container-type: size`: punkt kadru zostaje na środku przy każdej szerokości, a krawędzie się nie odsłaniają.
+
+### 2026-11-03 — 01 Hero: bez CTA kontaktu, tło z przepływem danych (`hero-v2.1`)
+- Zgłoszenie użytkownika: „wyrzucić ten przycisk porozmawiajmy o projekcie z hero”, hero „takie smutne, może coś w tle, żeby nie było tak pusto”.
+- Zrobione:
+  - Z hero zniknął przycisk „Porozmawiajmy o projekcie” (zostaje w pasku), w hero zostaje „Zobacz realizacje”.
+  - `modules/hero-field.ts` (nowy, canvas): sieć węzłów x na Pianie, pakiety danych w Lagunie po liniach sieci do węzła aktywnego modułu (seria przy zmianie, pojedyncze w czasie pokazu) z błyskiem x, węzły za kursorem. Reduced motion: sama sieć.
+  - `hero-system.ts` wysyła na sekcji `hs:flow` i `hs:change`; przygaszenie modułów w tle 50 % → 35 %.
+  - Testy (Edge headless): 1440 i 390 (sieć, seria pakietów przy zmianie, kursor), check i lint czyste.
+- Decyzje:
+  - Pakiety płyną same w czasie pokazu, co jest odstępstwem od zasady „sam z siebie nic się nie porusza” (DESIGN.md, Ruch). Uzasadnienie: to przepływ danych produktu, jak pętle w zrzutach, a użytkownik chce, żeby hero nie było puste. Stoją po pauzie i poza ekranem.
+- Zostało: ocena użytkownika, trace 60 fps (canvas na całe hero przy płynących pakietach).

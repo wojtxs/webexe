@@ -136,10 +136,16 @@ const HeroSystem: Module = {
         // Żywa warstwa gra pod kursorem i przy fokusie; stoi po pauzie, poza ekranem i do końca wejścia
         const liveOn = () => !holds.has('user') && !holds.has('away') && !holds.has('intro');
 
+        // Tło (hero-field) słucha na sekcji: hs:flow — czy dane płyną, hs:change — nowy cel pakietów
+        let flowing: boolean | null = null;
         const sync = () => {
           if (running()) timer?.resume();
           else timer?.pause();
           playLive(active, liveOn());
+          if (flowing !== liveOn()) {
+            flowing = liveOn();
+            root.dispatchEvent(new CustomEvent('hs:flow', { detail: { on: flowing } }));
+          }
         };
 
         hold = (reason, on) => {
@@ -190,6 +196,9 @@ const HeroSystem: Module = {
 
           const from = weights.slice();
           const to = segs.map((_, k) => (k === i ? WIDE : NARROW));
+          // Kolumna siatki, w której stanie węzeł nowego modułu (na pionowym układzie tło mierzy DOM)
+          const column = vertical.matches ? null : to.slice(0, i).reduce((sum, v) => sum + v, 0);
+          root.dispatchEvent(new CustomEvent('hs:change', { detail: { column } }));
           const state = { p: 0 };
           const showPulse = !vertical.matches && pulse;
           shift?.kill();
@@ -321,6 +330,7 @@ const HeroSystem: Module = {
 
         return () => {
           alive = false;
+          root.dispatchEvent(new CustomEvent('hs:flow', { detail: { on: false } }));
           local.forEach((fn) => fn());
           intro.kill();
           shift?.kill();

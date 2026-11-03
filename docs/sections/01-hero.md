@@ -20,7 +20,7 @@ Wybór 1: jedyna koncepcja, w której sam układ mówi „połączone systemy”
 
 - **H1** (`BRIEF.md`, 2026-11-03): „Budujemy systemy, / które zostają.”. Drugi wiersz startuje od kolumny 4.
 - **Lead** (`BRIEF.md`): pierwsze zdanie leadu, w polu pod pierwszym wierszem, obok drugiego wiersza i CTA.
-- **CTA:** „Porozmawiajmy o projekcie” (`#kontakt`, wariant cta) i „Zobacz realizacje” (`#realizacje`, wariant ghost, `TODO(treść)`).
+- **CTA:** tylko „Zobacz realizacje” (`#realizacje`, wariant ghost, `TODO(treść)`). Kontakt jest w pasku (użytkownik 2026-11-03: „wyrzucić ten przycisk porozmawiajmy o projekcie z hero”).
 - **Moduły:** etykieta warstwy (Aplikacje, Integracje, Automatyzacje, Utrzymanie), przy aktywnym tytuł realizacji. Link modułu ma nazwę „Warstwa: tytuł realizacji”.
 - Integracje i Utrzymanie to dwa fragmenty jednej realizacji („Sklep, ERP i kurierzy w jednym przepływie”, tagi Integracje × Utrzymanie): mapa połączeń oraz log zdarzeń z harmonogramem.
 - `TODO(treść)`: „Zobacz realizacje”, etykiety pauzy, etykieta kursora „Zobacz realizację”, opis listy dla czytnika.
@@ -30,13 +30,14 @@ Wybór 1: jedyna koncepcja, w której sam układ mówi „połączone systemy”
 ```html
 <section id="hero" class="hs theme-light" data-module="hero-system">
   <Grid nodes={false} />
+  <canvas class="hs__field" data-module="hero-field"></canvas>
   <div class="container hs__head">
     <h1 class="hs__title"><span data-split="words" data-split-intro>
       <span class="hs__line">Budujemy systemy,</span>
       <span class="hs__line hs__line--2">które zostają<span class="hs__stop">.</span></span>
     </span></h1>
     <p class="hs__lead" data-intro>…</p>
-    <div class="hs__actions" data-intro><Button/> <Button variant="ghost"/></div>
+    <div class="hs__actions" data-intro><Button variant="ghost"/></div>
   </div>
   <div class="container hs__system">
     <button class="hs__pause" data-hs-pause aria-pressed>…</button>
@@ -62,7 +63,7 @@ Wybór 1: jedyna koncepcja, w której sam układ mówi „połączone systemy”
 │ webexe                                 [CTA]  [ Menu ]   │    │ webexe  [ Menu ] │
 │ Budujemy systemy,                                        │    │ Budujemy         │
 │            które zostają.                                │    │ systemy,         │
-│ lead (kol. 1–3)  [Porozmawiajmy…] [Zobacz realizacje]    │    │     które        │
+│ lead (kol. 1–3)  [Zobacz realizacje]    × sieć węzłów ×   │    │     które        │
 │                                                    (❚❚)  │    │     zostają.     │
 │ x─────────────────────────x─────────x─────────x───────── │    │ lead, CTA        │
 │ Aplikacje  Kokpit floty    Integracje Automat.  Utrzym.  │    │ x Aplikacje  …   │
@@ -78,7 +79,8 @@ Wybór 1: jedyna koncepcja, w której sam układ mówi „połączone systemy”
 - Moduł ma szerokość `--w` kolumn: `--w × kol + (--w − 1) × rynna`. Aktywny ma 6, pozostałe po 2, suma 12, więc szwy leżą na siatce. Szyna biegnie od środka lewej rynny siatki do środka prawej, a węzeł x stoi na szynie w rynnie przed każdym modułem.
 - Kadr modułu: CaseShot w rozmiarze `--zoom` × wysokość modułu (domyślnie 1,8, Utrzymanie 2), 16:10. Punkt `--fx`, `--fy` stoi na środku modułu (`clamp`, kadr nie odsłania krawędzi). Przy zmianie szerokości kadr się nie skaluje, tylko odsłania więcej.
 - Poniżej 992 px moduły stoją w pionie, a `--w` liczy wysokość (`--w × 3,5 rem`, telefon `× 2,75 rem`). Kadr liczy się z szerokości modułu (`2,2 × 100cqi`). Szyny i impulsu nie ma, a każdy moduł ma kreskę z węzłem x u góry.
-- Moduły w tle hierarchii przyciemnia Głębia na 50 %.
+- Moduły w tle hierarchii przyciemnia Głębia na 35 %.
+- **Tło (`hero-field`, canvas pod treścią, nad liniami siatki):** sieć drobnych węzłów x (`--c-piana-deep`, pół przekątnej 0,2 rem) na granicach kolumn, w pionie co pół kroku kolumny, od szyny w górę. Na telefonie od górnej krawędzi modułów.
 
 ## Interakcje i ruch
 
@@ -95,11 +97,14 @@ Wybór 1: jedyna koncepcja, w której sam układ mówi „połączone systemy”
 | 9 | dotyk | pierwsze dotknięcie nieaktywnego modułu wybiera go, drugie prowadzi do realizacji | — |
 | 10 | pauza | pokaz i żywa warstwa stoją, `aria-pressed` | WCAG 2.2.2 |
 | 11 | klik w aktywny moduł | morf kadru w okładkę realizacji (`curtain.ts`) | jak `03-realizacje.md`, ruch #5 |
+| 12a | dane płyną (po wejściu, bez pauzy, w widoku) | pakiety: odcinek z wygasającym ogonem w Lagunie (na zmianę `--c-laguna-start` i `-end`) jedzie po liniach sieci kątem prostym do węzła aktywnego modułu i błyska w nim znakiem x | co 0,7–1,5 s; prędkość 5,5 kroku kolumny/s, ogon 1,1 kroku, grubość 0,125 rem, błysk 0,6 s |
+| 12b | zmiana modułu | seria 3 pakietów do węzła nowego modułu | odstęp 0,14 s |
+| 12c | ruch kursora (precyzyjny wskaźnik) | węzły sieci w promieniu kursora rosną do 0,42 rem i przechodzą w gradient Laguny | promień 2,4 kroku kolumny, wygładzanie 0,16 / 0,12 na klatkę |
 | 12 | scroll | bez przejmowania: hero ma wysokość ekranu, Manifest wchodzi normalnie, a jego węzły siatki rysują się przy wejściu. Hero poza ekranem: pokaz i żywe warstwy stoją | — |
 
 ## Reduced motion / bez JS / dotyk
 
-- Reduced motion: bez wejścia, pokazu, impulsu, paralaksy i żywych warstw. Kursor, fokus i dotyk przełączają moduł od razu, bez przejść CSS. Pauza ukryta.
+- Reduced motion: bez wejścia, pokazu, impulsu, pakietów, paralaksy i żywych warstw. Sieć węzłów stoi. Kursor, fokus i dotyk przełączają moduł od razu, bez przejść CSS. Pauza ukryta.
 - Bez JS: pierwszy moduł aktywny (wagi w `style`), linki działają.
 - Dotyk: ruch #9 zamiast #5, bez paralaksy i etykiety kursora.
 - WebGL: nie używany.
@@ -122,6 +127,5 @@ Okładki i żywe warstwy realizacji z kolekcji (DEMO do D3). Wszystkie cztery ka
 
 ## Decyzje otwarte
 
-1. Ocena użytkownika na żywo: hasło, skala H1, tempo pokazu (`HOLD` 5 s).
-2. Dwa przyciski CTA w pierwszym ekranie: w pasku i w hero. Czy chować CTA paska, dopóki hero jest w widoku (zmiana w `Header`, poza sekcją)?
-3. „Utrzymanie” pokazuje fragment realizacji przepływów (log zdarzeń i harmonogram). Gdy będzie materiał z D3/D5 (monitoring platformy), podmienić.
+1. Ocena użytkownika na żywo: hasło, skala H1, tempo pokazu (`HOLD` 5 s), gęstość tła (pakiety, sieć).
+2. „Utrzymanie” pokazuje fragment realizacji przepływów (log zdarzeń i harmonogram). Gdy będzie materiał z D3/D5 (monitoring platformy), podmienić.

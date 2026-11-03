@@ -31,7 +31,7 @@ Konkretny, spokojny, bez żargonu. Mówimy wprost, także o tym, czego nie warto
 ### 01 Hero
 - **H1:** Budujemy systemy, / które zostają. *(2026-11-03, hero „Schemat systemu”: użytkownik pozwolił wybrać mocniejsze hasło; wcześniej „Budujemy oprogramowanie dla firm / i zostajemy przy nim na lata.”. „Zostają” rymuje się z Manifestem: „…powstaje raz i zostaje bez opieki”)*
 - **Lead:** Tworzymy aplikacje do codziennej pracy, łączymy istniejące systemy i automatyzujemy powtarzalne zadania. *(2026-11-03: w hero tylko pierwsze zdanie, bo lead stoi w wąskim polu obok drugiego wiersza H1. Pełny lead z 2026-11-01 miał jeszcze: „Zajmujemy się całym projektem — od ustalenia, co trzeba zrobić, po wdrożenie, serwery i późniejszy rozwój.”)*
-- **CTA:** „Porozmawiajmy o projekcie” (D9) i drugi przycisk do realizacji: „Zobacz realizacje” (roboczo, `TODO(treść)`). *(2026-11-03: brief użytkownika chce wyraźnego CTA i przejścia do realizacji; wcześniej w hero nie było przycisku)*
+- **CTA:** w hero tylko przejście do realizacji: „Zobacz realizacje” (roboczo, `TODO(treść)`). „Porozmawiajmy o projekcie” (D9) stoi w pasku u góry. *(2026-11-03: przycisk kontaktu w hero użytkownik kazał wyrzucić, tego samego dnia co jego powrót)*
 - **Etykiety warstw rdzenia** (hover i rozkład przy scrollu, od góry): Aplikacje, Integracje, Automatyzacje, Utrzymanie. *(2026-10-27, od użytkownika; Utrzymanie jako podstawa, bo to rdzeń oferty)* Od 2026-11-03 (hero „Schemat systemu”) etykiety modułów w hero: każda warstwa ma fragment realizacji, a przy aktywnym module stoi tytuł projektu. Ten sam wiersz warstw jest w loaderze.
 
 ### 02 Manifest
