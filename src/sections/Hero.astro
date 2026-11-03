@@ -1,150 +1,127 @@
 ---
 /**
- * 01 Hero — „Plakat + ekran” (docs/sections/01-hero.md).
+ * 01 Hero — „Schemat systemu” (docs/sections/01-hero.md).
  *
- * Nagłówek w dwóch wierszach na całą szerokość, drugi wiersz wcięty o kolumnę siatki. Pod nim
- * lead i pokaz realizacji po lewej, a na kolumnach 5–12 żywy ekran, który co kilka sekund
- * pokazuje następną realizację (hero-reel: kurtyna, pasek postępu, pauza). Za treścią siatka
- * węzłów x zapala się wokół kursora (hero-field). Scroll: ekran rośnie do pełnej sceny, potem
- * odjeżdża w górę i odsłania Manifest (card-expand z fazą wyjścia).
- * Bez JS i przy reduced motion: pierwszy projekt na ekranie, przyciski przełączają bez ruchu.
+ * Wielki nagłówek w dwóch wierszach (drugi od linii siatki kolumny 4), lead wsunięty obok drugiego
+ * wiersza, pod nim CTA. Niżej schemat: szyna danych z węzłami x i cztery moduły na kolumnach siatki,
+ * czyli fragmenty prawdziwych aplikacji, po jednym na warstwę oferty (Aplikacje, Integracje,
+ * Automatyzacje, Utrzymanie). Aktywny moduł ma 6 kolumn, pozostałe po 2. Hierarchię zmienia
+ * kursor, fokus, dotknięcie albo pokaz co kilka sekund; impuls na szynie przenosi ją z modułu
+ * do modułu (hero-system). Klik w aktywny moduł prowadzi do realizacji.
+ * Bez JS i przy reduced motion: pierwszy moduł aktywny, przełączanie bez ruchu.
  */
+import Button from '../components/Button.astro';
 import CaseShot from '../components/CaseShot.astro';
 import Grid from '../components/Grid.astro';
-import Tags from '../components/Tags.astro';
+import XMark from '../components/XMark.astro';
 import { caseHref, getRealizacje, morphName } from '../data/realizacje';
+import { layers } from '../data/layers';
 import { noOrphans } from '../data/typo';
 import '../styles/sections/hero.css';
 
-const reel = await getRealizacje();
-const pad = (n: number) => String(n).padStart(2, '0');
+const all = await getRealizacje();
+const byLive = (live: string) => all.find((entry) => entry.data.live === live)!;
+
+// Warstwa oferty → fragment realizacji. fx, fy: punkt kadru (ułamki zrzutu), który stoi
+// na środku modułu; moduł przy rozszerzaniu odsłania kadr wokół niego.
+// Integracje i Utrzymanie to dwa fragmenty jednej realizacji (tagi: Integracje × Utrzymanie):
+// mapa połączeń i monitoring przepływów.
+const modules = [
+  { layer: layers[0], entry: byLive('flota'), fx: 0.44, fy: 0.6 },
+  { layer: layers[1], entry: byLive('przeplywy'), fx: 0.43, fy: 0.38 },
+  { layer: layers[2], entry: byLive('faktury'), fx: 0.58, fy: 0.44 },
+  { layer: layers[3], entry: byLive('przeplywy'), fx: 0.86, fy: 0.76, zoom: 2 },
+];
+const WIDE = 6;
+const NARROW = 2;
 ---
 
 <section
   id="hero"
-  class="hp theme-light sticky-track"
+  class="hs theme-light"
   data-nav-theme="light"
-  data-module="card-expand hero-reel"
-  data-card-expand-leave
+  data-module="hero-system"
   aria-labelledby="hero-title"
 >
   <Grid nodes={false} />
 
-  <div class="sticky-item hp__stage">
-    <canvas class="hp__field" aria-hidden="true" data-module="hero-field"></canvas>
+  <div class="container hs__head">
+    <h1 id="hero-title" class="hs__title">
+      <span class="hs__title-in" data-split="words" data-split-intro>
+        <span class="hs__line">Budujemy systemy,</span>
+        <span class="hs__line hs__line--2">
+          które zostają<span class="hs__stop">.</span>
+        </span>
+      </span>
+    </h1>
 
-    <div class="container hp__inner">
-      <!-- Zanikanie przy rozszerzaniu (card-expand) na opakowaniach: wejście (split-reveal, loader)
-           animuje elementy w środku i nie zderza się z tweenem opacity -->
-      <h1 id="hero-title" class="hp__title" data-card-expand="fade">
-        <!-- prettier-ignore -->
-        <span class="hp__title-in" data-split="words" data-split-intro>Budujemy oprogramowanie dla firm <br class="br-d" /><span class="hp__keep">i zostajemy</span> przy nim na lata<span class="hp__stop">.</span></span>
-      </h1>
+    <p class="hs__lead" data-intro>
+      {noOrphans(
+        'Tworzymy aplikacje do codziennej pracy, łączymy istniejące systemy i automatyzujemy powtarzalne zadania.'
+      )}
+    </p>
 
-      <div class="hp__lead-box" data-card-expand="fade">
-        <p class="hp__lead" data-intro>
-          {noOrphans(
-            'Tworzymy aplikacje do codziennej pracy, łączymy istniejące systemy i automatyzujemy powtarzalne zadania. Zajmujemy się całym projektem — od ustalenia, co trzeba zrobić, po wdrożenie, serwery i późniejszy rozwój.'
-          )}
-        </p>
-      </div>
+    <!-- TODO(treść): „Zobacz realizacje” -->
+    <div class="hs__actions" data-intro>
+      <Button href="#kontakt">Porozmawiajmy o projekcie</Button>
+      <Button href="#realizacje" variant="ghost">
+        Zobacz realizacje
+      </Button>
+    </div>
+  </div>
 
-      <div class="hp__window" data-card-expand="window" aria-hidden="true"></div>
+  <div class="container hs__system">
+    <!-- TODO(treść): etykiety pauzy, kursora i opis listy dla czytnika -->
+    <button
+      class="hs__pause"
+      type="button"
+      aria-pressed="false"
+      aria-label="Zatrzymaj pokaz realizacji"
+      data-hs-pause
+    >
+      <span class="hs__pause-icon" aria-hidden="true"></span>
+    </button>
 
-      <!-- TODO(treść): etykieta kursora -->
-      <figure
-        class="hp__card"
-        data-card-expand="card"
-        data-tilt="3"
-        data-tilt-area="[data-card-expand=window]"
-        data-cursor="Zobacz realizację"
-      >
-        <!-- Kadr ma rozmiar pełnej sceny (okno to przycięcie card-expand): na desktopie szerokość okna,
-             poniżej 992 px wysoka scena i cover 16:10, więc szerokość obrazu to ok. 1,6 wysokości okna -->
-        <div class="hp__screen" data-reel-screen>
-          {reel.map((entry, i) => (
-            <a
-              class:list={['shot', 'hp__shot', { 'is-active': i === 0 }]}
-              href={caseHref(entry)}
-              tabindex="-1"
-              aria-hidden="true"
-              data-reel-shot
-              data-morph={morphName(entry)}
-              data-morph-source={morphName(entry)}
-            >
+    <!-- Szyna danych nad modułami: węzeł x na granicy każdego modułu, impuls niesie aktywność -->
+    <span class="hs__bus" aria-hidden="true" data-hs-bus></span>
+    <span class="hs__pulse" aria-hidden="true" data-hs-pulse></span>
+
+    <ul class="hs__strip" aria-label="Warstwy oferty w naszych realizacjach" data-hs-strip>
+      {modules.map(({ layer, entry, fx, fy, zoom }, k) => (
+        <li
+          class:list={['hs__seg', { 'is-active': k === 0 }]}
+          style={`--w: ${k === 0 ? WIDE : NARROW}; --fx: ${fx}; --fy: ${fy}${zoom ? `; --zoom: ${zoom}` : ''}`}
+          data-hs-seg
+        >
+          <p class="hs__label" aria-hidden="true">
+            <XMark class="hs__node" active={k === 0} draw />
+            <span class="hs__label-in" data-hs-label>
+              <span class="hs__layer">{layer}</span>
+              <span class="hs__name">{entry.data.title}</span>
+            </span>
+          </p>
+          <a
+            class="hs__panel"
+            href={caseHref(entry)}
+            aria-label={`${layer}: ${entry.data.title}`}
+            data-cursor="Zobacz realizację"
+            data-morph={morphName(entry)}
+            data-morph-source={morphName(entry)}
+            data-hs-panel
+          >
+            <div class="shot hs__canvas" data-hs-canvas>
               <CaseShot
                 image={entry.data.cover}
                 alt=""
                 live={entry.data.live}
-                uid={`hero-${entry.id}`}
-                sizes="(max-width: 991px) 150vh, 100vw"
-                eager={i === 0}
+                uid={`hero-${k}`}
+                sizes="(max-width: 991px) 220vw, 80vw"
+                eager
               />
-            </a>
-          ))}
-        </div>
-        <figcaption class="sr-only">Wybrane realizacje webexe</figcaption>
-      </figure>
-
-      <!-- TODO(treść): etykiety pokazu (licznik, pauza, przyciski projektów) -->
-      <div class="hp__reel-box" data-card-expand="fade">
-        <div
-          class="hp__reel"
-          role="group"
-          aria-roledescription="pokaz"
-          aria-label="Realizacje"
-          data-intro
-        >
-          <div class="hp__items" aria-live="off" data-reel-live>
-            {reel.map((entry, i) => (
-              <div
-                class:list={['hp__item', { 'is-active': i === 0 }]}
-                data-reel-item
-                hidden={i !== 0}
-              >
-                <a class="hp__item-link t-h3" href={caseHref(entry)} data-morph={morphName(entry)}>
-                  {noOrphans(entry.data.title)}
-                </a>
-                <Tags tags={entry.data.tags} class="hp__item-tags" />
-              </div>
-            ))}
-          </div>
-
-          <ol class="hp__segs">
-            {reel.map((entry, i) => (
-              <li>
-                <button
-                  class:list={['hp__seg', { 'is-active': i === 0 }]}
-                  type="button"
-                  aria-label={`Pokaż realizację ${i + 1}: ${entry.data.title}`}
-                  aria-current={i === 0 ? 'true' : undefined}
-                  data-reel-seg
-                >
-                  <span class="hp__seg-fill" data-reel-fill></span>
-                </button>
-              </li>
-            ))}
-          </ol>
-          <div class="hp__reel-head t-label">
-            <p class="hp__count" aria-hidden="true">
-              <span class="hp__count-now" data-reel-count>
-                01
-              </span>
-              <span class="hp__count-sep">/</span>
-              <span>{pad(reel.length)}</span>
-            </p>
-            <button
-              class="hp__pause"
-              type="button"
-              aria-pressed="false"
-              aria-label="Zatrzymaj pokaz realizacji"
-              data-reel-pause
-            >
-              <span class="hp__pause-icon" aria-hidden="true"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
   </div>
 </section>

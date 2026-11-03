@@ -1,6 +1,6 @@
 /**
  * registry.ts — żywe warstwy kadrów realizacji (svg[data-live] w CaseShot) dla work-live, work-index
- * i pokazu w hero (hero-reel). Produkt buduje swoją warstwę sam (product-live).
+ * i modułów hero (hero-system). Produkt buduje swoją warstwę sam (product-live).
  */
 
 import { fakturyLive } from './faktury';

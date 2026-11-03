@@ -26,8 +26,8 @@ src/
     css.ts          cssVar() (cssColor() wraca dopiero razem z GL)
   modules/          card-expand.ts · scroll-fill.ts · x-zoom.ts · split-reveal.ts · media-reveal.ts · cursor.ts · tilt.ts
                     · header.ts · menu.ts · chapter-map.ts · nav-theme.ts · curtain.ts · work-index.ts · work-live.ts
-                    · hero-reel.ts · hero-field.ts · squeeze.ts (nieużywany od realizacji v2) · live/*.ts (żywe warstwy;
-                    registry.ts: kadry realizacji dla work-index, work-live i hero-reel) · …
+                    · hero-system.ts · squeeze.ts (nieużywany od realizacji v2) · live/*.ts (żywe warstwy;
+                    registry.ts: kadry realizacji dla work-index, work-live i hero-system) · …
   gl/               tylko wtedy, gdy spec sekcji wymaga WebGL (patrz „GL (opcjonalny)”)
 public/
   media/              nagrania i postery: hero, work, product (D3)
@@ -59,9 +59,9 @@ export interface Module {
 | `data-sticky` | `.sticky-track` z progresem dla ScrollTriggera |
 | `data-card-expand="card\|window\|fade"` | części `card-expand`: karta, okno startowe (prostokąt z siatki CSS), treść gasnąca pod kartą |
 | `data-card-expand-leave` | `card-expand` (na root): faza wyjścia, po rozszerzeniu karta stoi, potem odjeżdża w górę (`--leave`), a następna sekcja wchodzi pod ostatni ekran toru (`.has-leave`) |
-| `data-reel-screen` · `data-reel-shot` | `hero-reel`: ekran pokazu (kurtyna) i kadry realizacji na nim, po jednym na projekt |
-| `data-reel-item` · `data-reel-live` | `hero-reel`: nazwa i tagi projektu (ta sama kolejność co kadry) i ich wspólne opakowanie z `aria-live` (ogłaszanie po wyborze ręcznym) |
-| `data-reel-seg` · `data-reel-fill` · `data-reel-count` · `data-reel-pause` | `hero-reel`: przycisk projektu z paskiem postępu, licznik, przycisk pauzy (`aria-pressed`) |
+| `data-hs-strip` · `data-hs-seg` | `hero-system`: lista modułów i moduł (warstwa oferty); szerokość `--w` kolumn siatki (aktywny 6, pozostałe 2, suma 12), poniżej 992 px wysokość |
+| `data-hs-panel` · `data-hs-canvas` · `data-hs-label` | `hero-system`: link modułu do realizacji, kadr (CaseShot, punkt `--fx`/`--fy` na środku modułu, `--zoom`), etykieta z węzłem x |
+| `data-hs-bus` · `data-hs-pulse` · `data-hs-pause` | `hero-system`: szyna danych nad modułami, impuls przy zmianie modułu, pauza pokazu (`aria-pressed`) |
 | `data-x-zoom="mark"` | opakowanie znaku x skalowane przez `x-zoom` |
 | `data-scroll-fill="text"` | akapit wypełniany scrollem słowo po słowie przez `scroll-fill` (tylko Manifest) |
 | `data-split="lines"` + `data-split-delay="0.2"` | reveal linii (SplitText, maska `clip-path`) |

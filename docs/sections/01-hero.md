@@ -1,126 +1,127 @@
 # 01 — Hero
 
-**Status:** na głównej od 2026-11-03 (`hero-v1`), przyjęte przez użytkownika „na razie”: napisze, co z ruchu wyrzucić albo zmienić
-**Zależności:** realizacje z kolekcji (`src/content/realizacje`, DEMO do D3), żywe warstwy kadrów (`modules/live/registry.ts`), loader (`core/intro.ts`), `card-expand`, `curtain` (morf w okładkę), D9 (CTA)
-**Wzorzec:** `INSPIRACJE.md`, wiersz Hero (Alpanet: karta rozszerzana scrollem do pełnego kontenera). Kurtyna i zoom kadrów jak w indeksie realizacji (`03-realizacje.md`, ruch #1).
+**Status:** na głównej od 2026-11-03 (`hero-v2`, „Schemat systemu”). Do oceny użytkownika na żywo.
+**Zależności:** realizacje z kolekcji (`src/content/realizacje`, DEMO do D3), żywe warstwy kadrów (`modules/live/registry.ts`), loader (`core/intro.ts`, `[data-intro]`), `split-reveal` (H1), `cursor` (etykieta), `curtain` (morf w okładkę), D9 (CTA)
+**Wzorzec:** brief użytkownika z 2026-11-03 (chipsa.design, alpanet.pl, obys, cuberto, linear.app, burocratik.com). Zasady, nie kopie: skala typografii i asymetria (obys, burocratik), precyzja prawdziwych interfejsów (linear), duży tekst połączony z produktem (cuberto), redakcyjny rytm i jeden bohater (chipsa, alpanet).
 
 ## Cel
 
-W pierwszej sekundzie: software house, który buduje i zostaje. Wielki nagłówek mówi to wprost, a obok od razu widać nasze realizacje w działaniu: ekran pokazuje po kolei żywe aplikacje. Klik w ekran prowadzi do projektu, a scroll do Manifestu.
+Pierwsza reakcja: „ktoś się do tej strony przyłożył”, a zarazem od razu widać firmę, która buduje poważne oprogramowanie. Wielkie hasło mówi, że budujemy i zostajemy. Pod nim nasze realizacje pracują jako jeden system: cztery moduły (warstwy oferty) na szynie danych, na tej samej siatce co cała strona.
+
+## Koncepcje (2026-11-03)
+
+1. **Schemat systemu (Interactive System Showcase), wybrana.** Nagłówek w skali impact w dwóch schodkowych wierszach. Pod nim szyna danych z węzłami x i cztery moduły, czyli fragmenty prawdziwych aplikacji, po jednym na warstwę oferty. Hierarchię zmienia kursor, fokus, dotyk i pokaz, a impuls na szynie niesie ją od modułu do modułu. Wejście „uruchamia system”: szyna rysuje się od lewej, na węzłach rysują się x, moduły spadają spod szyny.
+2. **Wers.** Typografia na całą scenę (trzy wiersze ok. 14vw), a w jej wolnych polach (pod wydłużeniami liter i w światłach) migają kadry aplikacji. Minimum grafiki, maksimum skali. Odrzucona: ładna jako plakat, ale nie pokazuje, że budujemy systemy, i źle się czyta na telefonie.
+3. **Okno ze słowem.** Mała karta na środku z wielkim słowem warstwy wtopionym w obraz, scroll rozszerza ją do pełnej sceny (mechanika alpanet). Prototyp w `/lab/hero` (nie w repo). Odrzucona: jeden kadr naraz i sticky tor 300vh to cięższy scroll i mniej „systemu”.
+
+Wybór 1: jedyna koncepcja, w której sam układ mówi „połączone systemy”. Stoi na siatce i węzłach x (motyw przewodni), pokazuje cztery prawdziwe realizacje naraz i nie przejmuje scrolla.
 
 ## Treść
 
-- **H1** (`BRIEF.md`): „Budujemy oprogramowanie dla firm i zostajemy przy nim na lata.” Łamanie na desktopie: **„Budujemy oprogramowanie dla firm / i zostajemy przy nim na lata.”** (`BRIEF.md` od 2026-11-03, wcześniej 4 wiersze).
-- **Lead** (`BRIEF.md`, 2026-11-01) bez zmian.
-- **CTA w hero:** brak. Użytkownik 2026-11-02: przycisk pod leadem „do wyrzucenia”. CTA zostaje w pasku (D9).
-- **Pokaz:** tytuły i tagi realizacji z kolekcji.
-- `TODO(treść)`: etykieta kursora „Zobacz realizację”, etykiety pauzy („Zatrzymaj / Wznów pokaz realizacji”), etykiety odcinków („Pokaż realizację N: tytuł”), opis figury dla czytnika.
-- Etykiety warstw (Aplikacje, Integracje, Automatyzacje, Utrzymanie) nie występują już w hero. Zamiast nich pod nazwą projektu stoją jego tagi. Loader nadal ma wiersz warstw.
+- **H1** (`BRIEF.md`, 2026-11-03): „Budujemy systemy, / które zostają.”. Drugi wiersz startuje od kolumny 4.
+- **Lead** (`BRIEF.md`): pierwsze zdanie leadu, w polu pod pierwszym wierszem, obok drugiego wiersza i CTA.
+- **CTA:** „Porozmawiajmy o projekcie” (`#kontakt`, wariant cta) i „Zobacz realizacje” (`#realizacje`, wariant ghost, `TODO(treść)`).
+- **Moduły:** etykieta warstwy (Aplikacje, Integracje, Automatyzacje, Utrzymanie), przy aktywnym tytuł realizacji. Link modułu ma nazwę „Warstwa: tytuł realizacji”.
+- Integracje i Utrzymanie to dwa fragmenty jednej realizacji („Sklep, ERP i kurierzy w jednym przepływie”, tagi Integracje × Utrzymanie): mapa połączeń oraz log zdarzeń z harmonogramem.
+- `TODO(treść)`: „Zobacz realizacje”, etykiety pauzy, etykieta kursora „Zobacz realizację”, opis listy dla czytnika.
 
 ## Struktura DOM
 
 ```html
-<section id="hero" class="hp theme-light sticky-track"
-         data-module="card-expand hero-reel" data-card-expand-leave>
+<section id="hero" class="hs theme-light" data-module="hero-system">
   <Grid nodes={false} />
-  <div class="sticky-item hp__stage">
-    <canvas class="hp__field" aria-hidden="true" data-module="hero-field"></canvas>
-    <div class="container hp__inner">
-      <h1 class="hp__title" data-card-expand="fade">
-        <span data-split="words" data-split-intro>… <br class="br-d" /> …<span class="hp__stop">.</span></span>
-      </h1>
-      <div class="hp__lead-box" data-card-expand="fade"><p class="hp__lead" data-intro>…</p></div>
-      <div class="hp__window" data-card-expand="window" aria-hidden="true"></div>
-      <figure class="hp__card" data-card-expand="card" data-tilt="3" data-cursor="…">
-        <div class="hp__screen" data-reel-screen>
-          <a class="shot hp__shot" data-reel-shot data-morph data-morph-source tabindex="-1" aria-hidden="true">CaseShot</a> ×N
-        </div>
-      </figure>
-      <div class="hp__reel-box" data-card-expand="fade">
-        <div class="hp__reel" role="group" aria-roledescription="pokaz" data-intro>
-          <div class="hp__items" aria-live="off" data-reel-live>
-            <div class="hp__item" data-reel-item><a data-morph>tytuł</a><Tags /></div> ×N
-          </div>
-          <ol class="hp__segs"><li><button data-reel-seg aria-current><span data-reel-fill></span></button></li> ×N</ol>
-          <div class="hp__reel-head"><p>01 / 0N</p><button data-reel-pause aria-pressed></button></div>
-        </div>
-      </div>
-    </div>
+  <div class="container hs__head">
+    <h1 class="hs__title"><span data-split="words" data-split-intro>
+      <span class="hs__line">Budujemy systemy,</span>
+      <span class="hs__line hs__line--2">które zostają<span class="hs__stop">.</span></span>
+    </span></h1>
+    <p class="hs__lead" data-intro>…</p>
+    <div class="hs__actions" data-intro><Button/> <Button variant="ghost"/></div>
+  </div>
+  <div class="container hs__system">
+    <button class="hs__pause" data-hs-pause aria-pressed>…</button>
+    <span class="hs__bus" data-hs-bus></span> <span class="hs__pulse" data-hs-pulse></span>
+    <ul class="hs__strip" data-hs-strip>
+      <li class="hs__seg is-active" style="--w; --fx; --fy; --zoom?" data-hs-seg>
+        <p class="hs__label" aria-hidden="true"><XMark class="hs__node" draw/>
+          <span data-hs-label><span class="hs__layer">Aplikacje</span><span class="hs__name">tytuł</span></span></p>
+        <a class="hs__panel" href data-cursor data-morph data-morph-source data-hs-panel aria-label="Warstwa: tytuł">
+          <div class="shot hs__canvas" data-hs-canvas><CaseShot/></div>
+        </a>
+      </li> ×4
+    </ul>
   </div>
 </section>
 ```
 
-Opakowania `data-card-expand="fade"` są osobne od elementów z wejściem (`data-split`, `data-intro`), żeby tween zanikania nie zapamiętał opacity 0 spod loadera.
-
 ## Layout
 
 ```
-1440                                                         390
-┌───────────────────────────────────────────────────────┐    ┌──────────────────┐
-│ webexe                         [CTA]  [ Menu ]         │    │ webexe  [ Menu ] │
-│ Budujemy oprogramowanie dla firm                       │    │ Budujemy         │
-│          i zostajemy przy nim na lata.                 │    │ oprogramowanie   │
-│ Lead (kol. 1–4)  ┌───────────────────────────────────┐ │    │ dla firm         │
-│                  │ ekran: realizacja N (kol. 5–12)   │ │    │ i zostajemy…     │
-│                  │                                   │ │    │ Lead             │
-│ Tytuł projektu   │                                   │ │    │ ┌──────────────┐ │
-│ tag × tag        │                                   │ │    │ │ ekran        │ │
-│ ━━━ ─── ─── ───  │                                   │ │    │ └──────────────┘ │
-│ 01 / 04     (❚❚) └───────────────────────────────────┘ │    │ 01/04 Tytuł (❚❚) │
-└───────────────────────────────────────────────────────┘    │ ━━━ ─── ─── ───  │
-                                                             └──────────────────┘
+1440                                                            390
+┌──────────────────────────────────────────────────────────┐    ┌──────────────────┐
+│ webexe                                 [CTA]  [ Menu ]   │    │ webexe  [ Menu ] │
+│ Budujemy systemy,                                        │    │ Budujemy         │
+│            które zostają.                                │    │ systemy,         │
+│ lead (kol. 1–3)  [Porozmawiajmy…] [Zobacz realizacje]    │    │     które        │
+│                                                    (❚❚)  │    │     zostają.     │
+│ x─────────────────────────x─────────x─────────x───────── │    │ lead, CTA        │
+│ Aplikacje  Kokpit floty    Integracje Automat.  Utrzym.  │    │ x Aplikacje  …   │
+│ ┌──────── 6 kolumn ───────┐ ┌─2─┐ ┌─2─┐ ┌─2─┐            │    │ ┌──────────────┐ │
+│ │ aktywny moduł           │ │   │ │   │ │   │            │    │ └──────────────┘ │
+│ └─────────────────────────┘ └───┘ └───┘ └───┘            │    │ x Integracje ▭   │
+└──────────────────────────────────────────────────────────┘    └──────────────────┘
 ```
 
-- Tło Piana, siatka bez węzłów (węzły daje `hero-field`), motyw nawigacji jasny.
-- H1: `--t-hero` (4,75 rem desktop, 4,5 rem tablet, 2,5 rem telefon), waga i interlinia H1, `word-spacing: --ws-display`, kropka dosunięta `--kern-stop`. Na desktopie drugi wiersz wcięty o kolumnę siatki (`padding-left` + ujemny `text-indent` liczone z `100cqi`).
-- Wiersz 2 siatki: lead u góry kolumn 1–4, pokaz u dołu kolumn 1–4, ekran na kolumnach 5–12 (`1fr` wysokości sceny). Poniżej 992 px: nagłówek, lead, ekran (`1fr`), pokaz w jednym wierszu z postępem pod spodem.
-- 834: jak telefon, H1 w 4 wierszach, ekran wyższy.
+- Scena `min-height: 100svh`, wiersze `auto` (nagłówek) i `1fr` (schemat). Tło Piana, siatka bez węzłów: węzłami są x na szynie.
+- H1: `--t-impact` (8 rem; poniżej 992 px `--t-hero`, na telefonie znowu `--t-impact` 3,5 rem), waga, interlinia i tracking impact, `word-spacing: --ws-display`. Drugi wiersz wcięty o 3 kolumny z rynnami (tablet 2, telefon 1), liczone z `100cqi`.
+- Lead w kolumnach 1–3, w wierszach 1–2 siatki nagłówka, dół równo z dołem CTA. CTA od kolumny 4, pod drugim wierszem H1.
+- Moduł ma szerokość `--w` kolumn: `--w × kol + (--w − 1) × rynna`. Aktywny ma 6, pozostałe po 2, suma 12, więc szwy leżą na siatce. Szyna biegnie od środka lewej rynny siatki do środka prawej, a węzeł x stoi na szynie w rynnie przed każdym modułem.
+- Kadr modułu: CaseShot w rozmiarze `--zoom` × wysokość modułu (domyślnie 1,8, Utrzymanie 2), 16:10. Punkt `--fx`, `--fy` stoi na środku modułu (`clamp`, kadr nie odsłania krawędzi). Przy zmianie szerokości kadr się nie skaluje, tylko odsłania więcej.
+- Poniżej 992 px moduły stoją w pionie, a `--w` liczy wysokość (`--w × 3,5 rem`, telefon `× 2,75 rem`). Kadr liczy się z szerokości modułu (`2,2 × 100cqi`). Szyny i impulsu nie ma, a każdy moduł ma kreskę z węzłem x u góry.
+- Moduły w tle hierarchii przyciemnia Głębia na 50 %.
 
 ## Interakcje i ruch
 
 | # | Wyzwalacz | Efekt | Liczby |
 |---|---|---|---|
-| 1 | koniec loadera (`introDone`) | H1 słowo po słowie spod maski, lead i pokaz od dołu (loader), ekran kurtyną od dołu z dojazdem skali kadru | słowa: `--d-enter`, stagger 0,04 s; ekran: `inset(100% 0 0 0)` → `0`, 1,4 × `--d-enter`; skala 1,12 → 1, 1,6 × `--d-enter`, `--ease-enter` |
-| 2 | co `HOLD` | następna realizacja: kurtyna od dołu (wstecz od góry), skala 1,12 → 1, stary tytuł w górę i znika, nowy od dołu; odcinek aktywnego projektu wypełnia się przez cały pokaz | `HOLD` 6 s; kurtyna i skala `--d-enter`, `--ease-enter`; tytuł ±40 % wysokości, nowy z opóźnieniem 0,15 × `--d-enter` |
-| 3 | kursor nad ekranem lub pokazem, fokus w pokazie | pokaz stoi (żywa warstwa gra dalej) | — |
-| 4 | przycisk pauzy | pokaz i żywa warstwa stoją, `aria-pressed`, zmiany ogłaszane (`aria-live="polite"`) | WCAG 2.2.2 |
-| 5 | klik w odcinek | od razu ten projekt (ruch #2), ogłoszenie zmiany | — |
-| 6 | ruch kursora (precyzyjny wskaźnik) | węzły x na granicach kolumn w promieniu kursora wyrastają ze środka w Lagunie, dalsze mniejsze i bledsze | krok = szerokość kolumny + gap; promień 2,6 kroku, pełna jasność do 0,3 promienia; wygładzanie kursora 0,16, węzłów 0,12 na klatkę (60 fps); węzeł 0,45 rem, kreska 0,09 rem |
-| 7 | kursor nad ekranem | przechył ekranu i etykieta kursora | ±3°, gaśnie z `--expand` |
-| 8 | scroll, tor 300vh | ekran rośnie z okna do pełnej sceny (do dolnej krawędzi okna), nagłówek, lead i pokaz gasną | progres 0–0,5 rozszerzenie, 0–0,25 zanikanie, `scrub` |
-| 9 | scroll, dalej | pełna scena stoi, pokaz gra dalej | progres 0,5–0,7 |
-| 10 | scroll, koniec toru | ekran odjeżdża w górę szybciej niż scroll i odsłania Manifest, który wsuwa się pod ostatni ekran toru (`margin-top: -100vh`) | progres 0,7–1, `--leave` 0 → 1 (`translate` −100vh), `power1.in` |
-| 11 | klik w ekran albo tytuł projektu | morf kadru w okładkę projektu (View Transitions, `curtain.ts`) | jak `03-realizacje.md`, ruch #5 |
+| 1 | koniec loadera | H1 słowo po słowie spod maski (`split-reveal`), lead i CTA od dołu (loader `[data-intro]`) | jak w loaderze |
+| 2 | koniec loadera | szyna rysuje się od lewej. Gdy dojdzie do węzła, rysuje się x, etykieta wchodzi, moduł spada spod szyny kurtyną, a kadr dojeżdża skalą | szyna 1,6 × `--d-enter`, `--ease-draw`, start 0,15 s; x 0,6 × `--d-enter`; etykieta +0,08 s, `--d-enter`; kurtyna +0,12 s, 1,3 × `--d-enter`; skala 1,12 → 1, 1,9 × `--d-enter`, `--ease-enter` |
+| 3 | pokaz co `HOLD` | następny moduł aktywny (ruch #4) | `HOLD` 5 s, startuje po wejściu |
+| 4 | zmiana modułu | wagi płyną do nowego układu, impuls (odcinek szyny w `--c-laguna-start`) jedzie od węzła poprzedniego do węzła nowego i gaśnie na końcach. Węzeł aktywny dostaje gradient, tytuł realizacji wchodzi, przyciemnienie gaśnie, kadr dojeżdża skalą. Gra tylko żywa warstwa aktywnego modułu | `--d-context`, `--ease-context`; skala 1,05 → 1, 1,2 × `--d-context`; tytuł z opóźnieniem 0,6 × `--d-context` |
+| 5 | kursor nad modułem (mysz, pióro) | moduł staje się aktywny | zwłoka 0,12 s |
+| 6 | kursor nad schematem | pokaz stoi (żywa warstwa gra) | — |
+| 7 | ruch kursora nad aktywnym modułem (precyzyjny wskaźnik) | kadr przesuwa się przeciwnie do kursora | ±14 px poziomo, ±10 px pionowo, `quickTo` 0,6 s `power3.out` |
+| 8 | fokus w module (Tab) | moduł aktywny, pokaz stoi | — |
+| 9 | dotyk | pierwsze dotknięcie nieaktywnego modułu wybiera go, drugie prowadzi do realizacji | — |
+| 10 | pauza | pokaz i żywa warstwa stoją, `aria-pressed` | WCAG 2.2.2 |
+| 11 | klik w aktywny moduł | morf kadru w okładkę realizacji (`curtain.ts`) | jak `03-realizacje.md`, ruch #5 |
+| 12 | scroll | bez przejmowania: hero ma wysokość ekranu, Manifest wchodzi normalnie, a jego węzły siatki rysują się przy wejściu. Hero poza ekranem: pokaz i żywe warstwy stoją | — |
 
-## Reduced motion / bez WebGL / dotyk
+## Reduced motion / bez JS / dotyk
 
-- Reduced motion: bez toru (hero na wysokość ekranu), bez wejścia, pokazu, kurtyny, żywych warstw i siatki; ekran stoi w oknie z pierwszym projektem, odcinki przełączają od razu, pauza ukryta. Manifest zaczyna się normalnie pod hero.
-- Bez JS: jak reduced motion, odcinki nie działają (pierwszy projekt, linki działają).
-- Dotyk: bez siatki (#6), bez przechyłu i etykiety kursora. Pokaz, pauza i odcinki działają.
-- WebGL: nie używany (siatka to canvas 2D).
+- Reduced motion: bez wejścia, pokazu, impulsu, paralaksy i żywych warstw. Kursor, fokus i dotyk przełączają moduł od razu, bez przejść CSS. Pauza ukryta.
+- Bez JS: pierwszy moduł aktywny (wagi w `style`), linki działają.
+- Dotyk: ruch #9 zamiast #5, bez paralaksy i etykiety kursora.
+- WebGL: nie używany.
 
 ## Assety
 
-Okładki i żywe warstwy realizacji z kolekcji (`src/assets`, `components/live/*`), DEMO do D3. Kadry mają rozmiar pełnej sceny (okno to przycięcie), więc `sizes` liczy się dla sceny: desktop `100vw`, poniżej 992 px `150vh` (`cover` 16:10). Pierwszy kadr `eager`, reszta `lazy`; cztery pliki 2048 px ważą razem ok. 0,5 MB.
+Okładki i żywe warstwy realizacji z kolekcji (DEMO do D3). Wszystkie cztery kadry są w pierwszym ekranie, więc są `eager`. Kadr ma `2,2 ×` szerokość modułu na telefonie i ok. 0,8 szerokości ekranu na desktopie, stąd `sizes="(max-width: 991px) 220vw, 80vw"`.
 
 ## Etapy implementacji
 
-- S1 statyka + S2 ruch: prototyp w `/lab/hero` (2026-11-02), od 2026-11-03 na głównej: `sections/Hero.astro`, `styles/sections/hero.css`, `modules/hero-reel.ts`, `modules/hero-field.ts`, faza wyjścia w `card-expand.ts`, wybór kadru morfu w `curtain.ts`.
-- Usunięte razem z podmianą: stare `Hero.astro` i `hero.css` (karta z kokpitem floty i etykietami warstw), `hero-live.ts`, `demoHero`, kanał powiadomień w `FlotaLive` (`feed`), strona `/lab/hero`. Stan sprzed podmiany: tag `realizacje-v2`.
+- 2026-11-03: S1 statyka i S2 ruch razem (brief: „zaimplementuj bez zatrzymywania”): `sections/Hero.astro`, `styles/sections/hero.css`, `modules/hero-system.ts`.
+- Usunięte: `hero-reel.ts`, `hero-field.ts` i stary układ „Plakat + ekran” (tag `hero-v1`). `card-expand.ts` zostaje, bo używa go prototyp w `/lab`.
 
 ## Kryteria akceptacji
 
-- Nagłówek w 2 wierszach na 1440 i 1920, bez sklejonych słów, kropka przy ostatnim słowie, sierotki „i” przeniesione.
-- Pokaz przełącza 4 projekty, pauza i odcinki działają z klawiatury, ekran stoi pod kursorem.
-- Morf z ekranu hero i z indeksu realizacji leci z widocznego kadru.
-- init → destroy → init bez przyrostu ScrollTriggerów, konsola czysta, check, lint i build czyste.
-
-## Poza zakresem
-
-Nagranie wideo projektu (D3), żywy widget platformy (D5), zmiana stylu przycisku CTA w pasku.
+- 1440 i 390: nagłówek, CTA i schemat tworzą jedną kompozycję, bez poziomego scrolla, a lead nie dotyka H1.
+- Przełączanie kursorem, Tabem, dotykiem i pokazem. Pauza działa z klawiatury.
+- Przejście do Manifestu bez skoku i bez przejmowania scrolla.
+- Konsola czysta, check, lint i build czyste.
 
 ## Decyzje otwarte
 
-1. Co z czterech elementów ruchu zostaje (użytkownik: „spróbujmy wszystkiego, napiszę, co wyrzucić”).
-2. Etykiety warstw: wracają gdzieś w hero czy zostają tylko w loaderze?
-3. Przycisk CTA w pasku (ta sama gradientowa pigułka co usunięta z hero): zostaje czy zmienia styl?
+1. Ocena użytkownika na żywo: hasło, skala H1, tempo pokazu (`HOLD` 5 s).
+2. Dwa przyciski CTA w pierwszym ekranie: w pasku i w hero. Czy chować CTA paska, dopóki hero jest w widoku (zmiana w `Header`, poza sekcją)?
+3. „Utrzymanie” pokazuje fragment realizacji przepływów (log zdarzeń i harmonogram). Gdy będzie materiał z D3/D5 (monitoring platformy), podmienić.

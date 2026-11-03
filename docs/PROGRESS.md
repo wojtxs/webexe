@@ -659,3 +659,31 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - `text-indent` się dziedziczy: maski słów SplitText (inline-block) dostawały wcięcie i miały szerokość 0. Zerować go na dzieciach nagłówka.
   - `naturalWidth` obrazu z `srcset` jest przeliczony przez gęstość (szerokość pliku podzielona przez `w / sizes`), więc nie mówi, który plik przyszedł. Plik ustala się po `currentSrc`.
   - Ten sam projekt w dwóch kadrach na stronie: każdy wybór elementu po nazwie (`querySelector`) bierze pierwszy w dokumencie, często ukryty. Wybierać widoczny.
+
+### 2026-11-03 — 01 Hero: „Schemat systemu” (`hero-v2`)
+- Zrobione:
+  - Zgłoszenie użytkownika: hero-v1 „Plakat + ekran” odrzucone („wolne miejsce, nie przyciąga, AI slop”). Odrzucone też trzy laby `/lab/hero-1..3` i prototyp „Okno ze słowem” w `/lab/hero` (alpanet). Nowy brief: Awwwards-level, wielka typografia i interaktywna prezentacja prawdziwych systemów, trzy koncepcje, wybór i wdrożenie bez dodatkowego potwierdzenia, weryfikacja 1440 i 390.
+  - Referencje obejrzane na żywo (zrzuty Edge headless): linear.app, cuberto.com, burocratik.com i obys.agency (strona awwwards zwraca 403). alpanet i chipsa z `docs/reference/`.
+  - Koncepcje: 1 „Schemat systemu” (wybrana), 2 „Wers”, 3 „Okno ze słowem”. Opis i powody w `01-hero.md`.
+  - `sections/Hero.astro`, `styles/sections/hero.css`, `modules/hero-system.ts`:
+    - H1 „Budujemy systemy, / które zostają.” w skali impact, drugi wiersz od kolumny 4, lead obok, pod nim dwa CTA;
+    - szyna danych z węzłami x i cztery moduły (Aplikacje: kokpit floty, Integracje: mapa połączeń, Automatyzacje: obieg faktur, Utrzymanie: log zdarzeń i harmonogram przepływów);
+    - szerokość modułu w kolumnach (6/2/2/2), zmiana hierarchii kursorem, fokusem, dotykiem i pokazem, impuls na szynie, paralaksa kadru, pauza;
+    - wejście po loaderze: szyna się rysuje, węzły x, moduły spadają spod szyny.
+  - Usunięte: `hero-reel.ts`, `hero-field.ts`.
+  - Dokumenty: `BRIEF.md` (H1, lead, CTA, etykiety warstw, wiersz 01), `ARCHITECTURE.md` (`data-hs-*`, moduły), spec `01-hero.md`.
+  - Testy (Edge headless): zrzuty 1920 / 1440 / 834 / 390 (wejście, spoczynek, zmiana klatka po klatce, hover, scroll do Manifestu), Tab po modułach, reduced motion (przełączanie bez ruchu, pauza ukryta), brak poziomego scrolla, konsola bez błędów JS (jedyne 404 to favicon), check, lint i build czyste.
+- Zostało:
+  - Ocena użytkownika na żywo i decyzje otwarte w specu (hasło i skala, dwa CTA w pierwszym ekranie, materiał do „Utrzymania”).
+  - Trace 60 fps (zmiana szerokości modułów to layout 4 elementów na klatkę + żywa warstwa), test init → destroy → init ScrollTriggerów, Firefox.
+  - `TODO(treść)`: „Zobacz realizacje”, etykiety pauzy i kursora, opis listy.
+  - `card-expand.ts` w repo bez użycia (zostaje dla prototypu `/lab/hero`, który nie jest w repo).
+- Decyzje:
+  - **Hasło zmienione za zgodą z briefu:** „Budujemy systemy, które zostają.” zamiast „Budujemy oprogramowanie dla firm i zostajemy przy nim na lata.”. Lead w hero to tylko pierwsze zdanie (pełny w historii `BRIEF.md`).
+  - **CTA wraca do hero** (brief: wyraźne CTA i przejście do realizacji), mimo decyzji z 2026-11-02 „przycisk do wyrzucenia”.
+  - Szerokości modułów liczone w kolumnach siatki (`--w`), a nie przez `flex-grow`: przy proporcjach `flex-grow` szwy rozjeżdżały się z siatką o rynny.
+  - Bez sticky toru i przejmowania scrolla (brief: „unikaj ciężkiego scroll-jackingu”).
+- Lekcje:
+  - Grid sekcji bez `grid-template-columns` ma kolumnę `auto`: tekst z `nowrap` (etykieta z tytułem realizacji) rozpychał ją ponad ekran na 390. `minmax(0, 1fr)`.
+  - Reguła `.js-motion` ukrywająca element do wejścia nie może używać właściwości `scale`, jeśli GSAP animuje `transform`: obie się składają, a inline transform nie nadpisuje `scale`. Ukrywać tą samą właściwością, którą animuje GSAP.
+  - Kadr przycięty `clamp(100% − szer., 50% − fx × szer., 0)` w module z `container-type: size`: punkt kadru zostaje na środku przy każdej szerokości, a krawędzie się nie odsłaniają.

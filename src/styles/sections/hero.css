@@ -1,136 +1,240 @@
 /* ==========================================================================
-   01 Hero — „Plakat + ekran” (sections/Hero.astro, docs/sections/01-hero.md).
-   Tor 300vh, scena sticky 100vh. Desktop: nagłówek na 12 kolumnach, drugi wiersz wcięty
-   o kolumnę siatki; pod nim lead i pokaz po lewej (kolumny 1–4), ekran na 5–12.
-   card-expand (.is-expandable) rozszerza ekran do pełnej sceny, a z fazą wyjścia (.has-leave)
-   ekran odjeżdża w górę nad Manifestem, który wsuwa się pod scenę (margin-top: -100vh).
-   Bez JS i przy reduced motion: ekran stoi w oknie, Manifest zaczyna się pod torem.
+   01 Hero — „Schemat systemu” (docs/sections/01-hero.md, modules/hero-system.ts).
+   Scena na wysokość ekranu: u góry nagłówek w skali impact (drugi wiersz od kolumny 4),
+   lead obok drugiego wiersza i CTA pod nim; niżej szyna danych i cztery moduły na kolumnach.
+   Szerokość modułu = --w kolumn siatki (aktywny 6, pozostałe 2, suma zawsze 12), więc szwy
+   między modułami leżą na siatce. Poniżej 992 px moduły stoją w pionie, --w liczy wysokość.
    ========================================================================== */
 
-.hp {
+.hs {
+  container-type: inline-size;
   position: relative;
-  z-index: 1;
-  height: 300vh;
+  display: grid;
+  /* minmax(0, 1fr): etykiety bez łamania (nowrap) nie rozpychają kolumny ponad ekran */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  row-gap: var(--s-12);
+  min-height: 100svh;
+  padding-block: calc(var(--s-24) + var(--s-2)) var(--grid-padding);
   isolation: isolate;
 }
 
-/* Wyjście: tor jest przezroczysty (tło Piany daje body), Manifest wchodzi pod ostatni ekran toru,
-   a linie siatki hero kończą się tam, gdzie zaczynają się linie Manifestu */
-.hp.has-leave {
-  background-color: transparent;
+.hs__head,
+.hs__system {
+  --col: calc(
+    (100cqi - 2 * var(--grid-padding) - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols)
+  );
 }
 
-.hp.has-leave .grid-sys {
-  bottom: 100vh;
+/* --- Nagłówek, lead, CTA --- */
+.hs__head {
+  /* Wcięcie drugiego wiersza: 3 kolumny, tekst startuje na kolumnie 4 */
+  --indent: calc(3 * (var(--col) + var(--grid-gap)));
+  align-items: end;
 }
 
-.hp.has-leave + .manifest {
-  margin-top: -100vh;
-}
-
-/* Przezroczysta scena nie łapie wskaźnika nad Manifestem, który przewija się pod nią */
-.hp__stage {
-  pointer-events: none;
-}
-
-.hp__stage > *,
-.hp__inner > * {
-  pointer-events: auto;
-}
-
-.hp__inner {
-  container-type: inline-size;
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  grid-template-rows: auto 1fr;
-  row-gap: var(--s-12);
-  padding-top: var(--s-24);
-  padding-bottom: var(--grid-padding);
-  pointer-events: none;
-}
-
-/* --- Siatka węzłów za kursorem (hero-field) --- */
-.hp__field {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-/* --- Nagłówek: plakat w dwóch wierszach, drugi od drugiej kolumny siatki --- */
-.hp__title {
-  --indent: calc((100cqi + var(--grid-gap)) / 4);
-  grid-column: 1 / -1;
+.hs__title {
   grid-row: 1;
-  padding-left: var(--indent);
-  font-size: var(--t-hero);
-  font-weight: var(--w-h1);
-  line-height: var(--lh-h1);
-  letter-spacing: var(--ls-h1);
-  /* Spacja w Jakarcie jest wąska przy ciasnym trackingu: słowa się sklejały */
+  grid-column: 1 / -1;
+  font-size: var(--t-impact);
+  font-weight: var(--w-impact);
+  line-height: var(--lh-impact);
+  letter-spacing: var(--ls-impact);
   word-spacing: var(--ws-display);
-  text-indent: calc(-1 * var(--indent));
 }
 
-/* text-indent się dziedziczy: maski słów (inline-block) przesuwałyby swoją treść poza maskę */
-.hp__title * {
-  text-indent: 0;
+.hs__line {
+  display: block;
 }
 
-/* Spójnik z następnym słowem: po podziale na słowa twarda spacja nie blokuje łamania między maskami */
-.hp__keep {
-  white-space: nowrap;
+.hs__line--2 {
+  padding-left: var(--indent);
 }
 
-/* Kropka w Jakarcie ma szeroki światło z lewej i odstawała od ostatniego słowa */
-.hp__stop {
+.hs__stop {
   margin-left: var(--kern-stop);
 }
 
-/* --- Lead i pokaz w lewej kolumnie --- */
-.hp__lead-box {
-  grid-column: 1 / 5;
-  grid-row: 2;
-  align-self: start;
-}
-
-.hp__lead {
-  color: var(--ink-muted);
-}
-
-.hp__reel-box {
-  grid-column: 1 / 5;
-  grid-row: 2;
+/* Lead w wolnym polu pod pierwszym wierszem: obok drugiego wiersza i CTA, dół równo z CTA */
+.hs__lead {
+  grid-row: 1 / 3;
+  grid-column: 1 / 4;
   align-self: end;
-}
-
-.hp__reel {
-  display: grid;
-  gap: var(--s-4);
-}
-
-.hp__reel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.hp__count {
-  display: flex;
-  gap: var(--s-2);
+  max-width: 21em;
+  padding-right: var(--s-4);
+  padding-bottom: 0.15em;
   color: var(--ink-muted);
-  font-variant-numeric: tabular-nums;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
 }
 
-.hp__count-now {
+.hs__actions {
+  grid-row: 2;
+  grid-column: 4 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-8);
+}
+
+/* --- Schemat: szyna, moduły --- */
+.hs__system {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Szyna między skrajnymi liniami siatki (środki rynien), na górnej krawędzi modułów */
+.hs__bus,
+.hs__pulse {
+  position: absolute;
+  top: 0;
+  left: calc(var(--grid-padding) - var(--grid-gap) / 2);
+  height: 1px;
+  pointer-events: none;
+}
+
+.hs__bus {
+  right: calc(var(--grid-padding) - var(--grid-gap) / 2);
+  background-color: var(--c-piana-deep);
+  transform-origin: left center;
+}
+
+/* Impuls: odcinek szyny w Lagunie, jedzie od węzła do węzła przy zmianie modułu */
+.hs__pulse {
+  z-index: 1;
+  width: var(--s-16);
+  height: 2px;
+  background-color: var(--c-laguna-start);
+  opacity: 0;
+  translate: 0 -50%;
+}
+
+.hs__strip {
+  display: flex;
+  flex: 1;
+  gap: var(--grid-gap);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hs__seg {
+  --w: 2;
+  display: flex;
+  flex: 0 0 calc(var(--w) * var(--col) + (var(--w) - 1) * var(--grid-gap));
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Etykieta: węzeł x na szynie w rynnie przed modułem, warstwa oferty, przy aktywnym tytuł realizacji */
+.hs__label {
+  position: relative;
+  margin: 0;
+  padding-block: var(--s-3);
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  line-height: var(--lh-label);
+  white-space: nowrap;
+}
+
+.hs__node {
+  position: absolute;
+  top: 0;
+  left: calc(var(--grid-gap) / -2);
+  z-index: 2;
+  width: var(--s-3);
+  height: var(--s-3);
+  color: var(--c-piana-deep);
+  translate: -50% -50%;
+}
+
+.hs__node.xmark--active {
+  width: var(--s-4);
+  height: var(--s-4);
+}
+
+.hs__node path {
+  stroke-dasharray: 1;
+}
+
+.hs__label-in {
+  display: flex;
+  gap: var(--s-3);
+  overflow: hidden;
+}
+
+.hs__layer {
+  flex: none;
+  color: var(--ink-muted);
+  transition: color var(--d-ui) var(--ease-ui);
+}
+
+.hs__name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-muted);
+  font-weight: var(--w-small);
+  text-overflow: ellipsis;
+  opacity: 0;
+  transition: opacity var(--d-ui) var(--ease-ui);
+}
+
+.hs__seg.is-active .hs__layer {
   color: var(--c-glebia);
 }
 
-/* Pauza: dwie belki, po zatrzymaniu trójkąt */
-.hp__pause {
+.hs__seg.is-active .hs__name {
+  opacity: 1;
+  transition-delay: calc(var(--d-context) * 0.6);
+}
+
+/* Moduł: przycięty fragment aplikacji, kadr stoi punktem fx, fy na środku modułu */
+.hs__panel {
+  container-type: size;
+  position: relative;
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--r-chip);
+  background-color: var(--c-glebia);
+}
+
+.hs__panel .hs__canvas {
+  /* Kadr na desktopie liczony z wysokości modułu (stała), więc zmiana szerokości tylko odsłania */
+  --ch: calc(100cqh * var(--zoom, 1.8));
+  --cw: calc(var(--ch) * 1.6);
+  position: absolute;
+  top: clamp(calc(100% - var(--ch)), calc(50% - var(--fy) * var(--ch)), 0px);
+  left: clamp(calc(100% - var(--cw)), calc(50% - var(--fx) * var(--cw)), 0px);
+  width: var(--cw);
+  height: var(--ch);
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+/* Moduły w tle hierarchii przygaszone Głębią */
+.hs__panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--c-glebia);
+  opacity: 0.5;
+  transition: opacity var(--d-context) var(--ease-context);
+  pointer-events: none;
+}
+
+.hs__seg.is-active .hs__panel::after {
+  opacity: 0;
+}
+
+/* --- Pauza pokazu (WCAG 2.2.2): nad szyną, przy prawej krawędzi --- */
+.hs__pause {
+  position: absolute;
+  right: var(--grid-padding);
+  bottom: calc(100% + var(--s-3));
   display: grid;
   place-items: center;
   width: var(--s-8);
@@ -138,259 +242,136 @@
   border: 1px solid var(--c-piana-deep);
   border-radius: var(--r-pill);
   background: none;
-  color: inherit;
+  color: var(--c-glebia);
   cursor: pointer;
   transition: border-color var(--d-ui) var(--ease-ui);
 }
 
 @media (hover: hover) {
-  .hp__pause:hover {
+  .hs__pause:hover {
     border-color: currentColor;
   }
 }
 
-.hp__pause[hidden] {
+.hs__pause[hidden] {
   display: none;
 }
 
-.hp__pause-icon {
+.hs__pause-icon {
   width: var(--s-3);
   height: var(--s-3);
   border-inline: var(--s-1) solid currentColor;
 }
 
-.hp__pause[aria-pressed='true'] .hp__pause-icon {
+.hs__pause[aria-pressed='true'] .hs__pause-icon {
   border: 0;
   background-color: currentColor;
   clip-path: polygon(15% 0, 100% 50%, 15% 100%);
 }
 
-/* Projekty stoją w jednej komórce, widać aktywny (i wychodzący przy zmianie) */
-.hp__items {
-  display: grid;
+/* --- Stan przed wejściem (hero-system gra po loaderze; fallback 3 s w Base.astro) --- */
+/* transform, a nie scale: inline transform z GSAP ma pierwszeństwo przed tą regułą */
+.js-motion .hs__bus {
+  transform: scaleX(0);
 }
 
-.hp__item {
-  grid-area: 1 / 1;
-  display: grid;
-  align-content: end;
-  gap: var(--s-3);
-  visibility: hidden;
+.js-motion .hs__node path {
+  stroke-dashoffset: 1;
 }
 
-.hp__item.is-active,
-.hp__item.is-leaving {
-  visibility: visible;
+.js-motion .hs__label-in {
+  opacity: 0;
 }
 
-.hp__item-link {
-  color: inherit;
-  text-decoration: none;
-  text-wrap: balance;
+.js-motion .hs__panel {
+  clip-path: inset(0 0 100% 0);
 }
 
-@media (hover: hover) {
-  .hp__item-link:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.15em;
-  }
-}
-
-.hp__item-tags {
-  color: var(--ink-muted);
-}
-
-/* Postęp: odcinek na projekt, aktywny wypełnia się w czasie pokazu */
-.hp__segs {
-  display: grid;
-  grid-auto-columns: 1fr;
-  grid-auto-flow: column;
-  gap: var(--s-2);
-  list-style: none;
-}
-
-.hp__seg {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: var(--s-6);
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.hp__seg::before,
-.hp__seg-fill {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-}
-
-.hp__seg::before {
-  background-color: var(--c-piana-deep);
-}
-
-.hp__seg-fill {
-  background-image: var(--g-laguna);
-  transform-origin: 0 50%;
-  scale: 0 1;
-}
-
-.hp__seg.is-active .hp__seg-fill {
-  scale: 1 1;
-}
-
-/* --- Ekran --- */
-.hp__window,
-.hp__card {
-  grid-column: 5 / -1;
-  grid-row: 2;
-  border-radius: var(--r-card);
-}
-
-.hp__window {
-  pointer-events: none;
-}
-
-.hp__card {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  border-radius: var(--r-card);
-  background-color: var(--c-glebia);
-}
-
-.hp.is-expandable .hp__card {
-  grid-column: 1 / -1;
-  grid-row: 1 / -1;
-  /* Pełna scena sięga dolnej krawędzi okna: pod nią przewija się już Manifest */
-  margin-bottom: calc(-1 * var(--grid-padding));
-  overflow: visible;
-  border-radius: 0;
-  /* Przechył gaśnie razem z rozszerzaniem (--expand), wyjście w górę (--leave) */
-  transform: perspective(1600px) rotateX(calc(var(--tilt-x, 0deg) * (1 - var(--expand, 0))))
-    rotateY(calc(var(--tilt-y, 0deg) * (1 - var(--expand, 0))));
-  translate: 0 calc(var(--leave, 0) * -100vh);
-}
-
-.hp__screen {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
-}
-
-.hp__shot {
-  position: absolute;
-  inset: 0;
-  aspect-ratio: auto;
-  border-radius: 0;
-  visibility: hidden;
-  transform: none;
-}
-
-.hp__shot.is-active {
-  z-index: 2;
-  visibility: visible;
-}
-
-.hp__shot.is-leaving {
-  z-index: 1;
-  visibility: visible;
-}
-
-/* Wejście ekranu (hero-reel) czeka na koniec loadera */
-.js-motion .hp__screen {
-  clip-path: inset(100% 0 0 0);
-}
-
-/* --- Tablet i telefon: nagłówek, lead, ekran, pokaz pod ekranem --- */
+/* --- Tablet i telefon: moduły w pionie, --w liczy wysokość --- */
 @media (max-width: 991px) {
-  .hp__inner {
-    grid-template-rows: auto auto 1fr auto;
+  .hs {
+    row-gap: var(--s-12);
+    min-height: 0;
+    padding-top: calc(var(--s-24) + var(--s-4));
+  }
+
+  .hs__head {
+    --indent: calc(2 * (var(--col) + var(--grid-gap)));
     row-gap: var(--s-6);
-    padding-top: var(--s-16);
   }
 
-  .hp__title {
-    padding-left: 0;
-    text-indent: 0;
+  .hs__title {
+    font-size: var(--t-hero);
   }
 
-  .hp__lead-box {
+  .hs__lead {
+    grid-row: 2;
     grid-column: 1 / -1;
+    max-width: 28em;
+    padding: 0;
   }
 
-  .hp__window,
-  .hp__card {
-    grid-column: 1 / -1;
+  .hs__actions {
     grid-row: 3;
-  }
-
-  .hp__reel-box {
     grid-column: 1 / -1;
-    grid-row: 4;
+    margin-top: 0;
   }
 
-  /* Pokaz w jednym wierszu: licznik, nazwa projektu, pauza; pod nim postęp */
-  .hp__reel {
-    grid-template-columns: auto 1fr auto;
-    gap: var(--s-2) var(--s-4);
-    align-items: center;
-  }
-
-  .hp__reel-head {
-    display: contents;
-  }
-
-  .hp__count {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .hp__pause {
-    grid-column: 3;
-    grid-row: 1;
-  }
-
-  .hp__items {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: center;
-  }
-
-  .hp__item {
-    align-content: center;
-  }
-
-  .hp__item-link {
-    font-size: var(--t-body);
-    line-height: var(--lh-small);
-  }
-
-  .hp__item-tags {
+  .hs__bus,
+  .hs__pulse {
     display: none;
   }
 
-  .hp__segs {
-    grid-column: 1 / -1;
+  .hs__strip {
+    --row: 3.5rem;
+    flex-direction: column;
+    gap: var(--s-3);
   }
 
-  .hp__seg {
-    height: var(--s-4);
+  .hs__seg {
+    flex: 0 0 calc(var(--w) * var(--row));
+    border-top: 1px solid var(--c-piana-deep);
+  }
+
+  .hs__node {
+    left: 0;
+    translate: 0 -50%;
+  }
+
+  .hs__label {
+    padding-left: var(--s-6);
+  }
+
+  /* Kadr liczony z szerokości modułu (stała w pionie) */
+  .hs__panel .hs__canvas {
+    --cw: calc(100cqi * 2.2);
+    --ch: calc(var(--cw) / 1.6);
+  }
+}
+
+@media (max-width: 767px) {
+  .hs__head {
+    --indent: calc(1 * (var(--col) + var(--grid-gap)));
+  }
+
+  .hs__title {
+    font-size: var(--t-impact);
+  }
+
+  .hs__strip {
+    --row: 2.75rem;
+  }
+
+  .hs__pause {
+    bottom: auto;
+    top: calc(-1 * (var(--s-8) + var(--s-3)));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hp {
-    height: auto;
-  }
-
-  .hp__stage {
-    position: relative;
+  .hs__panel::after,
+  .hs__layer,
+  .hs__name {
+    transition: none;
   }
 }
