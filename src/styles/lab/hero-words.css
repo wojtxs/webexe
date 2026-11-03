@@ -1,0 +1,361 @@
+/* ==========================================================================
+   Lab: hero „Okno ze słowem” (pages/lab/hero.astro, modules/hero-words.ts).
+   Tor 300vh, scena sticky. Mały nagłówek w lewym górnym rogu, lead po prawej, na środku okno
+   na kolumnach 5–8 z żywą realizacją, przez okno przechodzi wielkie słowo warstwy oferty
+   (ciemne na Pianie, jasne w oknie). card-expand rozszerza okno do pełnej sceny, a faza wyjścia
+   wywozi scenę w górę nad Manifest.
+   ========================================================================== */
+
+.hw {
+  container-type: inline-size;
+  position: relative;
+  z-index: 1;
+  height: 300vh;
+  isolation: isolate;
+}
+
+.hw.has-leave {
+  background-color: transparent;
+}
+
+.hw.has-leave .grid-sys {
+  bottom: 100vh;
+}
+
+.hw.has-leave + .manifest {
+  margin-top: -100vh;
+}
+
+.hw__stage {
+  --col: calc(
+    (100cqi - 2 * var(--grid-padding) - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols)
+  );
+  /* Okno: 4 kolumny siatki na środku (5–8 z 12, 3–6 z 8), 16:10, środek nieco poniżej połowy.
+     Słowo jest szersze od okna: wystaje z niego ciemne, w środku jest jasne */
+  --win-w: calc(4 * var(--col) + 3 * var(--grid-gap));
+  --win-h: calc(var(--win-w) * 10 / 16);
+  --win-cy: 56%;
+  pointer-events: none;
+}
+
+.hw__stage > *,
+.hw__top > *,
+.hw__bottom > * {
+  pointer-events: auto;
+}
+
+/* --- Góra: nagłówek i lead --- */
+.hw__top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 4;
+  align-items: start;
+  padding-top: 5.75rem;
+  pointer-events: none;
+}
+
+.hw__title {
+  grid-column: 1 / 8;
+  font-size: calc(var(--t-h2) * 0.8);
+  font-weight: var(--w-h1);
+  line-height: 1.02;
+  letter-spacing: var(--ls-h1);
+  word-spacing: var(--ws-display);
+}
+
+.hw__stop {
+  margin-left: var(--kern-stop);
+}
+
+.hw__lead-box {
+  grid-column: 9 / -1;
+  padding-top: var(--s-2);
+}
+
+.hw__lead {
+  color: var(--ink-muted);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+}
+
+/* --- Słowo --- */
+.hw__word {
+  position: absolute;
+  top: var(--win-cy);
+  right: 0;
+  left: 0;
+  display: grid;
+  justify-items: center;
+  font-size: var(--t-impact);
+  font-weight: var(--w-impact);
+  line-height: var(--lh-impact);
+  letter-spacing: var(--ls-impact);
+  text-transform: uppercase;
+  white-space: nowrap;
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+.hw__word--dark {
+  z-index: 1;
+  color: var(--c-glebia);
+}
+
+.hw__word--light {
+  z-index: 3;
+  color: var(--c-biel);
+}
+
+.hw__item {
+  grid-area: 1 / 1;
+  display: flex;
+  overflow: hidden;
+  /* Maska znaków: J schodzi pod linię bazową */
+  padding-block: 0.08em 0.12em;
+  visibility: hidden;
+}
+
+.hw__item.is-active,
+.hw__item.is-leaving {
+  visibility: visible;
+}
+
+.hw__char {
+  display: block;
+}
+
+/* --- Okno i karta --- */
+.hw__window {
+  position: absolute;
+  top: var(--win-cy);
+  left: 50%;
+  width: var(--win-w);
+  height: var(--win-h);
+  border-radius: var(--r-card);
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+/* Karta ma rozmiar sceny; bez ruchu przycina ją do okna CSS, z ruchem robi to card-expand */
+.hw__card {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  clip-path: inset(
+    calc(var(--win-cy) - var(--win-h) / 2) calc(50% - var(--win-w) / 2)
+      calc(100% - var(--win-cy) - var(--win-h) / 2) calc(50% - var(--win-w) / 2) round var(--r-card)
+  );
+}
+
+.hw.is-expandable .hw__card {
+  translate: 0 calc(var(--leave, 0) * -100vh);
+}
+
+.hw__screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: var(--c-glebia);
+}
+
+.hw__shot {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  visibility: hidden;
+  transform: none;
+}
+
+.hw__shot.is-active {
+  z-index: 2;
+  visibility: visible;
+}
+
+.hw__shot.is-leaving {
+  z-index: 1;
+  visibility: visible;
+}
+
+/* Jasny interfejs pod przyciemnieniem: okno zawsze ciemne na Pianie, słowo w nim zawsze jasne */
+.hw__shot--light::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: color-mix(in oklab, var(--c-glebia) 72%, transparent);
+  pointer-events: none;
+}
+
+/* --- Dół: realizacja na ekranie i pauza --- */
+.hw__bottom {
+  position: absolute;
+  right: 0;
+  bottom: var(--grid-padding);
+  left: 0;
+  z-index: 4;
+  align-items: end;
+  pointer-events: none;
+}
+
+.hw__meta-box {
+  grid-column: 1 / 5;
+}
+
+.hw__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--s-4);
+}
+
+.hw__count {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.hw__count span {
+  color: var(--c-glebia);
+}
+
+.hw__metas {
+  display: grid;
+  overflow: hidden;
+}
+
+.hw__meta-item {
+  grid-area: 1 / 1;
+  display: grid;
+  gap: var(--s-1);
+  visibility: hidden;
+}
+
+.hw__meta-item.is-active,
+.hw__meta-item.is-leaving {
+  visibility: visible;
+}
+
+.hw__meta-link {
+  color: inherit;
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  line-height: var(--lh-label);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .hw__meta-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
+.hw__tags {
+  color: var(--ink-muted);
+  font-size: var(--t-small);
+}
+
+.hw__pause-box {
+  grid-column: -2 / -1;
+  justify-self: end;
+}
+
+.hw__pause {
+  display: grid;
+  place-items: center;
+  width: var(--s-8);
+  height: var(--s-8);
+  border: 1px solid var(--c-piana-deep);
+  border-radius: var(--r-pill);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color var(--d-ui) var(--ease-ui);
+}
+
+@media (hover: hover) {
+  .hw__pause:hover {
+    border-color: currentColor;
+  }
+}
+
+.hw__pause[hidden] {
+  display: none;
+}
+
+.hw__pause-icon {
+  width: var(--s-3);
+  height: var(--s-3);
+  border-inline: var(--s-1) solid currentColor;
+}
+
+.hw__pause[aria-pressed='true'] .hw__pause-icon {
+  border: 0;
+  background-color: currentColor;
+  clip-path: polygon(15% 0, 100% 50%, 15% 100%);
+}
+
+/* --- Tablet i telefon --- */
+@media (max-width: 991px) {
+  .hw__stage {
+    --win-cy: 62%;
+  }
+
+  .hw__top {
+    row-gap: var(--s-4);
+    padding-top: var(--s-24);
+  }
+
+  .hw__title,
+  .hw__lead-box {
+    grid-column: 1 / -1;
+  }
+
+  .hw__title {
+    font-size: var(--t-h2);
+  }
+
+  .hw__lead-box {
+    padding-top: 0;
+  }
+
+  .hw__word {
+    font-size: calc(var(--t-impact) * 0.62);
+  }
+
+  .hw__meta-box {
+    grid-column: 1 / -2;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Telefon: okno na całą szerokość siatki, słowo mieści się w nim */
+  .hw__stage {
+    --win-w: calc(100cqi - 2 * var(--grid-padding));
+    --win-cy: 66%;
+  }
+
+  .hw__title {
+    font-size: calc(var(--t-h2) * 1.05);
+  }
+
+  .hw__lead {
+    font-size: var(--t-small);
+  }
+
+  .hw__word {
+    font-size: calc(var(--t-impact) * 0.66);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hw {
+    height: auto;
+  }
+
+  .hw__stage {
+    position: relative;
+  }
+}
