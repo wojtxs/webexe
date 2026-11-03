@@ -29,10 +29,10 @@ Konkretny, spokojny, bez żargonu. Mówimy wprost, także o tym, czego nie warto
 > Zmiany treści wprowadzasz tutaj, a dopiero potem w kodzie. Łamania linii oznaczone `/` są zamierzone na desktopie.
 
 ### 01 Hero
-- **H1:** Budujemy / oprogramowanie / dla firm i zostajemy / przy nim na lata.
+- **H1:** Budujemy oprogramowanie dla firm / i zostajemy przy nim na lata. *(2026-11-03: dwa wiersze zamiast czterech, hero „Plakat + ekran”)*
 - **Lead:** Tworzymy aplikacje do codziennej pracy, łączymy istniejące systemy i automatyzujemy powtarzalne zadania. Zajmujemy się całym projektem — od ustalenia, co trzeba zrobić, po wdrożenie, serwery i późniejszy rozwój. *(2026-11-01, z przeglądu tekstów)*
-- **CTA:** *(D9, propozycja: „Porozmawiajmy o projekcie”)*
-- **Etykiety warstw rdzenia** (hover i rozkład przy scrollu, od góry): Aplikacje, Integracje, Automatyzacje, Utrzymanie. *(2026-10-27, od użytkownika; Utrzymanie jako podstawa, bo to rdzeń oferty)*
+- **CTA:** w hero brak przycisku *(2026-11-03, od użytkownika)*. CTA stoi w pasku u góry (D9, propozycja: „Porozmawiajmy o projekcie”).
+- **Etykiety warstw rdzenia** (hover i rozkład przy scrollu, od góry): Aplikacje, Integracje, Automatyzacje, Utrzymanie. *(2026-10-27, od użytkownika; Utrzymanie jako podstawa, bo to rdzeń oferty)* Od 2026-11-03 tylko w loaderze: w hero pod nazwą projektu stoją jego tagi.
 
 ### 02 Manifest
 - **Problem:** Większość firmowego oprogramowania powstaje raz i zostaje bez opieki. Po kilku latach nikt nie wie, jak działa, a każda zmiana jest ryzykiem.
@@ -101,7 +101,7 @@ Wersja 1 to strona główna plus `/realizacje` (wszystkie realizacje po kolei), 
 | # | Sekcja | Treść | Mechanika (`INSPIRACJE.md`) | Zależy od |
 |---|---|---|---|---|
 | 00 | Loader | — | znak x rysuje się dwiema kreskami, potem wejście hero, limit 2,5 s | D8 |
-| 01 | Hero | Hero | karta z nagraniem jednego projektu rozszerza się na sticky torze do pełnego kontenera, etykiety warstw na obrazie (Alpanet) | **D3** (materiał), D9 |
+| 01 | Hero | Hero | plakat w dwóch wierszach i ekran, który pokazuje realizacje po kolei; ekran rozszerza się na sticky torze do pełnej sceny i odjeżdża w górę nad Manifestem (Alpanet), węzły x siatki za kursorem *(2026-11-03)* | **D3** (materiał), D9 |
 | 02 | Manifest | Manifest | wypełnianie scrollem **słowo po słowie**, słowo-akcent „latami”, na końcu znak x i zoom przez jego środek do ciemnej części strony (Alpanet) | — |
 | 03 | Realizacje | **D3**: na głównej ok. 3 wybrane realizacje i odnośnik do `/realizacje`, każda karta prowadzi do swojej podstrony *(2026-11-01)*. Na projekt: tytuł, opis, obraz, wideo, a na podstronę pełny opis. Na końcu technologie, na których budujemy *(2026-11-01, zamiast liczb i logotypów klientów)* | duże karty, hover obraz → wideo, ściskanie przy szybkim scrollu (Chipsa); ikony technologii w komórkach siatki (Alpanet) | **D3** |
 | 04 | Produkt | **D3** (jeden produkt) | ten sam produkt na laptopie i telefonie, nagranie ekranu, paralaksa scrollem (Alpanet) | **D3** |

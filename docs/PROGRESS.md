@@ -618,3 +618,44 @@ Przed każdą sekcją: Claude pisze draft speca z `_TEMPLATE.md`, ty go akceptuj
   - `astro dev` bez `--host` słucha tylko na `::1`. Przeglądarka, która tłumaczy `localhost` na `127.0.0.1`, nie łączy się. Serwer dla użytkownika uruchamiać z `--host`, jako osobny proces (`Start-Process`), bo zadanie w tle ginie razem z sesją.
   - Po dojściu nowego importu (GSAP Flip) serwer deweloperski zwraca 504 „Outdated Optimize Dep”. Pomaga restart z `--force`.
   - W JS `\s` łapie też twardą spację, więc regex dla sierotek potrzebuje lookbehind, żeby obsłużyć „i w”.
+
+### 2026-11-02/03 — 01 Hero: „Plakat + ekran” (`hero-v1`)
+
+- Zrobione:
+  - Zgłoszenie użytkownika: tekst hero „rozjechany”, przycisk pod leadem „do wyrzucenia”, hero „drętwe”. Kierunek wybrany przez użytkownika: „Plakat + ekran” i wszystkie cztery elementy ruchu („spróbujmy wszystkiego, napiszę, co wyrzucić”). Prototyp w `/lab/hero`, a od 2026-11-03 na głównej („wrzuć to na razie”).
+  - Tekst: H1 w dwóch wierszach na 12 kolumnach, drugi wcięty o kolumnę siatki (`--t-hero`). Odstęp między słowami `--ws-display` (spacja w Jakarcie przy ciasnym trackingu ma 0,15 em i słowa się sklejały), kropka dosunięta `--kern-stop`, „i zostajemy” razem na telefonie. Przycisk CTA z hero usunięty (CTA w pasku).
+  - `sections/Hero.astro`, `styles/sections/hero.css`:
+    - lead u góry kolumn 1–4, pokaz realizacji u dołu, ekran na kolumnach 5–12;
+    - poniżej 992 px nagłówek, lead, ekran, a pod nim pokaz w jednym wierszu.
+  - `modules/hero-reel.ts`:
+    - pokaz 4 realizacji co 6 s: kurtyna z dojazdem skali, nazwa i tagi, odcinki postępu jako przyciski, licznik;
+    - pauza (WCAG 2.2.2, zatrzymuje też żywą warstwę), stop pod kursorem, przy fokusie i poza ekranem;
+    - wejście ekranu kurtyną po loaderze.
+  - `modules/hero-field.ts`: węzły x na granicach kolumn zapalają się wokół kursora (canvas 2D, Laguna z tokenów). Pętla rAF kręci się tylko wtedy, gdy coś się zmienia. Bez dotyku i reduced motion.
+  - `card-expand.ts`, opcja `data-card-expand-leave`: po rozszerzeniu ekran stoi na pełnej scenie, potem odjeżdża w górę, a Manifest wchodzi pod ostatni ekran toru.
+  - `curtain.ts`, `morphSource`: morf leci z widocznego kadru. Na głównej ten sam projekt ma kadr w hero i w indeksie realizacji, a wcześniej leciał z pierwszego kadru w dokumencie.
+  - Usunięte: stare `Hero.astro` i `hero.css` (karta z kokpitem floty i etykietami warstw), `hero-live.ts`, `demoHero`, kanał powiadomień `feed` w `FlotaLive` (tylko dla starego hero), strona `/lab/hero`.
+  - Dokumenty:
+    - `BRIEF.md`: łamanie H1, brak CTA w hero, etykiety warstw tylko w loaderze, wiersz 01 w mapie strony;
+    - `ARCHITECTURE.md`: `data-reel-*`, `data-card-expand-leave`, moduły;
+    - spec `01-hero.md`.
+  - Testy (Edge headless):
+    - zrzuty 1920 / 1440 / 834 / 390 w spoczynku, przy kursorze, przy zmianie projektu, przy rozszerzeniu, na pełnej scenie, przy wyjściu i na Manifeście;
+    - odcinki, pauza, morf z ekranu hero, reduced motion;
+    - init → destroy → init 51/0/51 ScrollTriggerów;
+    - 7 scenariuszy morfu i kurtyny;
+    - konsola czysta, check, lint i build czyste.
+- Zostało:
+  - Ocena użytkownika: który z czterech ruchów zostaje (decyzja otwarta 1 w specu); etykiety warstw (2); styl przycisku CTA w pasku (3).
+  - `TODO(treść)`: etykieta kursora, etykiety pauzy i odcinków, opis figury dla czytnika.
+  - Na telefonie z gęstością 3x kadr potrzebuje ok. 3700 px szerokości, a `CaseShot` ma najwyżej 2048 px. Wymaga szerszej listy `widths` we wspólnym komponencie, więc decyzja użytkownika.
+  - Pliki `flota-toast-*.webp` i ich wpisy w `flota.json` nieużywane od usunięcia kanału.
+  - Trace 60 fps (siatka za kursorem + żywa warstwa + scroll), Firefox.
+- Decyzje:
+  - **Kadr hero ma rozmiar pełnej sceny, a okno to przycięcie** (`card-expand`), więc `sizes` liczy się dla sceny: na desktopie `100vw`, a poniżej 992 px `150vh` (wysoka scena, `cover` 16:10). Z `sizes` skopiowanym z indeksu (`66vw`) desktop brał plik o 1,3 raza za mały.
+  - Opakowania `data-card-expand="fade"` są osobne od elementów z wejściem (`data-split`, `data-intro`), bo tween zanikania zapamiętywał opacity 0 spod loadera.
+  - Przy wyjściu sekcja hero ma przezroczyste tło, a Manifest `margin-top: -100vh`. Scena ma `pointer-events: none`, żeby nie łapać kursora nad Manifestem.
+- Lekcje:
+  - `text-indent` się dziedziczy: maski słów SplitText (inline-block) dostawały wcięcie i miały szerokość 0. Zerować go na dzieciach nagłówka.
+  - `naturalWidth` obrazu z `srcset` jest przeliczony przez gęstość (szerokość pliku podzielona przez `w / sizes`), więc nie mówi, który plik przyszedł. Plik ustala się po `currentSrc`.
+  - Ten sam projekt w dwóch kadrach na stronie: każdy wybór elementu po nazwie (`querySelector`) bierze pierwszy w dokumencie, często ukryty. Wybierać widoczny.
